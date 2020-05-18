@@ -1,6 +1,6 @@
-package First_Class;
+package user_Interface;
 
-public class Starter_Class {
+public class GUI {
 
 	public static void main(String[] args) {
 		
