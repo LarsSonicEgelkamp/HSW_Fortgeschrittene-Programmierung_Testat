@@ -13,9 +13,9 @@ public class GUI extends JFrame implements ActionListener{
 	JLabel label;
     JPanel panel;
     
-	JButton button1;
-    JButton button2;
-    JButton button3;
+	JButton btnBörsenmanager;
+    JButton btnAktionär;
+    JButton btnAktiengesellschaft;
     
 	public GUI () {
 		
@@ -26,17 +26,17 @@ public class GUI extends JFrame implements ActionListener{
 
 	    
 	    //Drei Buttons werden erstellt
-        button1 = new JButton("Button 1");
-        button2 = new JButton ("Button 2");
-        button3 = new JButton ("Button 3");
+        btnBörsenmanager = new JButton("Börsenmanager");
+        btnAktionär = new JButton ("Aktionär");
+        btnAktiengesellschaft = new JButton ("Aktiengesellschaft");
         
-        button1.addActionListener(this);
-        button2.addActionListener(this);
-        button3.addActionListener(this);
+        btnBörsenmanager.addActionListener(this);
+        btnAktionär.addActionListener(this);
+        btnAktiengesellschaft.addActionListener(this);
         
-        panel.add(button1);
-        panel.add(button2);
-        panel.add(button3);
+        panel.add(btnBörsenmanager);
+        panel.add(btnAktionär);
+        panel.add(btnAktiengesellschaft);
         
         this.add(panel);
         		
@@ -46,13 +46,15 @@ public class GUI extends JFrame implements ActionListener{
 	        // Die Quelle wird mit getSource() abgefragt und mit den
 	        // Buttons abgeglichen. Wenn die Quelle des ActionEvents einer
 	        // der Buttons ist, wird der Text des JLabels entsprechend geändert
-	        if(ae.getSource() == this.button1){
+	        if(ae.getSource() == this.btnBörsenmanager){
+	        	panel = new JPanel();
+	        	panel.setVisible(true);
+	        	
+	        }
+	        else if(ae.getSource() == this.btnAktionär){
 
 	        }
-	        else if(ae.getSource() == this.button2){
-
-	        }
-	        else if (ae.getSource() == this.button3){
+	        else if (ae.getSource() == this.btnAktiengesellschaft){
 
 	        }
 	    }
