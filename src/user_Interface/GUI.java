@@ -10,6 +10,11 @@ import javax.swing.JPanel;
 
 public class GUI extends JFrame implements ActionListener{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	JLabel label;
     JPanel panel;
     
@@ -39,7 +44,7 @@ public class GUI extends JFrame implements ActionListener{
         panel.add(btnAktiengesellschaft);
         
         this.add(panel);
-//        this.setVisible(true);
+        this.setVisible(true);
         
 	}
 	
@@ -50,7 +55,7 @@ public class GUI extends JFrame implements ActionListener{
 	        if(ae.getSource() == this.btnBörsenmanager){
 	        	JPanel panelBörsenmanager = new JPanel();
 	        	this.add(panelBörsenmanager);
-//	        	panel.setVisible(true);
+	        	panel.setVisible(true);
 	        	
 	        }
 	        else if(ae.getSource() == this.btnAktionär){
