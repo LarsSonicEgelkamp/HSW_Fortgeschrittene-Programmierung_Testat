@@ -22,8 +22,8 @@ public class GUI extends JFrame implements ActionListener{
 		this.setTitle("Börsenanwendung");
 		this.setSize(400,200);
         panel = new JPanel();
-       
-
+        
+        
 	    
 	    //Drei Buttons werden erstellt
         btnBörsenmanager = new JButton("Börsenmanager");
@@ -39,7 +39,8 @@ public class GUI extends JFrame implements ActionListener{
         panel.add(btnAktiengesellschaft);
         
         this.add(panel);
-        		
+//        this.setVisible(true);
+        
 	}
 	
 	 public void actionPerformed (ActionEvent ae){
@@ -47,8 +48,9 @@ public class GUI extends JFrame implements ActionListener{
 	        // Buttons abgeglichen. Wenn die Quelle des ActionEvents einer
 	        // der Buttons ist, wird der Text des JLabels entsprechend geändert
 	        if(ae.getSource() == this.btnBörsenmanager){
-	        	panel = new JPanel();
-	        	panel.setVisible(true);
+	        	JPanel panelBörsenmanager = new JPanel();
+	        	this.add(panelBörsenmanager);
+//	        	panel.setVisible(true);
 	        	
 	        }
 	        else if(ae.getSource() == this.btnAktionär){

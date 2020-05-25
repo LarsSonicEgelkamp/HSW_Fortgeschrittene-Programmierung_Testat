@@ -6,7 +6,7 @@ public class Start {
 		// TODO Auto-generated method stub
 		
 		GUI start = new GUI();
-		start.setVisible(true);
+
 
 	}
 
