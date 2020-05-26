@@ -9,14 +9,19 @@ import java.io.IOException;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
+
+
 import Filemanager.Serialisierung;
+import börsenprogramm.Depotinhaber;
 
 public class GUI extends JFrame implements ActionListener {
 
@@ -30,6 +35,8 @@ public class GUI extends JFrame implements ActionListener {
 	JRadioButton btnBörsenmanager, btnAktionär, btnAktiengesellschaft;
 
 	JButton btnAnmelden, btnRegestrieren;
+	JButton btnAbmelden = new JButton("Abmelden");
+	
 
 	JTextField txtAnmeldeID;
 	
@@ -90,7 +97,7 @@ public class GUI extends JFrame implements ActionListener {
 		boolean exestierendeID = true;
 		// TODO Hier muss noch die überprüfung stattfinden ob die ID bereits existiert
 		// oder nicht
-//		exestierendeID = s.deserilize("test");
+		exestierendeID = !s.deserilize(checkWord).equals(checkWord);
 		
 		return exestierendeID;
 	}
@@ -146,6 +153,9 @@ public class GUI extends JFrame implements ActionListener {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		} else if (ae.getSource()==this.btnAbmelden) {
+			this.createStartseite(this);
+			this.validate();
 		}
 	}
 
@@ -155,8 +165,16 @@ public class GUI extends JFrame implements ActionListener {
 	 */
 	private void createAktiengesellschaftFenster() {
 		JPanel aktiengesellschaftPanel = new JPanel();
-
-		this.setContentPane(aktiengesellschaftPanel);
+		
+		
+		JTabbedPane tabpane = new JTabbedPane(JTabbedPane.TOP,JTabbedPane.SCROLL_TAB_LAYOUT );
+		
+		tabpane.addTab("Aktien Gesellschaft", aktiengesellschaftPanel);
+		tabpane.addTab("Aktien", createAktienPanel());
+		
+		aktiengesellschaftPanel.add(btnAbmelden);
+		
+		this.setContentPane(tabpane);
 		this.validate();
 	}
 
@@ -167,13 +185,28 @@ public class GUI extends JFrame implements ActionListener {
 	
 	JButton meinDepot;
 	private void createAktionärFenster() {
-		JPanel aktionärPanel = new JPanel();
+		JPanel meinDepot = new JPanel();
+		JComboBox depots = new JComboBox();
 		
-		meinDepot = new JButton("mein Depot");
 		
-		this.setContentPane(aktionärPanel);
+		//TO DO: Hier muss die Combobox noch befüllt werden
+		for (Integer meineDepot : Depotinhaber.getMeineDepots()) {
+			depots.add(meinDepot);
+		}		
+		
+		meinDepot.add(depots);
+		
+		JTabbedPane tabpane = new JTabbedPane(JTabbedPane.TOP,JTabbedPane.SCROLL_TAB_LAYOUT );
+		tabpane.addTab("mein Depot", meinDepot);
+		tabpane.addTab("Aktien", createAktienPanel());
+		
+		meinDepot.add(btnAbmelden);
+		
+		this.setContentPane(tabpane);
 		this.validate();
 	}
+
+
 
 	/**
 	 * Description: Hier wird das Interface für den Börsenmanger erstellt
@@ -181,10 +214,28 @@ public class GUI extends JFrame implements ActionListener {
 	 */
 	private void createBörsenmanagerFenster() {
 		JPanel panelBörsenmanager = new JPanel();
-
-		this.setContentPane(panelBörsenmanager);
+		
+		
+		JTabbedPane tabpane = new JTabbedPane(JTabbedPane.TOP,JTabbedPane.SCROLL_TAB_LAYOUT );
+		
+		tabpane.addTab("Börsenmanager", panelBörsenmanager);
+		tabpane.addTab("Aktien", createAktienPanel());
+		
+		panelBörsenmanager.add(btnAbmelden);
+		btnAbmelden.addActionListener(this);
+		
+		this.setContentPane(tabpane);
 		this.validate();
 
 	}
-
+	
+	/**
+	 * Description: Hier wird das Panel für den Aktienmarkt erstellt
+	 *
+	 */
+	private JPanel createAktienPanel() {
+		// TODO Auto-generated method stub
+		JPanel aktien = new JPanel();
+		return aktien;
+	}
 }

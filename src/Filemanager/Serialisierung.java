@@ -24,13 +24,20 @@ public class Serialisierung {
 				oos.writeObject(o);
 			}
 		}
-	}
+		else {
+			try (FileOutputStream fos = new FileOutputStream(filepath + "/" + dateiname + ".id");
+					ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+				oos.writeObject(o);
+			}
+		}
+	} 
 
 	public String deserilize(String dateiname) throws FileNotFoundException, IOException, ClassNotFoundException {
 		final String s;
 		try (FileInputStream fis = new FileInputStream(filepath + "/" + dateiname + ".id");
 				ObjectInputStream ois = new ObjectInputStream(fis)) {
 			s = (String) ois.readObject();
+			
 		}
 		return s;
 	}
