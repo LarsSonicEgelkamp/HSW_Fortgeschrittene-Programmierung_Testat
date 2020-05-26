@@ -13,46 +13,51 @@ public class CSV_Writer {
 
 	}
 
-	public void writeCSV(String filename) {
+	public static void writeCSV(String filename) {
 
-		final String filepath = System.getProperty("user.home" + "/Börsenprogramm/CSV_Dateien/" + filename + ".csv");
-
+		File filepath = new File(System.getProperty("user.home") + "/Börsenprogramm/CSV_Dateien");
 		BufferedWriter bw = null;
 		FileWriter fw = null;
-		File f = new File(filepath);
+		File f = new File(filepath + "/" + filename + ".csv");
 
-		if (f.mkdir()) {
+		if (filepath.mkdirs()) {
+
 			try {
 
-				fw = new FileWriter(filepath);
+				fw = new FileWriter(f);
 				bw = new BufferedWriter(fw);
 
 				for (String orderElement : Order.getOrderListe()) {
 					bw.write(orderElement + ",");
 				}
 
+				bw.close();
+
 			} catch (IOException e) {
 
 				e.printStackTrace();
 
-			} finally {
-
-				try {
-
-					if (bw != null)
-						bw.close();
-
-					if (fw != null)
-						fw.close();
-
-				} catch (IOException ex) {
-
-					ex.printStackTrace();
-
-				}
-
 			}
 
 		}
+
+		else {
+			try {
+
+				fw = new FileWriter(f);
+				bw = new BufferedWriter(fw);
+
+				for (String orderElement : Order.getOrderListe()) {
+					bw.write(orderElement + ",");
+				}
+				bw.close();
+
+			} catch (IOException e) {
+
+				e.printStackTrace();
+
+			}
+		}
+
 	}
 }
