@@ -23,7 +23,6 @@ public class Start {
         start.setVisible(true);
 
 
-
 	}
 
 }
