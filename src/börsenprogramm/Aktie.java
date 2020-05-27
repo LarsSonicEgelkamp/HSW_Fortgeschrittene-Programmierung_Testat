@@ -4,20 +4,20 @@ import java.util.ArrayList;
 
 public class Aktie {
 
-	private String id;
+	private int id;
 	private int aktWert;
 	private ArrayList<Integer> werteHistorie = new ArrayList<Integer>();
 
-	public Aktie(String id, int initialWert) {
+	public Aktie(int id, int initialWert) {
 		this.id = id;
 		this.aktWert = initialWert;
 	}
 
-	public String getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
