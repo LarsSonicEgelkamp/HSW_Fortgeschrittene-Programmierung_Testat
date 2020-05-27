@@ -15,7 +15,7 @@ public class Boerse {
 		return depotListe;
 	}
 
-	public void neueAktie(String id, int wert) {
+	public void neueAktie(int id, int wert) {
 		Aktie aktie = new Aktie(id, wert);
 		this.aktienListe.add(aktie);
 	}
