@@ -6,7 +6,7 @@ public class Depotinhaber {
 
 	private int id;
 	private String name;
-	private ArrayList<Integer> meineDepots = new ArrayList<Integer>();
+	private static ArrayList<Integer> meineDepots = new ArrayList<Integer>();
 
 	private Depotinhaber(int id, String name) {
 		this.id = id;
@@ -17,7 +17,7 @@ public class Depotinhaber {
 		this.meineDepots.add(depotID);
 	}
 	
-	public ArrayList<Integer> getMeineDepots() {
+	public static ArrayList<Integer> getMeineDepots() {
 		return meineDepots;
 	}
 }
