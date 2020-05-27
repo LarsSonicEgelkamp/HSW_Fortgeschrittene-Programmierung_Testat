@@ -209,6 +209,16 @@ public class GUI extends JFrame implements ActionListener {
 		
 		meinDepot.add(btnVerkaufen);
 		meinDepot.add(btnAbmelden);
+		
+		JComboBox cbxAlleAktien = new JComboBox();
+		JLabel lblAktienKaufen=new JLabel("Anzahl der Aktien:");
+		JTextField txtAktienKaufen = new JTextField(5);
+		JButton btnAktienKaufen = new JButton("kaufen");
+		
+		meinDepot.add(cbxAlleAktien);
+		meinDepot.add(lblAktienKaufen);
+		meinDepot.add(txtAktienKaufen);
+		meinDepot.add(btnAktienKaufen);
 
 		btnVerkaufen.addActionListener(this);
 
@@ -274,15 +284,7 @@ public class GUI extends JFrame implements ActionListener {
 		// TODO Auto-generated method stub
 		JPanel aktien = new JPanel();
 		
-		JComboBox cbxAlleAktien = new JComboBox();
-		JLabel lblAktienKaufen=new JLabel("Anzahl der Aktien:");
-		JTextField txtAktienKaufen = new JTextField(5);
-		JButton btnAktienKaufen = new JButton("kaufen");
-		
-		aktien.add(cbxAlleAktien);
-		aktien.add(lblAktienKaufen);
-		aktien.add(txtAktienKaufen);
-		aktien.add(btnAktienKaufen);
+
 		
 		return aktien;
 	}
