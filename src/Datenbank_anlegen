@@ -1,0 +1,14 @@
+Gehe auf die Seite: https://dev.mysql.com/downloads/windows/installer/8.0.html
+Downloade den MySQL-Installer
+Starte die exe und folge den Anweisungen: Achtung!!!, bei den Requirements bitte erst execute drücken, dann next (die manuell hinzuzufügenden Programme brauchte ich nicht)
+	bei der Einrichtung des Servers habe ich alles auf standard gelassen. Als Passwort habe ich "testat" genommen.(Natürlich ohne ""-Zeichen.)
+	
+Danach öffnest du die command line für den Server und gibst dort dein Passwort ein.
+Danach gibst du die folgenden Zeilen ein. Nach jedem Symicolon einmal enter drücken bitte:
+
+
+CREATE DATABASE boersendatenbank;
+CREATE USER 'user'@'localhost' IDENTIFIED BY 'user';
+GRANT ALL PRIVILEGES ON * . * TO 'user'@'localhost';
+GRANT ALL ON boersendatenbank.* TO 'user'@'localhost';
+FLUSH PRIVILEGES;
