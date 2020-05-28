@@ -6,9 +6,7 @@ import java.sql.SQLException;
 import java.sql.DriverManager;
 import java.sql.Connection;
 
-
 import börsenprogramm.Datenbankmanager;
-
 
 public class Start {
 
@@ -22,13 +20,13 @@ public class Start {
 			db = new Datenbankmanager(con);
 			Statement stat = con.createStatement();
 
+			GUI start = new GUI(stat);
+
+			start.setVisible(true);
+
 		} catch (SQLException e) {
 			System.out.println("Fehler: " + e.getMessage());
 		}
-
-		GUI start = new GUI();
-
-        start.setVisible(true);
 	}
 
 }

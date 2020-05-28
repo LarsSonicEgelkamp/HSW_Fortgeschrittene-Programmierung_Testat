@@ -7,6 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
@@ -44,13 +47,16 @@ public class GUI extends JFrame implements ActionListener {
 
 	Serialisierung s = new Serialisierung();
 
+	Statement stat;
+
 	/**
 	 * 
 	 * Hier wird die das User-Interface erzeugt
 	 * 
 	 */
-	public GUI() {
+	public GUI(Statement stat) {
 
+		this.stat = stat;
 		createStartseite(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		System.out.println("Hallo");
@@ -94,14 +100,37 @@ public class GUI extends JFrame implements ActionListener {
 
 	}
 
-	private boolean anmeldeIDPrüfen(String checkWord)
-			throws FileNotFoundException, ClassNotFoundException, IOException {
-		boolean exestierendeID = true;
+//return true, wenn die Anmelde ID existiert
+	private boolean anmeldeIDPrüfen(String checkWord, String anmeldeSubjekt)
+			throws FileNotFoundException, ClassNotFoundException, IOException, SQLException {
+//		boolean exestierendeID = true;
+
+		ResultSet ids;
+		if (anmeldeSubjekt.contentEquals("boersenmanager")) {
+			this.stat = ConnectionManager.ueberpruefeConnection(stat);
+			ids = stat.executeQuery("SELECT ID FROM Boersenmanager WHERE ID=" + checkWord + ";");
+			if (ids.next()) {
+				return true;
+			}
+		} else if (anmeldeSubjekt.contentEquals("aktiengesellschaft")) {
+			this.stat = ConnectionManager.ueberpruefeConnection(stat);
+			ids = stat.executeQuery("SELECT ID FROM Aktiengesellschaft WHERE ID=" + checkWord + ";");
+			if (ids.next()) {
+				return true;
+			}
+		} else if (anmeldeSubjekt.contentEquals("aktionaer")) {
+			this.stat = ConnectionManager.ueberpruefeConnection(stat);
+			ids = stat.executeQuery("SELECT ID FROM Depotinhaber WHERE ID=" + checkWord + ";");
+			if (ids.next()) {
+				return true;
+			}
+		}
 		// TODO Hier muss noch die überprüfung stattfinden ob die ID bereits existiert
 		// oder nicht
-		exestierendeID = !s.deserilize(checkWord).equals(checkWord);
+//		exestierendeID = !s.deserilize(checkWord).equals(checkWord);
 
-		return exestierendeID;
+//		return exestierendeID;
+		return false;
 	}
 
 	/**
@@ -113,38 +142,38 @@ public class GUI extends JFrame implements ActionListener {
 		// der Buttons ist, wird der Text des JLabels entsprechend geändert
 		if (ae.getSource() == this.btnAnmelden && btnBörsenmanager.isSelected() == true) {
 			try {
-				if (!anmeldeIDPrüfen(txtAnmeldeID.getText())) {
+				if (anmeldeIDPrüfen(txtAnmeldeID.getText(), "boersenmanager")) {
 					createBörsenmanagerFenster();
 				} else {
 					JOptionPane.showMessageDialog(null, "Die Anmelde-ID existiert nicht", "Börsenmanager",
 							JOptionPane.INFORMATION_MESSAGE);
 				}
-			} catch (HeadlessException | ClassNotFoundException | IOException e) {
+			} catch (HeadlessException | ClassNotFoundException | IOException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 		} else if (ae.getSource() == this.btnAnmelden && btnAktionär.isSelected() == true) {
 			try {
-				if (!anmeldeIDPrüfen(txtAnmeldeID.getText())) {
+				if (anmeldeIDPrüfen(txtAnmeldeID.getText(), "aktionaer")) {
 					createAktionärFenster();
 				} else {
 					JOptionPane.showMessageDialog(null, "Die Anmelde-ID existiert nicht", "Aktionär",
 							JOptionPane.INFORMATION_MESSAGE);
 				}
-			} catch (HeadlessException | ClassNotFoundException | IOException e) {
+			} catch (HeadlessException | ClassNotFoundException | IOException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else if (ae.getSource() == this.btnAnmelden && btnAktiengesellschaft.isSelected() == true) {
 			try {
-				if (!anmeldeIDPrüfen(txtAnmeldeID.getText())) {
+				if (anmeldeIDPrüfen(txtAnmeldeID.getText(), "aktiengesellschaft")) {
 					createAktiengesellschaftFenster();
 				} else {
 					JOptionPane.showMessageDialog(null, "Die Anmelde-ID existiert nicht", "Aktiengesellschaft",
 							JOptionPane.INFORMATION_MESSAGE);
 				}
-			} catch (HeadlessException | ClassNotFoundException | IOException e) {
+			} catch (HeadlessException | ClassNotFoundException | IOException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -206,15 +235,15 @@ public class GUI extends JFrame implements ActionListener {
 		JTabbedPane tabpane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
 		tabpane.addTab("mein Depot", meinDepot);
 		tabpane.addTab("Aktien", createAktienPanel());
-		
+
 		meinDepot.add(btnVerkaufen);
 		meinDepot.add(btnAbmelden);
-		
+
 		JComboBox cbxAlleAktien = new JComboBox();
-		JLabel lblAktienKaufen=new JLabel("Anzahl der Aktien:");
+		JLabel lblAktienKaufen = new JLabel("Anzahl der Aktien:");
 		JTextField txtAktienKaufen = new JTextField(5);
 		JButton btnAktienKaufen = new JButton("kaufen");
-		
+
 		meinDepot.add(cbxAlleAktien);
 		meinDepot.add(lblAktienKaufen);
 		meinDepot.add(txtAktienKaufen);
@@ -263,7 +292,8 @@ public class GUI extends JFrame implements ActionListener {
 		JLabel lblOrders = new JLabel("ausstehende Orders:");
 		JComboBox cbxOrders = new JComboBox();
 		JButton btnOrderAusführen = new JButton("Order ausführen");
-		// TODO Die Combo Box muss noch befüllt werden und eine Textarea mit allen Aktien oder ein Jlist eingefügt werden
+		// TODO Die Combo Box muss noch befüllt werden und eine Textarea mit allen
+		// Aktien oder ein Jlist eingefügt werden
 		panelBörsenmanager.add(lblOrders);
 		panelBörsenmanager.add(cbxOrders);
 		panelBörsenmanager.add(btnOrderAusführen);
@@ -283,9 +313,7 @@ public class GUI extends JFrame implements ActionListener {
 	private JPanel createAktienPanel() {
 		// TODO Auto-generated method stub
 		JPanel aktien = new JPanel();
-		
 
-		
 		return aktien;
 	}
 }
