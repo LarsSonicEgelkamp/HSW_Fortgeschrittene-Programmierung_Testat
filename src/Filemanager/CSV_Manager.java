@@ -7,9 +7,9 @@ import java.io.IOException;
 
 import börsenprogramm.Order;
 
-public class CSV_Writer {
+public class CSV_Manager {
 
-	public CSV_Writer() {
+	public CSV_Manager() {
 
 	}
 
@@ -58,6 +58,8 @@ public class CSV_Writer {
 
 			}
 		}
+		
+		
 
 	}
 }
