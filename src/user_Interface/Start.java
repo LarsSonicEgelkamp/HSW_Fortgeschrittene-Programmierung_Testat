@@ -6,18 +6,19 @@ import java.sql.SQLException;
 import java.sql.DriverManager;
 import java.sql.Connection;
 
-import börsenprogramm.Datenbankmanager;
+import börsenprogramm.Datenbankersteller;
+
 
 public class Start {
 
-	private static Datenbankmanager db;
+	private static Datenbankersteller db;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
 		String databaseURL = "jdbc:mysql://localhost/boersendatenbank?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 		try (Connection con = DriverManager.getConnection(databaseURL, "user", "user")) {
-			db = new Datenbankmanager(con);
+			db = new Datenbankersteller(con);
 			Statement stat = con.createStatement();
 
 			GUI start = new GUI(stat);
