@@ -8,12 +8,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
@@ -31,13 +30,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListModel;
 import javax.swing.UIManager;
-import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
 
 import Filemanager.Serialisierung;
 import börsenprogramm.Aktie;
@@ -61,7 +55,9 @@ public class GUI extends JFrame implements ActionListener {
 	JButton btnAnmelden;
 	JButton btnAbmelden = new JButton("Abmelden");
 
-	JTextField txtAnmeldeID;
+	JTextField txtAnmeldeID, txtDepotihaberID,txtAktienID,txtAktienWert;
+	
+	JButton btnDepotAnlegen,btnAktieAnlegen;
 
 	JComboBox<Integer> depots;
 
@@ -71,6 +67,8 @@ public class GUI extends JFrame implements ActionListener {
 
 	AktuellerUser aUser;
 	JPanel aktuellesPanel;
+	
+	Boersenmanager bm;
 
 	/**
 	 * 
@@ -173,6 +171,7 @@ public class GUI extends JFrame implements ActionListener {
 				if (anmeldeIDPrüfen(txtAnmeldeID.getText(), "boersenmanager")) {
 					aUser = new AktuellerUser("boersenmanager", Integer.parseInt(txtAnmeldeID.getText()));
 					createBörsenmanagerFenster();
+					bm = new Boersenmanager();
 				} else {
 					JOptionPane.showMessageDialog(null, "Die Anmelde-ID existiert nicht", "Börsenmanager",
 							JOptionPane.INFORMATION_MESSAGE);
@@ -212,6 +211,11 @@ public class GUI extends JFrame implements ActionListener {
 			System.out.println("verkaufen");
 		} else if (ae.getSource() == this.depots) {
 			JPanel tempPanel = this.getAktuellesPanel();
+		}
+		else if (ae.getSource()== this.btnDepotAnlegen) {
+			bm.createDepot(stat,con, txtDepotihaberID);
+		}else if (ae.getSource()==btnAktieAnlegen) {
+			bm.aktieAnlegen(stat, con, txtAktienID.getText(), txtAktienWert.getText(), AktiengesellschaftsID, DepotinhaberID, depotID);
 		}
 	}
 
@@ -276,7 +280,8 @@ public class GUI extends JFrame implements ActionListener {
 
 		meinDepot.add(btnVerkaufen);
 		
-
+		
+		
 		JComboBox cbxAlleAktien = new JComboBox();
 		JLabel lblAktienKaufen = new JLabel("Anzahl der Aktien:");
 		JTextField txtAktienKaufen = new JTextField(5);
@@ -286,7 +291,9 @@ public class GUI extends JFrame implements ActionListener {
 		meinDepot.add(lblAktienKaufen);
 		meinDepot.add(txtAktienKaufen);
 		meinDepot.add(btnAktienKaufen);
-
+		
+		
+		
 		btnVerkaufen.addActionListener(this);
 		
 		meinDepot.add(btnAbmelden);
@@ -316,11 +323,11 @@ public class GUI extends JFrame implements ActionListener {
 
 		JLabel lblAktienID = new JLabel("Aktien ID:");
 		JLabel lblAktienWert = new JLabel("Aktien Wert:");
-		JTextField txtAktienID = new JTextField(5);
-		JTextField txtAktienWert = new JTextField(5);
-		JButton btnAktieAnlegen = new JButton("Aktie anlegen");
+		txtAktienID = new JTextField(5);
+		txtAktienWert = new JTextField(5);
+		btnAktieAnlegen = new JButton("Aktie anlegen");
 		JLabel lblDepotinhaberID = new JLabel("Depotinhaber ID:");
-		JTextField txtDepotihaberID = new JTextField(5);
+		txtDepotihaberID = new JTextField(5);
 
 		panelBörsenmanager.add(lblAktienID);
 		panelBörsenmanager.add(txtAktienID);
@@ -331,13 +338,12 @@ public class GUI extends JFrame implements ActionListener {
 
 		JLabel lblDepotID = new JLabel("Depot ID:");
 		JTextField txtDepotID = new JTextField(5);
-		JButton btnDepotAnlegen = new JButton("Depot anlegen");
+		btnDepotAnlegen = new JButton("Depot anlegen");
 
 		panelBörsenmanager.add(lblDepotID);
 		panelBörsenmanager.add(txtDepotID);
 		panelBörsenmanager.add(lblDepotinhaberID);
 		panelBörsenmanager.add(txtDepotihaberID);
-		//Depotinhabertxt
 		panelBörsenmanager.add(btnDepotAnlegen);
 		btnDepotAnlegen.addActionListener(this);
 
@@ -357,6 +363,8 @@ public class GUI extends JFrame implements ActionListener {
 		this.validate();
 
 	}
+	
+
 
 	/**
 	 * Description: Hier wird das Panel für den Aktienmarkt erstellt
