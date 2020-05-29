@@ -2,8 +2,10 @@ package user_Interface;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
@@ -58,19 +60,18 @@ public class GUI extends JFrame implements ActionListener {
 
 	JRadioButton btnBörsenmanager, btnAktionär, btnAktiengesellschaft;
 
+	JPanel meinDepot;
+
 	JButton btnAnmelden, btnRegestrieren;
 	JButton btnAbmelden = new JButton("Abmelden");
 
 	JTextField txtAnmeldeID;
-
-	JComboBox<Integer> depots;
 
 	Serialisierung s = new Serialisierung();
 
 	Statement stat;
 
 	AktuellerUser aUser;
-	JPanel aktuellesPanel;
 
 	/**
 	 * 
@@ -220,8 +221,42 @@ public class GUI extends JFrame implements ActionListener {
 		} else if (ae.getSource() == this.btnVerkaufen) {
 			System.out.println("verkaufen");
 		} else if (ae.getSource() == this.depots) {
-			JPanel tempPanel = this.getAktuellesPanel();
+			try {
+				DefaultListModel<String> listModel = new DefaultListModel<String>();
+
+				int index=this.getComponentIndex(meineAktienList);
+				this.meinDepot.remove(meineAktienList);
+				Boerse b = new Boerse(stat);
+				ArrayList<Aktie> akList = b.getAktienListe(aUser);
+				for (Aktie a : akList) {
+					int aktuellesDepot = a.getDepot(a.getId());
+					int gewaehltesDe = (Integer) depots.getSelectedItem();
+					if (gewaehltesDe == aktuellesDepot) {
+						listModel.addElement("ID: " + a.getId() + " Wert:" + a.getWert(a.getId()));
+					}
+				}
+				meineAktienList = new JList(listModel);
+
+				this.meinDepot.add(meineAktienList, index);
+
+				this.revalidate();
+				this.repaint();
+
+			} catch (Exception e) {//SQLException |
+				this.setErrorMessage(e);
+			}
 		}
+	}
+
+	public int getComponentIndex(Component component) throws Exception {
+		if (component != null && component.getParent() != null) {
+			Container c = component.getParent();
+			for (int i = 0; i < c.getComponentCount(); i++) {
+				if (c.getComponent(i) == component)
+					return i;
+			}
+		}
+		throw new Exception("Index der gesuchten Componente kann nicht gefunden werden");
 	}
 
 	/**
@@ -246,11 +281,12 @@ public class GUI extends JFrame implements ActionListener {
 	 * Description: Hier wird das Interface für einen Aktionär/Depotinhaber erstellt
 	 *
 	 */
-
+	JComboBox<Integer> depots;
+	JList<String> meineAktienList;
 	JButton btnVerkaufen;
 
 	private void createAktionärFenster() throws SQLException {
-		JPanel meinDepot = new JPanel();
+		meinDepot = new JPanel();
 		btnVerkaufen = new JButton("Verkaufen");
 		DefaultComboBoxModel<Integer> comboBoxModel = new DefaultComboBoxModel<Integer>();
 		DefaultListModel<String> listModel = new DefaultListModel<String>();
@@ -271,12 +307,10 @@ public class GUI extends JFrame implements ActionListener {
 				listModel.addElement("ID: " + a.getId() + " Wert:" + a.getWert(a.getId()));
 			}
 		}
-		JList<String> meineAktienList = new JList<String>(listModel);
+		meineAktienList = new JList<String>(listModel);
 
 		meinDepot.add(depots);
 		meinDepot.add(meineAktienList);
-
-		// TODO: Die Jlist muss noch befüllt werden
 
 		JTabbedPane tabpane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
 		tabpane.addTab("mein Depot", meinDepot);
@@ -297,14 +331,8 @@ public class GUI extends JFrame implements ActionListener {
 		meinDepot.add(btnAktienKaufen);
 
 		btnVerkaufen.addActionListener(this);
-
 		this.setContentPane(tabpane);
-		this.aktuellesPanel = meinDepot;
 		this.validate();
-	}
-
-	public JPanel getAktuellesPanel() {
-		return this.aktuellesPanel;
 	}
 
 	/**
