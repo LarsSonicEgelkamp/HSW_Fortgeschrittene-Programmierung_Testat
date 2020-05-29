@@ -1,4 +1,4 @@
-package börsenprogramm;
+package bÃ¶rsenprogramm;
 
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -39,7 +39,7 @@ public class Aktie {
 		this.stat = stat;
 	}
 
-	public Integer getId() {
+	public int getId() {
 		return id;
 	}
 
@@ -53,7 +53,7 @@ public class Aktie {
 	}
 
 	/*
-	 * Bevor der Wert der Aktie geändert wird, wird der aktuelle Wert zuerst in der
+	 * Bevor der Wert der Aktie geÃ¤ndert wird, wird der aktuelle Wert zuerst in der
 	 * Werte-Historie gespeichert.
 	 */
 	public void setWert(int wert) throws SQLException {

@@ -49,4 +49,10 @@ public class Depotinhaber {
 	public static ArrayList<Integer> getMeineDepots() {
 		return meineDepots;
 	}
+	
+	public void verkaufsVerlauf() {
+		
+	}
+	
+	
 }

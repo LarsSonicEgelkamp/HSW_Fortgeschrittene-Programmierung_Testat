@@ -104,7 +104,7 @@ public class Datenbankersteller {
 						+ "Aktiengesellschaft ( ID INT, CONSTRAINT PK_Aktiengesellschaft_ID PRIMARY KEY (ID));";
 				stat.execute(sqlBefehlTabelleErstellen);
 				stat.execute("INSERT INTO Aktiengesellschaft(ID) VALUES ('1'),('2'),('3'),('4'),('5');");
-
+				
 			}
 		} catch (SQLException e) {
 			throw new SQLException(e.getMessage());
