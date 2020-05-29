@@ -8,12 +8,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
+import user_Interface.ConnectionManager;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
@@ -55,9 +54,9 @@ public class GUI extends JFrame implements ActionListener {
 	JButton btnAnmelden;
 	JButton btnAbmelden = new JButton("Abmelden");
 
-	JTextField txtAnmeldeID, txtDepotihaberID,txtAktienID,txtAktienWert;
-	
-	JButton btnDepotAnlegen,btnAktieAnlegen;
+	JTextField txtAnmeldeID, txtDepotinhaberID, txtAktienID, txtAktienWert;
+
+	JButton btnDepotAnlegen, btnAktieAnlegen;
 
 	JComboBox<Integer> depots;
 
@@ -67,7 +66,7 @@ public class GUI extends JFrame implements ActionListener {
 
 	AktuellerUser aUser;
 	JPanel aktuellesPanel;
-	
+
 	Boersenmanager bm;
 
 	/**
@@ -211,11 +210,16 @@ public class GUI extends JFrame implements ActionListener {
 			System.out.println("verkaufen");
 		} else if (ae.getSource() == this.depots) {
 			JPanel tempPanel = this.getAktuellesPanel();
-		}
-		else if (ae.getSource()== this.btnDepotAnlegen) {
-			bm.createDepot(stat,con, txtDepotihaberID);
-		}else if (ae.getSource()==btnAktieAnlegen) {
-			bm.aktieAnlegen(stat, con, txtAktienID.getText(), txtAktienWert.getText(), AktiengesellschaftsID, DepotinhaberID, depotID);
+		} else if (ae.getSource() == this.btnDepotAnlegen) {
+			int depotinhaberID = Integer.parseInt(txtDepotinhaberID.getText());
+			try {
+				bm.createDepot(stat, depotinhaberID);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else if (ae.getSource() == btnAktieAnlegen) {
+//			bm.aktieAnlegen(stat,  txtAktienID.getText(), txtAktienWert.getText(), AktiengesellschaftsID, DepotinhaberID, depotID);
 		}
 	}
 
@@ -279,9 +283,7 @@ public class GUI extends JFrame implements ActionListener {
 		tabpane.addTab("Depots", createDepotPanel());
 
 		meinDepot.add(btnVerkaufen);
-		
-		
-		
+
 		JComboBox cbxAlleAktien = new JComboBox();
 		JLabel lblAktienKaufen = new JLabel("Anzahl der Aktien:");
 		JTextField txtAktienKaufen = new JTextField(5);
@@ -291,14 +293,12 @@ public class GUI extends JFrame implements ActionListener {
 		meinDepot.add(lblAktienKaufen);
 		meinDepot.add(txtAktienKaufen);
 		meinDepot.add(btnAktienKaufen);
-		
-		
-		
+
 		btnVerkaufen.addActionListener(this);
-		
+
 		meinDepot.add(btnAbmelden);
 		btnAbmelden.addActionListener(this);
-		
+
 		this.setContentPane(tabpane);
 		this.aktuellesPanel = meinDepot;
 		this.validate();
@@ -327,7 +327,7 @@ public class GUI extends JFrame implements ActionListener {
 		txtAktienWert = new JTextField(5);
 		btnAktieAnlegen = new JButton("Aktie anlegen");
 		JLabel lblDepotinhaberID = new JLabel("Depotinhaber ID:");
-		txtDepotihaberID = new JTextField(5);
+		txtDepotinhaberID = new JTextField(5);
 
 		panelBörsenmanager.add(lblAktienID);
 		panelBörsenmanager.add(txtAktienID);
@@ -343,7 +343,7 @@ public class GUI extends JFrame implements ActionListener {
 		panelBörsenmanager.add(lblDepotID);
 		panelBörsenmanager.add(txtDepotID);
 		panelBörsenmanager.add(lblDepotinhaberID);
-		panelBörsenmanager.add(txtDepotihaberID);
+		panelBörsenmanager.add(txtDepotinhaberID);
 		panelBörsenmanager.add(btnDepotAnlegen);
 		btnDepotAnlegen.addActionListener(this);
 
@@ -363,8 +363,6 @@ public class GUI extends JFrame implements ActionListener {
 		this.validate();
 
 	}
-	
-
 
 	/**
 	 * Description: Hier wird das Panel für den Aktienmarkt erstellt
@@ -381,7 +379,7 @@ public class GUI extends JFrame implements ActionListener {
 					"zu finden in Depot" };
 			tamodel.setColumnIdentifiers(newIdentifiers);
 			for (Aktie ak : liste) {
-				Integer[] rowData = { ak.getId(), ak.getWert(ak.getId()), ( ak).getAktiengesellschaft(ak.getId()),
+				Integer[] rowData = { ak.getId(), ak.getWert(ak.getId()), (ak).getAktiengesellschaft(ak.getId()),
 						ak.getDepotinhaber(ak.getId()), ak.getDepot(ak.getId()) };
 				tamodel.addRow(rowData);
 
