@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
@@ -59,7 +60,7 @@ public class GUI extends JFrame implements ActionListener {
 
 	JLabel label;
 
-	JRadioButton btnBoersenmanager,btnAktionaer,btnAktiengesellschaft;
+	JRadioButton btnBoersenmanager, btnAktionaer, btnAktiengesellschaft;
 
 	JPanel meinDepot;
 
@@ -244,7 +245,7 @@ public class GUI extends JFrame implements ActionListener {
 			} catch (Exception e) {// SQLException |
 				this.setErrorMessage(e);
 			}
-		}		 else if (ae.getSource() == this.btnDepotAnlegen) {
+		} else if (ae.getSource() == this.btnDepotAnlegen) {
 			int depotinhaberID = Integer.parseInt(txtDepotinhaberID.getText());
 			try {
 				bm.createDepot(stat, depotinhaberID);
@@ -254,11 +255,27 @@ public class GUI extends JFrame implements ActionListener {
 			}
 		} else if (ae.getSource() == btnAktieAnlegen) {
 //			bm.aktieAnlegen(stat,  txtAktienID.getText(), txtAktienWert.getText(), AktiengesellschaftsID, DepotinhaberID, depotID);
-		}else if (ae.getSource()== cbxAktienID) {
+		} else if (ae.getSource() == cbxAktienID) {
 			
+			
+			try {
+				ResultSet rs = stat
+						.executeQuery("SELECT Wert FROM Wertehistorie WHERE ID = " + cbxAktienID.getName() + ";");
+				ResultSet rs2 =  stat
+						.executeQuery("SELECT Datum FROM Wertehistorie WHERE ID = " + cbxAktienID.getName() + ";");
+				if (rs.next()) {
+					werteHistorie.addAll(rs.get);
+				}
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		}
 	}
+	
+	ArrayList<String> werteHistorie = new ArrayList<String>();
 
 	public int getComponentIndex(Component component) throws Exception {
 		if (component != null && component.getParent() != null) {
@@ -273,7 +290,7 @@ public class GUI extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Description: Hier wird das Interface fÃ¼r eine Aktiengesellschaft erstellt
+	 * Description: Hier wird das Interface für eine Aktiengesellschaft erstellt
 	 *
 	 */
 	private void createAktiengesellschaftFenster() {
@@ -373,6 +390,7 @@ public class GUI extends JFrame implements ActionListener {
 		}
 
 		cbxAktienID.addActionListener(this);
+
 	}
 
 	/**
