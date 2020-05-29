@@ -83,24 +83,44 @@ public class Datenbankmanager {
 		this.stat = stat;
 	}
 
-	public ArrayList<Integer> getAktienIDs() throws SQLException {
+	public ArrayList<Integer> getAktienIDs(AktuellerUser user) throws SQLException {
 
 		ArrayList<Integer> ids = new ArrayList<Integer>();
-		this.stat = ConnectionManager.ueberpruefeConnection(stat);
-		ResultSet rs = stat.executeQuery("SELECT ID FROM Aktie;");
-		while (rs.next()) {
-			ids.add(rs.getInt(1));
+		if (user.getUserArt().contentEquals("boersenmanager")) {
+			this.stat = ConnectionManager.ueberpruefeConnection(stat);
+			ResultSet rs = stat.executeQuery("SELECT ID FROM Aktie ;");
+			while (rs.next()) {
+				ids.add(rs.getInt(1));
+			}
+		} else {
+			this.stat = ConnectionManager.ueberpruefeConnection(stat);
+			ResultSet rs = stat
+					.executeQuery("SELECT ID FROM Aktie WHERE " + user.getUserArt() + "_ID = " + user.getId() + ";");
+			while (rs.next()) {
+				ids.add(rs.getInt(1));
+			}
 		}
 		return ids;
 	}
-	
-	public ArrayList<Integer> getDepotIDs() throws SQLException {
+
+	public ArrayList<Integer> getDepotIDs(AktuellerUser user) throws SQLException, IllegalArgumentException {
 
 		ArrayList<Integer> ids = new ArrayList<Integer>();
-		this.stat = ConnectionManager.ueberpruefeConnection(stat);
-		ResultSet rs = stat.executeQuery("SELECT ID FROM Depot;");
-		while (rs.next()) {
-			ids.add(rs.getInt(1));
+		if (user.getUserArt().contentEquals("aktiengesellschaft")) {
+			throw new IllegalArgumentException("Der User Aktiengesellschaft hat keinen Zugriff auf die Depots");
+		} else if (user.getUserArt().contentEquals("boersenmanager")) {
+			this.stat = ConnectionManager.ueberpruefeConnection(stat);
+			ResultSet rs = stat.executeQuery("SELECT ID FROM Depot;");
+			while (rs.next()) {
+				ids.add(rs.getInt(1));
+			}
+		} else {
+			this.stat = ConnectionManager.ueberpruefeConnection(stat);
+			ResultSet rs = stat
+					.executeQuery("SELECT ID FROM Depot WHERE " + user.getUserArt() + "_ID = " + user.getId() + ";");
+			while (rs.next()) {
+				ids.add(rs.getInt(1));
+			}
 		}
 		return ids;
 	}

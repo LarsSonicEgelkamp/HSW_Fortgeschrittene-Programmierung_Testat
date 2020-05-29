@@ -32,9 +32,9 @@ public class Boerse {
 	 *          Wert, Aktiengesellschaft ID, Depot ID und Depotinhaber ID.
 	 * @throws SQLException
 	 */
-	public ArrayList<Aktie> getAktienListe() throws SQLException {
+	public ArrayList<Aktie> getAktienListe(AktuellerUser user) throws SQLException {
 		ArrayList<Integer> aktienIDListe;
-		aktienIDListe = dm.getAktienIDs();
+		aktienIDListe = dm.getAktienIDs(user);
 		for (int id : aktienIDListe) {
 			Aktie tempAk = new Aktie(id, stat);
 			tempAk.setWert(tempAk.getWert(tempAk.getId()));
@@ -50,10 +50,10 @@ public class Boerse {
  * @return: Eine ArrayList mit Depots gefüllt, mit den Attributen ID und Inhaber ID.
  * @throws SQLException
  */
-	public ArrayList<Depot> getDepotListe() throws SQLException {
+	public ArrayList<Depot> getDepotListe(AktuellerUser user) throws SQLException {
 
 		ArrayList<Integer> depotIDListe;
-		depotIDListe = dm.getDepotIDs();
+		depotIDListe = dm.getDepotIDs(user);
 		for (int id : depotIDListe) {
 			Depot tempDe = new Depot(id, stat);
 			tempDe.setInhaber(tempDe.getInhaber(id));

@@ -40,6 +40,7 @@ import javax.swing.table.TableModel;
 
 import Filemanager.Serialisierung;
 import börsenprogramm.Aktie;
+import börsenprogramm.AktuellerUser;
 import börsenprogramm.Boerse;
 import börsenprogramm.Boersenmanager;
 import börsenprogramm.Depot;
@@ -64,6 +65,10 @@ public class GUI extends JFrame implements ActionListener {
 	Serialisierung s = new Serialisierung();
 
 	Statement stat;
+	
+	AktuellerUser aUser;
+	
+	
 
 	/**
 	 * 
@@ -167,6 +172,7 @@ public class GUI extends JFrame implements ActionListener {
 		if (ae.getSource() == this.btnAnmelden && btnBörsenmanager.isSelected() == true) {
 			try {
 				if (anmeldeIDPrüfen(txtAnmeldeID.getText(), "boersenmanager")) {
+					aUser = new AktuellerUser("boersenmanager", Integer.parseInt(txtAnmeldeID.getText()));
 					createBörsenmanagerFenster();
 				} else {
 					JOptionPane.showMessageDialog(null, "Die Anmelde-ID existiert nicht", "Börsenmanager",
@@ -180,6 +186,7 @@ public class GUI extends JFrame implements ActionListener {
 		} else if (ae.getSource() == this.btnAnmelden && btnAktionär.isSelected() == true) {
 			try {
 				if (anmeldeIDPrüfen(txtAnmeldeID.getText(), "aktionaer")) {
+					aUser = new AktuellerUser("depotinhaber", Integer.parseInt(txtAnmeldeID.getText()));
 					createAktionärFenster();
 				} else {
 					JOptionPane.showMessageDialog(null, "Die Anmelde-ID existiert nicht", "Aktionär",
@@ -192,6 +199,7 @@ public class GUI extends JFrame implements ActionListener {
 		} else if (ae.getSource() == this.btnAnmelden && btnAktiengesellschaft.isSelected() == true) {
 			try {
 				if (anmeldeIDPrüfen(txtAnmeldeID.getText(), "aktiengesellschaft")) {
+					aUser = new AktuellerUser("aktiengesellschaft", Integer.parseInt(txtAnmeldeID.getText()));
 					createAktiengesellschaftFenster();
 				} else {
 					JOptionPane.showMessageDialog(null, "Die Anmelde-ID existiert nicht", "Aktiengesellschaft",
@@ -342,7 +350,7 @@ public class GUI extends JFrame implements ActionListener {
 		Boerse b = new Boerse(stat);
 		DefaultTableModel tamodel = new DefaultTableModel();
 		try {
-			ArrayList<Aktie> liste = b.getAktienListe();
+			ArrayList<Aktie> liste = b.getAktienListe(aUser);
 
 			String[] newIdentifiers = { "ID", "Aktueller Wert", "Von Aktiengesellschaft", "Aktuell in Besitz von",
 					"zu finden in Depot" };
@@ -371,14 +379,14 @@ public class GUI extends JFrame implements ActionListener {
 		Boerse b = new Boerse(stat);
 		DefaultTableModel talmodel = new DefaultTableModel();
 		try {
-			ArrayList<Depot> liste = b.getDepotListe();
+			ArrayList<Depot> liste = b.getDepotListe(aUser);
 
 			String[] newIdentifiers = { "ID", "Aktuell in Besitz von" };
 			talmodel.setColumnIdentifiers(newIdentifiers);
 			for (Depot de : liste) {
 				Depotinhaber di = new Depotinhaber(de.getInhaber(de.getId()), stat);
 				String inhaberName = di.getName(di.getId());
-				String[] rowData = { ""+de.getId(), ""+de.getInhaber(de.getId())+" [ "+inhaberName+"]" };
+				String[] rowData = { "" + de.getId(), "" + de.getInhaber(de.getId()) + " [ " + inhaberName + "]" };
 				talmodel.addRow(rowData);
 
 			}
