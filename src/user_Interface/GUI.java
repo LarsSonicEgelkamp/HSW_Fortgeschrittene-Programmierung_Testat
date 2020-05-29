@@ -193,7 +193,7 @@ public class GUI extends JFrame implements ActionListener {
 			try {
 				if (anmeldeIDPruefen(txtAnmeldeID.getText(), "aktionaer")) {
 					aUser = new AktuellerUser("depotinhaber", Integer.parseInt(txtAnmeldeID.getText()));
-					createAktionärFenster();
+					createAktionaerFenster();
 				} else {
 					JOptionPane.showMessageDialog(null, "Die Anmelde-ID existiert nicht", "Aktionär",
 							JOptionPane.INFORMATION_MESSAGE);
@@ -300,7 +300,7 @@ public class GUI extends JFrame implements ActionListener {
 	JList<String> meineAktienList;
 	JButton btnVerkaufen;
 
-	private void createAktionärFenster() throws SQLException {
+	private void createAktionaerFenster() throws SQLException {
 		meinDepot = new JPanel();
 		btnVerkaufen = new JButton("Verkaufen");
 		DefaultComboBoxModel<Integer> comboBoxModel = new DefaultComboBoxModel<Integer>();
