@@ -1,5 +1,6 @@
 package user_Interface;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
@@ -10,8 +11,12 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -21,12 +26,23 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
+import javax.swing.UIManager;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
 import Filemanager.Serialisierung;
+import börsenprogramm.Aktie;
+import börsenprogramm.Boerse;
 import börsenprogramm.Boersenmanager;
+import börsenprogramm.Depot;
 import börsenprogramm.Depotinhaber;
 
 public class GUI extends JFrame implements ActionListener {
@@ -55,7 +71,6 @@ public class GUI extends JFrame implements ActionListener {
 	 * 
 	 */
 	public GUI(Statement stat) {
-
 		this.stat = stat;
 		createStartseite(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -99,7 +114,7 @@ public class GUI extends JFrame implements ActionListener {
 		this.setContentPane(content);
 
 	}
-	
+
 	/**
 	 * 
 	 * @param checkWord
@@ -275,6 +290,7 @@ public class GUI extends JFrame implements ActionListener {
 
 		tabpane.addTab("Börsenmanager", panelBörsenmanager);
 		tabpane.addTab("Aktien", createAktienPanel());
+		tabpane.addTab("Depots", createDepotPanel());
 
 		JLabel lblAktienName = new JLabel("Aktien Name:");
 		JLabel lblAktienWert = new JLabel("Aktien Wert:");
@@ -320,9 +336,64 @@ public class GUI extends JFrame implements ActionListener {
 	 *
 	 */
 	private JPanel createAktienPanel() {
-		// TODO Auto-generated method stub
 		JPanel aktien = new JPanel();
+		JButton btnAktielisteAktualisieren = new JButton("Jetzt Aktienliste aktualisieren");
+		btnAktielisteAktualisieren.addActionListener(this);
+		Boerse b = new Boerse(stat);
+		DefaultTableModel tamodel = new DefaultTableModel();
+		try {
+			ArrayList<Aktie> liste = b.getAktienListe();
 
+			String[] newIdentifiers = { "ID", "Aktueller Wert", "Von Aktiengesellschaft", "Aktuell in Besitz von",
+					"zu finden in Depot" };
+			tamodel.setColumnIdentifiers(newIdentifiers);
+			for (Aktie ak : liste) {
+				Integer[] rowData = { ak.getId(), ak.getWert(ak.getId()), ak.getAktiengesellschaft(ak.getId()),
+						ak.getDepotinhaber(ak.getId()), ak.getDepot(ak.getId()) };
+				tamodel.addRow(rowData);
+
+			}
+			JTable aktienListe = new JTable(tamodel);
+			JScrollPane sp = new JScrollPane(aktienListe);
+			aktien.add(sp);
+		} catch (SQLException e1) {
+			this.setErrorMessage("Fehler beim Erstellen der Aktienliste" + e1);
+		}
+
+		aktien.add(btnAktielisteAktualisieren);
 		return aktien;
+	}
+
+	private JPanel createDepotPanel() {
+		JPanel depots = new JPanel();
+		JButton btnDepotlisteAktualisieren = new JButton("Jetzt Depotliste aktualisieren");
+		btnDepotlisteAktualisieren.addActionListener(this);
+		Boerse b = new Boerse(stat);
+		DefaultTableModel talmodel = new DefaultTableModel();
+		try {
+			ArrayList<Depot> liste = b.getDepotListe();
+
+			String[] newIdentifiers = { "ID", "Aktuell in Besitz von" };
+			talmodel.setColumnIdentifiers(newIdentifiers);
+			for (Depot de : liste) {
+				Depotinhaber di = new Depotinhaber(de.getInhaber(de.getId()), stat);
+				String inhaberName = di.getName(di.getId());
+				String[] rowData = { ""+de.getId(), ""+de.getInhaber(de.getId())+" [ "+inhaberName+"]" };
+				talmodel.addRow(rowData);
+
+			}
+			JTable depotListe = new JTable(talmodel);
+			JScrollPane sp = new JScrollPane(depotListe);
+			depots.add(sp);
+		} catch (SQLException e1) {
+			this.setErrorMessage("Fehler beim Erstellen der Aktienliste" + e1);
+		}
+
+		depots.add(btnDepotlisteAktualisieren);
+		return depots;
+	}
+
+	public void setErrorMessage(String message) {
+		JOptionPane.showMessageDialog(null, message, "Fehlermeldung", JOptionPane.ERROR_MESSAGE);
 	}
 }
