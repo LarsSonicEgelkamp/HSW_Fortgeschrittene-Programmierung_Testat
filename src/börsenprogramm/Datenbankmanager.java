@@ -89,7 +89,18 @@ public class Datenbankmanager {
 		this.stat = ConnectionManager.ueberpruefeConnection(stat);
 		ResultSet rs = stat.executeQuery("SELECT ID FROM Aktie;");
 		while (rs.next()) {
-			ids.add(rs.getInt(rs.getRow()));
+			ids.add(rs.getInt(1));
+		}
+		return ids;
+	}
+	
+	public ArrayList<Integer> getDepotIDs() throws SQLException {
+
+		ArrayList<Integer> ids = new ArrayList<Integer>();
+		this.stat = ConnectionManager.ueberpruefeConnection(stat);
+		ResultSet rs = stat.executeQuery("SELECT ID FROM Depot;");
+		while (rs.next()) {
+			ids.add(rs.getInt(1));
 		}
 		return ids;
 	}
