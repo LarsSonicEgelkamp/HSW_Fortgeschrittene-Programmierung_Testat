@@ -32,28 +32,33 @@ public class Boerse {
 		Depot depot = new Depot(id, inhaberName);
 		this.depotListe.add(depot);
 	}
-	
-	public ArrayList<String> alleAktienLesen (Statement stat, Connection con) {
+
+	public ArrayList<String> alleAktienLesen(Statement stat, Connection con) {
 		ArrayList<String> alleAktien = new ArrayList<String>();
-		
+
 		try {
-			alleAktien.addAll( stat.executeQuery("SELECT ID FROM Aktie;"));
+			ResultSet alleAktienSQL = stat.executeQuery("SELECT ID FROM Aktie;");
+
+			for (int j = 0; alleAktienSQL.next(); j++) {
+				alleAktien.add(alleAktienSQL.getString(j));
+			}
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return alleAktien;
 	}
-	
-	public void abfragenAktienHistorie (Statement stat, Connection con, Aktie aktienID) throws SQLException {
-		
-		ResultSet aktienHistorie = stat.executeQuery("SELECT ID FROM Wertehistorie WHERE ID = " + aktienID.getId()+";");
-		
+
+	public void abfragenAktienHistorie(Statement stat, Connection con, Aktie aktienID) throws SQLException {
+
+		ResultSet aktienHistorie = stat
+				.executeQuery("SELECT ID FROM Wertehistorie WHERE ID = " + aktienID.getId() + ";");
+
 		if (aktienHistorie.next()) {
 			aktienListe.add(aktienID);
 		}
 	}
-	
 
 }
