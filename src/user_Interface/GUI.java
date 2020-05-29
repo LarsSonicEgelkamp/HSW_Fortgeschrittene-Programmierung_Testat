@@ -8,6 +8,7 @@ import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -21,6 +22,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -34,6 +36,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
+import Filemanager.CSV_Manager;
 import Filemanager.Serialisierung;
 
 import boersenprogramm.AktuellerUser;
@@ -59,7 +62,7 @@ public class GUI extends JFrame implements ActionListener {
 
 	JLabel label;
 
-	JRadioButton btnBoersenmanager,btnAktionaer,btnAktiengesellschaft;
+	JRadioButton btnBoersenmanager, btnAktionaer, btnAktiengesellschaft;
 
 	JPanel meinDepot;
 
@@ -244,7 +247,7 @@ public class GUI extends JFrame implements ActionListener {
 			} catch (Exception e) {// SQLException |
 				this.setErrorMessage(e);
 			}
-		}		 else if (ae.getSource() == this.btnDepotAnlegen) {
+		} else if (ae.getSource() == this.btnDepotAnlegen) {
 			int depotinhaberID = Integer.parseInt(txtDepotinhaberID.getText());
 			try {
 				bm.createDepot(stat, depotinhaberID);
@@ -254,9 +257,24 @@ public class GUI extends JFrame implements ActionListener {
 			}
 		} else if (ae.getSource() == btnAktieAnlegen) {
 //			bm.aktieAnlegen(stat,  txtAktienID.getText(), txtAktienWert.getText(), AktiengesellschaftsID, DepotinhaberID, depotID);
-		}else if (ae.getSource()== cbxAktienID) {
-			
+		} else if (ae.getSource() == cbxAktienID) {
 
+		} else if (ae.getSource() == this.orderEinreichen) {
+			try {
+			JFileChooser chooserOrderEinreichen = new JFileChooser();
+			chooserOrderEinreichen.setDialogTitle("Bitte wählen sie ihre Order aus.");
+			chooserOrderEinreichen.showOpenDialog(null);
+			File f = chooserOrderEinreichen.getSelectedFile();
+			this.orderEinreichen(f);
+			}catch(IOException e) {
+				this.setErrorMessage(e);
+			}
+		}else if(ae.getSource()==this.btnOrdersAusfuehren) {
+			try {
+				this.ordersAusfuehren();
+			} catch (IOException e) {
+				this.setErrorMessage(e);
+			}
 		}
 	}
 
@@ -299,12 +317,14 @@ public class GUI extends JFrame implements ActionListener {
 	JComboBox<Integer> depots;
 	JList<String> meineAktienList;
 	JButton btnVerkaufen;
+	JButton orderEinreichen;
 
 	private void createAktionaerFenster() throws SQLException {
 		meinDepot = new JPanel();
 		btnVerkaufen = new JButton("Verkaufen");
 		DefaultComboBoxModel<Integer> comboBoxModel = new DefaultComboBoxModel<Integer>();
 		DefaultListModel<String> listModel = new DefaultListModel<String>();
+		orderEinreichen = new JButton("Order einreichen");
 
 		Boerse b = new Boerse(stat);
 
@@ -348,8 +368,9 @@ public class GUI extends JFrame implements ActionListener {
 		meinDepot.add(txtAktienKaufen);
 		meinDepot.add(btnAktienKaufen);
 
+		orderEinreichen.addActionListener(this);
 		btnVerkaufen.addActionListener(this);
-
+		meinDepot.add(orderEinreichen);
 		meinDepot.add(btnAbmelden);
 		btnAbmelden.addActionListener(this);
 
@@ -376,11 +397,14 @@ public class GUI extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Description: Hier wird das Interface fÃ¼r den BÃ¶rsenmanger erstellt
+	 * Description: Hier wird das Interface fuer den Boersenmanger erstellt
 	 *
 	 */
+	JButton btnOrdersAusfuehren;
 	private void createBoersenmanagerFenster() {
 		JPanel panelBoersenmanager = new JPanel();
+		btnOrdersAusfuehren = new JButton("Alle Orders ausfuehren");
+		btnOrdersAusfuehren.addActionListener(this);
 
 		JTabbedPane tabpane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
 
@@ -423,6 +447,7 @@ public class GUI extends JFrame implements ActionListener {
 		panelBoersenmanager.add(lblOrders);
 		panelBoersenmanager.add(cbxOrders);
 		panelBoersenmanager.add(btnOrderAusfuehren);
+		panelBoersenmanager.add(btnOrdersAusfuehren);
 
 		panelBoersenmanager.add(btnAbmelden);
 		btnAbmelden.addActionListener(this);
@@ -566,4 +591,36 @@ public class GUI extends JFrame implements ActionListener {
 		return transaktionsP;
 
 	}
+
+	private void orderEinreichen(File order) throws IOException {
+		if(!this.orderPruefen(order)) {
+			throw new IOException("Falsches Dateiformat. Die Datei muss eine CSV-Datei sein.");
+		}
+		CSV_Manager csvmag= new CSV_Manager();
+		csvmag.neueOrderDatei(order);
+	}
+
+	/**
+	 * Überprüft, ob die eingereichte Datei das richtige Format hat.
+	 * 
+	 * @param order: Die eingereichte Datei.
+	 * @return: true, wenn das Dateiformat korrekt ist; false, wenn das DAteiformat
+	 *          falsch ist
+	 */
+	private boolean orderPruefen(File order) {
+		String[] splitOrder = order.getName().split("\\.");
+		int index = splitOrder.length-1;
+		if (splitOrder[index].contentEquals("csv")) {
+			return true;
+		}
+		return false;
+	}
+	
+	private void ordersAusfuehren() throws IOException {
+		CSV_Manager csvmag= new CSV_Manager();
+		csvmag.bearbeiteOrders();
+		
+	}
+	
+
 }
