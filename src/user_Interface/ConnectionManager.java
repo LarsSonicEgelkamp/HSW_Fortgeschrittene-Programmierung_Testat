@@ -34,7 +34,7 @@ public class ConnectionManager {
 	 * @param stat
 	 * @throws SQLException
 	 */
-	public static Statement connectionWiederherstellen(Statement stat) throws SQLException {
+	private static Statement connectionWiederherstellen(Statement stat) throws SQLException {
 		String databaseURL = "jdbc:mysql://localhost/boersendatenbank?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 		Connection con = DriverManager.getConnection(databaseURL, "user", "user");
 		stat = con.createStatement();
