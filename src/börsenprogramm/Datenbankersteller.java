@@ -20,6 +20,7 @@ public class Datenbankersteller {
 //			stat.execute("DROP TABLE Depot");
 //			stat.execute("DROP TABLE Aktie");
 //			stat.execute("DROP TABLE WerteHistorie");
+//			stat.execute("DROP TABLE Transaktion");
 
 			erstelleAktiengesellschafttabelle(stat, co);
 			erstelleBoersenmanagerTabelle(stat, co);
@@ -27,6 +28,7 @@ public class Datenbankersteller {
 			erstelleDepottabelle(stat, co);
 			erstelleAktienTabelle(stat, co);
 			erstelleWerteHistorieTabelle(stat, co);
+			erstelleTransaktionTabelle(stat,co);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -152,10 +154,33 @@ public class Datenbankersteller {
 			throw new SQLException(e.getMessage());
 		}
 	}
+	
+	public void erstelleTransaktionTabelle(Statement stat, Connection con) throws SQLException {
+		try {
+			if (this.pruefeExistenz(stat, con, "Transaktion") == false) {
+				String sqlBefehlTabelleErstellen = "CREATE TABLE "
+						+ "Transaktion ( ID INT, Aktie_ID INT, Verkaufswert INT, VerkaufsDepot_ID INT, AnkaufsDepot_ID INT, FOREIGN KEY (Aktie_ID) REFERENCES Aktie(ID), FOREIGN KEY (AnkaufsDepot_ID) REFERENCES Depot(ID), FOREIGN KEY (VerkaufsDepot_ID) REFERENCES Depot(ID)  , CONSTRAINT PK_Transaktion_ID PRIMARY KEY (ID));";
+				stat.execute(sqlBefehlTabelleErstellen);
+				stat.execute("INSERT INTO Transaktion(ID, Aktie_ID, Verkaufswert, VerkaufsDepot_ID, AnkaufsDepot_ID) VALUES\r\n" + 
+						"('50', '1', '5', '20', '21'),\r\n" + 
+						"('51', '1', '10', '21', '22'),\r\n" + 
+						"('52', '1', '15', '22', '20'),\r\n" + 
+						"('53', '1', '10', '20', '21'),						\r\n" + 
+						"('54', '2', '20', '23', '20'),\r\n" + 
+						"('55', '2', '30', '20', '24'),\r\n" + 
+						"('56', '2', '10', '24', '22'),\r\n" + 
+						"('57', '3', '50', '24', '22'),\r\n" + 
+						"('58', '3', '33', '22', '21'),\r\n" + 
+						"('59', '4', '45', '21', '20'),\r\n" + 
+						"('60', '5', '56', '20', '24'),\r\n" + 
+						"('61', '5', '23', '24', '23'),\r\n" + 
+						"('62', '6', '45', '21', '22'),\r\n" + 
+						"('63', '7', '65', '23', '24');");
 
-	// bin mir nicht sicher, ob das notwendig ist
-//	public void erstelleOrderTabelle() {
-//		
-//	}
+			}
+		} catch (SQLException e) {
+			throw new SQLException(e.getMessage());
+		}
+	}
 
 }

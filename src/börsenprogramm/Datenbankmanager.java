@@ -56,4 +56,36 @@ public class Datenbankmanager {
 		}
 		return ids;
 	}
+
+	public ArrayList<Integer> getTransaktionsListe(AktuellerUser user) throws SQLException, IllegalArgumentException {
+
+		ArrayList<Integer> ids = new ArrayList<Integer>();
+		if (user.getUserArt().contentEquals("aktiengesellschaft")) {
+			ArrayList<Integer> aktienIDs = this.getAktienIDs(user);
+			for (int id : aktienIDs) {
+				this.stat = ConnectionManager.ueberpruefeConnection(stat);
+				ResultSet rs = stat.executeQuery("SELECT ID FROM Transaktion WHERE Aktien_ID = " + id + ";");
+				while (rs.next()) {
+					ids.add(rs.getInt(1));
+				}
+			}
+		} else if (user.getUserArt().contentEquals("boersenmanager")) {
+			this.stat = ConnectionManager.ueberpruefeConnection(stat);
+			ResultSet rs = stat.executeQuery("SELECT ID FROM Depot;");
+			while (rs.next()) {
+				ids.add(rs.getInt(1));
+			}
+		} else {
+			ArrayList<Integer> depotIDs = this.getDepotIDs(user);
+			for (int id : depotIDs) {
+				this.stat = ConnectionManager.ueberpruefeConnection(stat);
+				ResultSet rs = stat.executeQuery("SELECT ID FROM Transaktion WHERE VerkaufsDepot_ID = " + id
+						+ " XOR AnkaufsDepot_ID =" + id + ";");
+				while (rs.next()) {
+					ids.add(rs.getInt(1));
+				}
+			}
+		}
+		return ids;
+	}
 }

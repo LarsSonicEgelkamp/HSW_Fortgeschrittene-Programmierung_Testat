@@ -18,6 +18,7 @@ public class Boerse {
 
 	private ArrayList<Aktie> aktienListe = new ArrayList<Aktie>();
 	private ArrayList<Depot> depotListe = new ArrayList<Depot>();
+	private ArrayList<Transaktion> transaktionsListe = new ArrayList<Transaktion>();
 	private Statement stat;
 	private Datenbankmanager dm;
 
@@ -60,6 +61,20 @@ public class Boerse {
 			depotListe.add(tempDe);
 		}
 		return depotListe;
+	}
+	
+	public ArrayList<Transaktion> getTransaktionsListe(AktuellerUser user) throws SQLException {
+		ArrayList<Integer> transaktionsIDListe;
+		transaktionsIDListe = dm.getTransaktionsListe(user);
+		for (int id : transaktionsIDListe) {
+			Transaktion tempTa = new Transaktion(id, stat);
+			tempTa.setAktienID(tempTa.getAktienID(id));
+			tempTa.setVerkaufswert(tempTa.getVerkaufswert(id));
+			tempTa.setVerkaufsDepotID(tempTa.getVerkaufsDepotID(id));
+			tempTa.setAnkaufsDepotID(tempTa.getAnkaufsDepotID(id));
+			transaktionsListe.add(tempTa);
+		}
+		return transaktionsListe;
 	}
 
 	public void neueAktie(int id, int wert) throws SQLException {
