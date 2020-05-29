@@ -48,6 +48,7 @@ import börsenprogramm.Boerse;
 import börsenprogramm.Boersenmanager;
 import börsenprogramm.Depot;
 import börsenprogramm.Depotinhaber;
+import börsenprogramm.Transaktion;
 
 public class GUI extends JFrame implements ActionListener {
 
@@ -224,7 +225,7 @@ public class GUI extends JFrame implements ActionListener {
 			try {
 				DefaultListModel<String> listModel = new DefaultListModel<String>();
 
-				int index=this.getComponentIndex(meineAktienList);
+				int index = this.getComponentIndex(meineAktienList);
 				this.meinDepot.remove(meineAktienList);
 				Boerse b = new Boerse(stat);
 				ArrayList<Aktie> akList = b.getAktienListe(aUser);
@@ -242,7 +243,7 @@ public class GUI extends JFrame implements ActionListener {
 				this.revalidate();
 				this.repaint();
 
-			} catch (Exception e) {//SQLException |
+			} catch (Exception e) {// SQLException |
 				this.setErrorMessage(e);
 			}
 		}
@@ -270,6 +271,7 @@ public class GUI extends JFrame implements ActionListener {
 
 		tabpane.addTab("Aktien Gesellschaft", aktiengesellschaftPanel);
 		tabpane.addTab("Aktien", createAktienPanel());
+		tabpane.addTab("Alle Transaktionen unserer Aktien", createTransaktionPanel());
 
 		aktiengesellschaftPanel.add(btnAbmelden);
 
@@ -316,6 +318,7 @@ public class GUI extends JFrame implements ActionListener {
 		tabpane.addTab("mein Depot", meinDepot);
 		tabpane.addTab("Aktien", createAktienPanel());
 		tabpane.addTab("Depots", createDepotPanel());
+		tabpane.addTab("Meine Transaktionen", createTransaktionPanel());
 
 		meinDepot.add(btnVerkaufen);
 		meinDepot.add(btnAbmelden);
@@ -347,6 +350,7 @@ public class GUI extends JFrame implements ActionListener {
 		tabpane.addTab("Börsenmanager", panelBörsenmanager);
 		tabpane.addTab("Aktien", createAktienPanel());
 		tabpane.addTab("Depots", createDepotPanel());
+		tabpane.addTab("Alle Transaktionen", createTransaktionPanel());
 
 		JLabel lblAktienName = new JLabel("Aktien Name:");
 		JLabel lblAktienWert = new JLabel("Aktien Wert:");
@@ -411,7 +415,7 @@ public class GUI extends JFrame implements ActionListener {
 			JScrollPane sp = new JScrollPane(aktienListe);
 			aktien.add(sp);
 		} catch (SQLException e1) {
-			this.setErrorMessage("Fehler beim Erstellen der Aktienliste" + e1);
+			this.setErrorMessage(e1);
 		}
 		this.validate();
 		return aktien;
@@ -437,7 +441,7 @@ public class GUI extends JFrame implements ActionListener {
 			JScrollPane sp = new JScrollPane(depotListe);
 			depots.add(sp);
 		} catch (SQLException e1) {
-			this.setErrorMessage("Fehler beim Erstellen der Aktienliste" + e1);
+			this.setErrorMessage(e1);
 		}
 		this.validate();
 		return depots;
@@ -479,5 +483,45 @@ public class GUI extends JFrame implements ActionListener {
 				return c;
 			}
 		};
+	}
+
+	JPanel transaktionsP;
+
+	private JPanel createTransaktionPanel() {
+		transaktionsP = new JPanel();
+		Boerse b = new Boerse(stat);
+		DefaultTableModel tamodel = new DefaultTableModel();
+		try {
+			ArrayList<Transaktion> liste = b.getTransaktionsListe(aUser);
+			if (aUser.getUserArt().contentEquals("aktiengesellschaft")) {
+				String[] newIdentifiers = { " Transaktions ID", "Aktien ID", "Verkaufswert" };
+				tamodel.setColumnIdentifiers(newIdentifiers);
+				for (Transaktion ta : liste) {
+					Integer[] rowData = { ta.getTransaktionsID(), ta.getAktienID(ta.getTransaktionsID()),
+							ta.getVerkaufswert(ta.getTransaktionsID()) };
+					tamodel.addRow(rowData);
+
+				}
+			} else {
+				String[] newIdentifiers = { " Transaktions ID", "Aktien ID", "Verkaufswert", "Verkaufsdepot",
+						"Ankaufsdepot" };
+				tamodel.setColumnIdentifiers(newIdentifiers);
+				for (Transaktion ta : liste) {
+					Integer[] rowData = { ta.getTransaktionsID(), ta.getAktienID(ta.getTransaktionsID()),
+							ta.getVerkaufswert(ta.getTransaktionsID()), ta.getVerkaufsDepotID(ta.getTransaktionsID()),
+							ta.getAnkaufsDepotID(ta.getTransaktionsID()) };
+					tamodel.addRow(rowData);
+
+				}
+			}
+			JTable aktienListe = new JTable(tamodel);
+			JScrollPane sp = new JScrollPane(aktienListe);
+			transaktionsP.add(sp);
+		} catch (SQLException e1) {
+			this.setErrorMessage(e1);
+		}
+		this.validate();
+		return transaktionsP;
+
 	}
 }

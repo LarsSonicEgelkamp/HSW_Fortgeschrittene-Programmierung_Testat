@@ -47,7 +47,7 @@ public class Aktie {
 		this.stat = ConnectionManager.ueberpruefeConnection(stat);
 		ResultSet rs = stat.executeQuery("SELECT aktuellerWert FROM Aktie WHERE ID = " + id + ";");
 		if (rs.next()) {
-			return rs.getInt(rs.getRow());
+			return rs.getInt(1);
 		}
 		return 000;// Errorcode
 	}
@@ -69,7 +69,7 @@ public class Aktie {
 		this.stat = ConnectionManager.ueberpruefeConnection(stat);
 		ResultSet rs = stat.executeQuery("SELECT Depotinhaber_ID FROM Aktie WHERE ID = " + id + ";");
 		if (rs.next()) {
-			return rs.getInt(rs.getRow());
+			return rs.getInt(1);
 		}
 		return 000;// Errorcode
 	}
@@ -82,7 +82,7 @@ public class Aktie {
 		this.stat = ConnectionManager.ueberpruefeConnection(stat);
 		ResultSet rs = stat.executeQuery("SELECT Aktiengesellschaft_ID FROM Aktie WHERE ID = " + id + ";");
 		if (rs.next()) {
-			return rs.getInt(rs.getRow());
+			return rs.getInt(1);
 		}
 		return 000;// Errorcode
 	}
@@ -95,7 +95,7 @@ public class Aktie {
 		this.stat = ConnectionManager.ueberpruefeConnection(stat);
 		ResultSet rs = stat.executeQuery("SELECT Depot_ID FROM Aktie WHERE ID = " + id + ";");
 		if (rs.next()) {
-			return rs.getInt(rs.getRow());
+			return rs.getInt(1);
 		}
 		return 000;// Errorcode
 	}
@@ -103,14 +103,4 @@ public class Aktie {
 	public void setDepot(int depot) {
 		this.depot = depot;
 	}
-
-//	public Aktie getAktie(int id) throws SQLException {
-//		Aktie tempAk = new Aktie(id);
-//		tempAk.setWert(tempAk.getWert(id));
-//		tempAk.setAktiengesellschaft(tempAk.getAktiengesellschaft(id));
-//		tempAk.setDepot(tempAk.getDepot(id));
-//		tempAk.setDepotinhaber(tempAk.getDepotinhaber(id));
-//		return tempAk;
-//	}
-
 }
