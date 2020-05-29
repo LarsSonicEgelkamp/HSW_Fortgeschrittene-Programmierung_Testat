@@ -12,31 +12,47 @@ public class Boerse {
 
 	private ArrayList<Aktie> aktienListe = new ArrayList<Aktie>();
 	private ArrayList<Depot> depotListe = new ArrayList<Depot>();
-	Statement stat;
+	private Statement stat;
+	private Datenbankmanager dm;
 
 	public Boerse(Statement stat) {
 		this.stat = stat;
+		dm = new Datenbankmanager(stat);
 	}
 
+	/**
+	 * 
+	 * @return: Eine ArrayList mit Aktien gefüllt, mit den Attributen ID, aktueller
+	 *          Wert, Aktiengesellschaft ID, Depot ID und Depotinhaber ID.
+	 * @throws SQLException
+	 */
 	public ArrayList<Aktie> getAktienListe() throws SQLException {
-		this.stat = ConnectionManager.ueberpruefeConnection(stat);
-		ResultSet alleAktienIDs = stat.executeQuery("SELECT ID FROM Aktie;");
-		Aktie tempAk;
-		while (alleAktienIDs.next()) {
-			int id = alleAktienIDs.getInt(1);
-			tempAk = new Aktie(id);
+		ArrayList<Integer> aktienIDListe;
+		aktienIDListe = dm.getAktienIDs();
+		for (int id : aktienIDListe) {
+			Aktie tempAk = new Aktie(id, stat);
+			tempAk.setWert(tempAk.getWert(tempAk.getId()));
+			tempAk.setAktiengesellschaft(tempAk.getAktiengesellschaft(tempAk.getId()));
+			tempAk.setDepot(tempAk.getDepot(tempAk.getId()));
+			tempAk.setDepotinhaber(tempAk.getDepotinhaber(tempAk.getId()));
 			aktienListe.add(tempAk);
-		}
-		for (Aktie ak : aktienListe) {
-			ak.setWert(ak.getWert(ak.getId(), stat));
-			ak.setAktiengesellschaft(ak.getAktiengesellschaft(ak.getId(), stat));
-			ak.setDepot(ak.getDepot(ak.getId(), stat));
-			ak.setDepotinhaber(ak.getDepotinhaber(ak.getId(), stat));
 		}
 		return aktienListe;
 	}
+/**
+ * 
+ * @return: Eine ArrayList mit Depots gefüllt, mit den Attributen ID und Inhaber ID.
+ * @throws SQLException
+ */
+	public ArrayList<Depot> getDepotListe() throws SQLException {
 
-	public ArrayList<Depot> getDepotListe() {
+		ArrayList<Integer> depotIDListe;
+		depotIDListe = dm.getDepotIDs();
+		for (int id : depotIDListe) {
+			Depot tempDe = new Depot(id, stat);
+			tempDe.setInhaber(tempDe.getInhaber(id));
+			depotListe.add(tempDe);
+		}
 		return depotListe;
 	}
 
@@ -54,8 +70,8 @@ public class Boerse {
 		}
 	}
 
-	public void neuesDepot(int id, String inhaberName) {
-		Depot depot = new Depot(id, inhaberName);
+	public void neuesDepot(int id, int inhaberName) {
+		Depot depot = new Depot(id, inhaberName, stat);
 		this.depotListe.add(depot);
 	}
 }

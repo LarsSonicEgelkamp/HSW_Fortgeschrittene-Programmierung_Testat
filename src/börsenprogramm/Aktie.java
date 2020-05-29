@@ -34,15 +34,16 @@ public class Aktie {
 		this.aktiengesellschaft = aktiengesellschaft;
 	}
 
-	public Aktie(int id) {
+	public Aktie(int id, Statement stat) {
 		this.id = id;
+		this.stat = stat;
 	}
 
 	public Integer getId() {
 		return id;
 	}
 
-	public int getWert(int id, Statement stat) throws SQLException {
+	public int getWert(int id) throws SQLException {
 		this.stat = ConnectionManager.ueberpruefeConnection(stat);
 		ResultSet rs = stat.executeQuery("SELECT aktuellerWert FROM Aktie WHERE ID = " + id + ";");
 		if (rs.next()) {
@@ -64,7 +65,7 @@ public class Aktie {
 		this.aktWert = wert;
 	}
 
-	public int getDepotinhaber(int id, Statement stat) throws SQLException {
+	public int getDepotinhaber(int id) throws SQLException {
 		this.stat = ConnectionManager.ueberpruefeConnection(stat);
 		ResultSet rs = stat.executeQuery("SELECT Depotinhaber_ID FROM Aktie WHERE ID = " + id + ";");
 		if (rs.next()) {
@@ -77,7 +78,7 @@ public class Aktie {
 		this.depotinhaber = depotinhaber;
 	}
 
-	public int getAktiengesellschaft(int id, Statement stat) throws SQLException {
+	public int getAktiengesellschaft(int id) throws SQLException {
 		this.stat = ConnectionManager.ueberpruefeConnection(stat);
 		ResultSet rs = stat.executeQuery("SELECT Aktiengesellschaft_ID FROM Aktie WHERE ID = " + id + ";");
 		if (rs.next()) {
@@ -90,7 +91,7 @@ public class Aktie {
 		this.aktiengesellschaft = aktiengesellschaft;
 	}
 
-	public int getDepot(int id, Statement stat) throws SQLException {
+	public int getDepot(int id) throws SQLException {
 		this.stat = ConnectionManager.ueberpruefeConnection(stat);
 		ResultSet rs = stat.executeQuery("SELECT Depot_ID FROM Aktie WHERE ID = " + id + ";");
 		if (rs.next()) {
