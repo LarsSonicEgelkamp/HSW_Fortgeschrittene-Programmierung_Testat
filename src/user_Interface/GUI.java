@@ -58,7 +58,7 @@ public class GUI extends JFrame implements ActionListener {
 
 	JRadioButton btnBörsenmanager, btnAktionär, btnAktiengesellschaft;
 
-	JButton btnAnmelden, btnRegestrieren;
+	JButton btnAnmelden;
 	JButton btnAbmelden = new JButton("Abmelden");
 
 	JTextField txtAnmeldeID;
@@ -106,17 +106,14 @@ public class GUI extends JFrame implements ActionListener {
 		txtAnmeldeID = new JTextField("Hier bitte ihre ID eintragen");
 
 		btnAnmelden = new JButton("Anmelden");
-		btnRegestrieren = new JButton("Regestrieren");
 
 		content.add(btnBörsenmanager);
 		content.add(btnAktionär);
 		content.add(btnAktiengesellschaft);
 		content.add(txtAnmeldeID);
-		content.add(btnRegestrieren);
 		content.add(btnAnmelden);
 
 		btnAnmelden.addActionListener(this);
-		btnRegestrieren.addActionListener(this);
 
 		this.setContentPane(content);
 
@@ -208,12 +205,6 @@ public class GUI extends JFrame implements ActionListener {
 			} catch (HeadlessException | ClassNotFoundException | IOException | SQLException e) {
 				this.setErrorMessage(e);
 			}
-		} else if (ae.getSource() == this.btnRegestrieren) {
-			try {
-				s.serialize(txtAnmeldeID.getText(), txtAnmeldeID.getText());
-			} catch (IOException e) {
-				this.setErrorMessage(e);
-			}
 		} else if (ae.getSource() == this.btnAbmelden) {
 			this.createStartseite(this);
 			this.validate();
@@ -284,7 +275,7 @@ public class GUI extends JFrame implements ActionListener {
 		tabpane.addTab("Depots", createDepotPanel());
 
 		meinDepot.add(btnVerkaufen);
-		meinDepot.add(btnAbmelden);
+		
 
 		JComboBox cbxAlleAktien = new JComboBox();
 		JLabel lblAktienKaufen = new JLabel("Anzahl der Aktien:");
@@ -297,7 +288,10 @@ public class GUI extends JFrame implements ActionListener {
 		meinDepot.add(btnAktienKaufen);
 
 		btnVerkaufen.addActionListener(this);
-
+		
+		meinDepot.add(btnAbmelden);
+		btnAbmelden.addActionListener(this);
+		
 		this.setContentPane(tabpane);
 		this.aktuellesPanel = meinDepot;
 		this.validate();
@@ -320,25 +314,30 @@ public class GUI extends JFrame implements ActionListener {
 		tabpane.addTab("Aktien", createAktienPanel());
 		tabpane.addTab("Depots", createDepotPanel());
 
-		JLabel lblAktienName = new JLabel("Aktien Name:");
+		JLabel lblAktienID = new JLabel("Aktien ID:");
 		JLabel lblAktienWert = new JLabel("Aktien Wert:");
-		JTextField txtAktienName = new JTextField(5);
+		JTextField txtAktienID = new JTextField(5);
 		JTextField txtAktienWert = new JTextField(5);
 		JButton btnAktieAnlegen = new JButton("Aktie anlegen");
+		JLabel lblDepotinhaberID = new JLabel("Depotinhaber ID:");
+		JTextField txtDepotihaberID = new JTextField(5);
 
-		panelBörsenmanager.add(lblAktienName);
-		panelBörsenmanager.add(txtAktienName);
+		panelBörsenmanager.add(lblAktienID);
+		panelBörsenmanager.add(txtAktienID);
 		panelBörsenmanager.add(lblAktienWert);
 		panelBörsenmanager.add(txtAktienWert);
 		panelBörsenmanager.add(btnAktieAnlegen);
 		btnAktieAnlegen.addActionListener(this);
 
-		JLabel lblDepotName = new JLabel("Depot Name:");
-		JTextField txtDepotName = new JTextField(5);
+		JLabel lblDepotID = new JLabel("Depot ID:");
+		JTextField txtDepotID = new JTextField(5);
 		JButton btnDepotAnlegen = new JButton("Depot anlegen");
 
-		panelBörsenmanager.add(lblDepotName);
-		panelBörsenmanager.add(txtDepotName);
+		panelBörsenmanager.add(lblDepotID);
+		panelBörsenmanager.add(txtDepotID);
+		panelBörsenmanager.add(lblDepotinhaberID);
+		panelBörsenmanager.add(txtDepotihaberID);
+		//Depotinhabertxt
 		panelBörsenmanager.add(btnDepotAnlegen);
 		btnDepotAnlegen.addActionListener(this);
 
@@ -374,7 +373,7 @@ public class GUI extends JFrame implements ActionListener {
 					"zu finden in Depot" };
 			tamodel.setColumnIdentifiers(newIdentifiers);
 			for (Aktie ak : liste) {
-				Integer[] rowData = { ak.getId(), ak.getWert(ak.getId()), ak.getAktiengesellschaft(ak.getId()),
+				Integer[] rowData = { ak.getId(), ak.getWert(ak.getId()), ( ak).getAktiengesellschaft(ak.getId()),
 						ak.getDepotinhaber(ak.getId()), ak.getDepot(ak.getId()) };
 				tamodel.addRow(rowData);
 
