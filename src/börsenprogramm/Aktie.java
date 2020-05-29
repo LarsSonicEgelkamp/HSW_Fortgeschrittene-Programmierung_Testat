@@ -39,7 +39,7 @@ public class Aktie {
 		this.stat = stat;
 	}
 
-	public Integer getId() {
+	public int getId() {
 		return id;
 	}
 
@@ -103,6 +103,8 @@ public class Aktie {
 	public void setDepot(int depot) {
 		this.depot = depot;
 	}
+
+
 
 //	public Aktie getAktie(int id) throws SQLException {
 //		Aktie tempAk = new Aktie(id);

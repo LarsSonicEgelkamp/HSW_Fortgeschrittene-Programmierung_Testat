@@ -1,4 +1,4 @@
-package bÃ¶rsenprogramm;
+package börsenprogramm;
 
 
 
@@ -81,7 +81,7 @@ public class Boerse {
 		this.depotListe.add(depot);
 	}
 
-	public ArrayList<String> alleAktienLesen(Statement stat, Connection con) {
+	public ArrayList<String> alleAktienLesen(Statement stat) {
 		ArrayList<String> alleAktien = new ArrayList<String>();
 
 		try {
@@ -99,7 +99,7 @@ public class Boerse {
 		return alleAktien;
 	}
 
-	public void abfragenAktienHistorie(Statement stat, Connection con, Aktie aktienID) throws SQLException {
+	public void abfragenAktienHistorie(Statement stat, Aktie aktienID) throws SQLException {
 
 		ResultSet aktienHistorie = stat
 				.executeQuery("SELECT ID FROM Wertehistorie WHERE ID = " + aktienID.getId() + ";");

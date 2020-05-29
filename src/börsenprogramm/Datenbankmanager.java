@@ -1,4 +1,4 @@
-package bÃ¶rsenprogramm;
+package börsenprogramm;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -53,4 +53,6 @@ public class Depotinhaber {
 	public void verkaufsVerlauf() {
 		
 	}
+	
+	
 }
