@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -62,13 +63,14 @@ public class GUI extends JFrame implements ActionListener {
 
 	JTextField txtAnmeldeID;
 
+	JComboBox<Integer> depots;
+
 	Serialisierung s = new Serialisierung();
 
 	Statement stat;
-	
+
 	AktuellerUser aUser;
-	
-	
+	JPanel aktuellesPanel;
 
 	/**
 	 * 
@@ -179,8 +181,7 @@ public class GUI extends JFrame implements ActionListener {
 							JOptionPane.INFORMATION_MESSAGE);
 				}
 			} catch (HeadlessException | ClassNotFoundException | IOException | SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				this.setErrorMessage(e);
 			}
 
 		} else if (ae.getSource() == this.btnAnmelden && btnAktionär.isSelected() == true) {
@@ -193,8 +194,7 @@ public class GUI extends JFrame implements ActionListener {
 							JOptionPane.INFORMATION_MESSAGE);
 				}
 			} catch (HeadlessException | ClassNotFoundException | IOException | SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				this.setErrorMessage(e);
 			}
 		} else if (ae.getSource() == this.btnAnmelden && btnAktiengesellschaft.isSelected() == true) {
 			try {
@@ -206,21 +206,21 @@ public class GUI extends JFrame implements ActionListener {
 							JOptionPane.INFORMATION_MESSAGE);
 				}
 			} catch (HeadlessException | ClassNotFoundException | IOException | SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				this.setErrorMessage(e);
 			}
 		} else if (ae.getSource() == this.btnRegestrieren) {
 			try {
 				s.serialize(txtAnmeldeID.getText(), txtAnmeldeID.getText());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				this.setErrorMessage(e);
 			}
 		} else if (ae.getSource() == this.btnAbmelden) {
 			this.createStartseite(this);
 			this.validate();
 		} else if (ae.getSource() == this.btnVerkaufen) {
 			System.out.println("verkaufen");
+		} else if (ae.getSource() == this.depots) {
+			JPanel tempPanel = this.getAktuellesPanel();
 		}
 	}
 
@@ -249,24 +249,39 @@ public class GUI extends JFrame implements ActionListener {
 
 	JButton btnVerkaufen;
 
-	private void createAktionärFenster() {
+	private void createAktionärFenster() throws SQLException {
 		JPanel meinDepot = new JPanel();
-		JComboBox depots = new JComboBox();
 		btnVerkaufen = new JButton("Verkaufen");
-		JList<String> meineAktienList = new JList<String>();
+		DefaultComboBoxModel<Integer> comboBoxModel = new DefaultComboBoxModel<Integer>();
+		DefaultListModel<String> listModel = new DefaultListModel<String>();
 
-		// TO DO: Hier muss die Combobox noch befüllt werden
-		for (Integer meineDepot : Depotinhaber.getMeineDepots()) {
-			depots.add(meinDepot);
+		Boerse b = new Boerse(stat);
+
+		for (Depot de : b.getDepotListe(aUser)) {
+			comboBoxModel.addElement(de.getId());
 		}
+		depots = new JComboBox<Integer>(comboBoxModel);
+		depots.addActionListener(this);
+
+		ArrayList<Aktie> akList = b.getAktienListe(aUser);
+		for (Aktie a : akList) {
+			int aktuellesDepot = a.getDepot(a.getId());
+			int gewaehltesDe = (Integer) depots.getSelectedItem();
+			if (gewaehltesDe == aktuellesDepot) {
+				listModel.addElement("ID: " + a.getId() + " Wert:" + a.getWert(a.getId()));
+			}
+		}
+		JList<String> meineAktienList = new JList<String>(listModel);
 
 		meinDepot.add(depots);
 		meinDepot.add(meineAktienList);
+
 		// TODO: Die Jlist muss noch befüllt werden
 
 		JTabbedPane tabpane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
 		tabpane.addTab("mein Depot", meinDepot);
 		tabpane.addTab("Aktien", createAktienPanel());
+		tabpane.addTab("Depots", createDepotPanel());
 
 		meinDepot.add(btnVerkaufen);
 		meinDepot.add(btnAbmelden);
@@ -284,7 +299,12 @@ public class GUI extends JFrame implements ActionListener {
 		btnVerkaufen.addActionListener(this);
 
 		this.setContentPane(tabpane);
+		this.aktuellesPanel = meinDepot;
 		this.validate();
+	}
+
+	public JPanel getAktuellesPanel() {
+		return this.aktuellesPanel;
 	}
 
 	/**
@@ -345,8 +365,6 @@ public class GUI extends JFrame implements ActionListener {
 	 */
 	private JPanel createAktienPanel() {
 		JPanel aktien = new JPanel();
-		JButton btnAktielisteAktualisieren = new JButton("Jetzt Aktienliste aktualisieren");
-		btnAktielisteAktualisieren.addActionListener(this);
 		Boerse b = new Boerse(stat);
 		DefaultTableModel tamodel = new DefaultTableModel();
 		try {
@@ -367,15 +385,12 @@ public class GUI extends JFrame implements ActionListener {
 		} catch (SQLException e1) {
 			this.setErrorMessage("Fehler beim Erstellen der Aktienliste" + e1);
 		}
-
-		aktien.add(btnAktielisteAktualisieren);
+		this.validate();
 		return aktien;
 	}
 
 	private JPanel createDepotPanel() {
 		JPanel depots = new JPanel();
-		JButton btnDepotlisteAktualisieren = new JButton("Jetzt Depotliste aktualisieren");
-		btnDepotlisteAktualisieren.addActionListener(this);
 		Boerse b = new Boerse(stat);
 		DefaultTableModel talmodel = new DefaultTableModel();
 		try {
@@ -396,12 +411,45 @@ public class GUI extends JFrame implements ActionListener {
 		} catch (SQLException e1) {
 			this.setErrorMessage("Fehler beim Erstellen der Aktienliste" + e1);
 		}
-
-		depots.add(btnDepotlisteAktualisieren);
+		this.validate();
 		return depots;
 	}
 
 	public void setErrorMessage(String message) {
 		JOptionPane.showMessageDialog(null, message, "Fehlermeldung", JOptionPane.ERROR_MESSAGE);
+	}
+
+	public void setErrorMessage(Exception e) {
+		e.printStackTrace();
+		JOptionPane.showMessageDialog(null, e.getMessage(), "Fehlermeldung", JOptionPane.ERROR_MESSAGE);
+	}
+
+	private DefaultListCellRenderer createAktienListRenderer() {
+		return new DefaultListCellRenderer() {
+			private Color background = new Color(0, 100, 255, 15);
+			private Color defaultBackground = (Color) UIManager.get("List.background");
+
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+				Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				if (c instanceof JLabel) {
+					JLabel label = (JLabel) c;
+					Aktie ak = (Aktie) value;
+					try {
+						label.setText(String.format(" %s            %s            %s            %s            %s",
+								ak.getId(), ak.getWert(ak.getId()), ak.getAktiengesellschaft(ak.getId()),
+								ak.getDepotinhaber(ak.getId()), ak.getDepot(ak.getId())));
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					if (!isSelected) {
+						label.setBackground(index % 2 == 0 ? background : defaultBackground);
+					}
+				}
+				return c;
+			}
+		};
 	}
 }
