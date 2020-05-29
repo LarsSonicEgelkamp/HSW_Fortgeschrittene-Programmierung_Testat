@@ -99,7 +99,7 @@ public class Boerse {
 		return alleAktien;
 	}
 
-	public void abfragenAktienHistorie(Statement stat, Connection con, Aktie aktienID) throws SQLException {
+	public void abfragenAktienHistorie(Statement stat, Aktie aktienID) throws SQLException {
 
 		ResultSet aktienHistorie = stat
 				.executeQuery("SELECT ID FROM Wertehistorie WHERE ID = " + aktienID.getId() + ";");
