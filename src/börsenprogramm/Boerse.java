@@ -81,7 +81,7 @@ public class Boerse {
 		this.depotListe.add(depot);
 	}
 
-	public ArrayList<String> alleAktienLesen(Statement stat, Connection con) {
+	public ArrayList<String> alleAktienLesen(Statement stat) {
 		ArrayList<String> alleAktien = new ArrayList<String>();
 
 		try {

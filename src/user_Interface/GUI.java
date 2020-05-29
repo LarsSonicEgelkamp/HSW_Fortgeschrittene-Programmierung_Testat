@@ -220,6 +220,8 @@ public class GUI extends JFrame implements ActionListener {
 			}
 		} else if (ae.getSource() == btnAktieAnlegen) {
 //			bm.aktieAnlegen(stat,  txtAktienID.getText(), txtAktienWert.getText(), AktiengesellschaftsID, DepotinhaberID, depotID);
+		}else if (ae.getSource()== cbxAktienID) {
+			
 		}
 	}
 
@@ -281,6 +283,7 @@ public class GUI extends JFrame implements ActionListener {
 		tabpane.addTab("mein Depot", meinDepot);
 		tabpane.addTab("Aktien", createAktienPanel());
 		tabpane.addTab("Depots", createDepotPanel());
+		tabpane.add("Aktien Historie", createWertHistoriePanel());
 
 		meinDepot.add(btnVerkaufen);
 
@@ -302,6 +305,25 @@ public class GUI extends JFrame implements ActionListener {
 		this.setContentPane(tabpane);
 		this.aktuellesPanel = meinDepot;
 		this.validate();
+	}
+	
+	Boerse b =new Boerse(stat);
+	
+	JComboBox cbxAktienID;
+	private void createWertHistoriePanel(Boerse b) {
+		JPanel werteHistoriePanel = new JPanel();
+		cbxAktienID = new JComboBox();
+		JList aktienHistorie = new JList();
+		
+		
+		
+		werteHistoriePanel.add(cbxAktienID);
+		werteHistoriePanel.add(aktienHistorie);
+		for (String aktie : b.alleAktienLesen(stat)) {
+			cbxAktienID.addItem(aktie);
+		}
+		
+		cbxAktienID.addActionListener(this);
 	}
 
 	public JPanel getAktuellesPanel() {
