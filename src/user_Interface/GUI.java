@@ -99,8 +99,17 @@ public class GUI extends JFrame implements ActionListener {
 		this.setContentPane(content);
 
 	}
-
-//return true, wenn die Anmelde ID existiert
+	
+	/**
+	 * 
+	 * @param checkWord
+	 * @param anmeldeSubjekt
+	 * @return boolean: Gibt true zurück, wenn die ID valide ist.
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 * @throws SQLException
+	 */
 	private boolean anmeldeIDPrüfen(String checkWord, String anmeldeSubjekt)
 			throws FileNotFoundException, ClassNotFoundException, IOException, SQLException {
 //		boolean exestierendeID = true;

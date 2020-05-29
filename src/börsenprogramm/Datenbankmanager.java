@@ -1,10 +1,10 @@
-package börsenprogramm;
+package bÃ¶rsenprogramm;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+
 
 public class Datenbankmanager {
 
@@ -34,8 +34,8 @@ public class Datenbankmanager {
 	}
 
 	/*
-	 * überprüft, ob die referenzierte Tabelle schon vorhanden ist gibt false
-	 * zurück, wenn die Tabelle noch nicht existiert
+	 * Ã¼berprÃ¼ft, ob die referenzierte Tabelle schon vorhanden ist gibt false
+	 * zurÃ¼ck, wenn die Tabelle noch nicht existiert
 	 */
 	protected boolean pruefeExistenz(Statement stat, Connection con, String tabellenName) throws SQLException {
 
@@ -74,88 +74,23 @@ public class Datenbankmanager {
 		}
 	}
 
-	public void erstelleWerteHistorieTabelle(Statement stat, Connection con) throws SQLException {
-		try {
-			if (this.pruefeExistenz(stat, con, "Wertehistorie") == false) {
-				String sqlBefehlTabelleErstellen = "CREATE TABLE "
-						+ "Wertehistorie ( Aktie_ID INT, Wert INT, Datum DATE, FOREIGN KEY(Aktie_ID) REFERENCES Aktie(ID), CONSTRAINT PK_Wertehistorie_Aktie_ID_Datum PRIMARY KEY (Aktie_ID, Datum));";
-				stat.execute(sqlBefehlTabelleErstellen);
-				stat.execute("INSERT INTO Wertehistorie(Aktie_ID, Wert, Datum) VALUES\r\n"
-						+ "('1', '5', '2020-01-31'),\r\n" + "('1', '10', '2020-02-29'),\r\n"
-						+ "('1', '15', '2020-03-31'),\r\n" + "('1', '10', '2020-04-30'),\r\n"
-						+ "('2', '20', '2020-02-29'),\r\n" + "('2', '30', '2020-03-31'),\r\n"
-						+ "('2', '10', '2020-04-30'),\r\n" + "('3', '50', '2020-03-31'),\r\n"
-						+ "('3', '33', '2020-04-30'),\r\n" + "('4', '45', '2020-04-30'),\r\n"
-						+ "('5', '56', '2020-03-31'),\r\n" + "('5', '23', '2020-04-30'),\r\n"
-						+ "('6', '45', '2020-04-30'),\r\n" + "('7', '65', '2020-04-30');");
 
-			}
-		} catch (SQLException e) {
-			throw new SQLException(e.getMessage());
-		}
+public class Datenbankmanager {
+
+	private Statement stat;
+
+	public Datenbankmanager(Statement stat) {
+		this.stat = stat;
 	}
 
-	public void erstelleAktiengesellschafttabelle(Statement stat, Connection con) throws SQLException {
-		try {
-			if (this.pruefeExistenz(stat, con, "Aktiengesellschaft") == false) {
-				String sqlBefehlTabelleErstellen = "CREATE TABLE "
-						+ "Aktiengesellschaft ( ID INT, CONSTRAINT PK_Aktiengesellschaft_ID PRIMARY KEY (ID));";
-				stat.execute(sqlBefehlTabelleErstellen);
-				stat.execute("INSERT INTO Aktiengesellschaft(ID) VALUES ('1'),('2'),('3'),('4'),('5');");
+	public ArrayList<Integer> getAktienIDs() throws SQLException {
 
-			}
-		} catch (SQLException e) {
-			throw new SQLException(e.getMessage());
+		ArrayList<Integer> ids = new ArrayList<Integer>();
+		this.stat = ConnectionManager.ueberpruefeConnection(stat);
+		ResultSet rs = stat.executeQuery("SELECT ID FROM Aktie;");
+		while (rs.next()) {
+			ids.add(rs.getInt(rs.getRow()));
 		}
+		return ids;
 	}
-
-	public void erstelleBoersenmanagerTabelle(Statement stat, Connection con) throws SQLException {
-		try {
-			if (this.pruefeExistenz(stat, con, "Boersenmanager") == false) {
-				String sqlBefehlTabelleErstellen = "CREATE TABLE "
-						+ "Boersenmanager ( ID INT, CONSTRAINT PK_Boersenmanager_ID PRIMARY KEY (ID));";
-				stat.execute(sqlBefehlTabelleErstellen);
-				stat.execute("INSERT INTO Boersenmanager(ID) VALUES ('30'),('31');");
-
-			}
-		} catch (SQLException e) {
-			throw new SQLException(e.getMessage());
-		}
-	}
-
-	public void erstelleDepottabelle(Statement stat, Connection con) throws SQLException {
-		try {
-			if (this.pruefeExistenz(stat, con, "Depot") == false) {
-				String sqlBefehlTabelleErstellen = "CREATE TABLE "
-						+ "Depot ( ID INT, Depotinhaber_ID INT, FOREIGN KEY (Depotinhaber_ID) REFERENCES Depotinhaber(ID), CONSTRAINT PK_Depot_ID PRIMARY KEY (ID));";
-				stat.execute(sqlBefehlTabelleErstellen);
-				stat.execute("INSERT INTO Depot(ID, Depotinhaber_ID) VALUES \r\n" + "('20', '10'),\r\n"
-						+ "('21', '11'),\r\n" + "('22', '10'),\r\n" + "('23', '12'),\r\n" + "('24', '12');");
-
-			}
-		} catch (SQLException e) {
-			throw new SQLException(e.getMessage());
-		}
-	}
-
-	public void erstelleDepotinhaberTabelle(Statement stat, Connection con) throws SQLException {
-		try {
-			if (this.pruefeExistenz(stat, con, "Depotinhaber") == false) {
-				String sqlBefehlTabelleErstellen = "CREATE TABLE "
-						+ "Depotinhaber ( ID INT, Name VARCHAR(255), CONSTRAINT PK_Depotinhaber_ID PRIMARY KEY (ID));";
-				stat.execute(sqlBefehlTabelleErstellen);
-				stat.execute("INSERT INTO Depotinhaber(ID, Name) VALUES \r\n" + "('10', 'Klaus Heinrich'),\r\n"
-						+ "('11', 'Maria Engel'),\r\n" + "('12', 'Barbara Giesberg');");
-
-			}
-		} catch (SQLException e) {
-			throw new SQLException(e.getMessage());
-		}
-	}
-
-	// bin mir nicht sicher, ob das notwendig ist
-//	public void erstelleOrderTabelle() {
-//		
-//	}
-
 }
