@@ -1,10 +1,8 @@
-package boersenprogramm¶rsenprogramm;
+package boersenprogramm;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 import user_Interface.ConnectionManager;

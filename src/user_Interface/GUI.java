@@ -35,20 +35,20 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 import Filemanager.Serialisierung;
-import b�.Aktie;
-import b�rsenprogramm.AktuellerUser;
-import b�rsenprogramm.Boerse;
-import b�rsenprogramm.Boersenmanager;
-import b�rsenprogramm.Depot;
-import b�rsenprogramm.Depotinhaber;
-import b�rsenprogramm.Transaktion;
-import börsenprogramm.Aktie;
-import börsenprogramm.AktuellerUser;
-import börsenprogramm.Boerse;
-import börsenprogramm.Boersenmanager;
-import börsenprogramm.Depot;
-import börsenprogramm.Depotinhaber;
-import börsenprogramm.Transaktion;
+
+import boersenprogramm.AktuellerUser;
+import boersenprogramm.Boerse;
+import boersenprogramm.Boersenmanager;
+import boersenprogramm.Depot;
+import boersenprogramm.Depotinhaber;
+import boersenprogramm.Transaktion;
+import boersenprogramm.Aktie;
+import boersenprogramm.AktuellerUser;
+import boersenprogramm.Boerse;
+import boersenprogramm.Boersenmanager;
+import boersenprogramm.Depot;
+import boersenprogramm.Depotinhaber;
+import boersenprogramm.Transaktion;
 
 public class GUI extends JFrame implements ActionListener {
 
@@ -97,25 +97,25 @@ public class GUI extends JFrame implements ActionListener {
 	 */
 	private void createStartseite(GUI gui) {
 
-		this.setTitle("Börsenanwendung");
+		this.setTitle("Boersenanwendung");
 		this.setSize(200, 400);
 		this.setMinimumSize(new Dimension(200, 200));
 		JPanel content = new JPanel();
 
-		btnBörsenmanager = new JRadioButton("Börsenmanager", true);
+		btnBoersenmanager = new JRadioButton("Börsenmanager", true);
 		btnAktiengesellschaft = new JRadioButton("Aktiengesellschaft");
-		btnAktionär = new JRadioButton("Aktionär");
+		btnAktionaer = new JRadioButton("Aktionär");
 		ButtonGroup anmeldeAuswahl = new ButtonGroup();
 		anmeldeAuswahl.add(btnAktiengesellschaft);
-		anmeldeAuswahl.add(btnAktionär);
-		anmeldeAuswahl.add(btnBörsenmanager);
+		anmeldeAuswahl.add(btnAktionaer);
+		anmeldeAuswahl.add(btnBoersenmanager);
 
 		txtAnmeldeID = new JTextField("Hier bitte ihre ID eintragen");
 
 		btnAnmelden = new JButton("Anmelden");
 
-		content.add(btnBörsenmanager);
-		content.add(btnAktionär);
+		content.add(btnBoersenmanager);
+		content.add(btnAktionaer);
 		content.add(btnAktiengesellschaft);
 		content.add(txtAnmeldeID);
 		content.add(btnAnmelden);
@@ -136,7 +136,7 @@ public class GUI extends JFrame implements ActionListener {
 	 * @throws IOException
 	 * @throws SQLException
 	 */
-	private boolean anmeldeIDPr�fen(String checkWord, String anmeldeSubjekt)
+	private boolean anmeldeIDPruefen(String checkWord, String anmeldeSubjekt)
 			throws FileNotFoundException, ClassNotFoundException, IOException, SQLException {
 //		boolean exestierendeID = true;
 
@@ -417,12 +417,12 @@ public class GUI extends JFrame implements ActionListener {
 
 		JLabel lblOrders = new JLabel("ausstehende Orders:");
 		JComboBox cbxOrders = new JComboBox();
-		JButton btnOrderAusführen = new JButton("Order ausführen");
+		JButton btnOrderAusfuehren = new JButton("Order ausführen");
 		// TODO Die Combo Box muss noch befüllt werden und eine Textarea mit allen
 		// Aktien oder ein Jlist eingefügt werden
 		panelBoersenmanager.add(lblOrders);
 		panelBoersenmanager.add(cbxOrders);
-		panelBoersenmanager.add(btnOrderAusführen);
+		panelBoersenmanager.add(btnOrderAusfuehren);
 
 		panelBoersenmanager.add(btnAbmelden);
 		btnAbmelden.addActionListener(this);
@@ -497,34 +497,35 @@ public class GUI extends JFrame implements ActionListener {
 		JOptionPane.showMessageDialog(null, e.getMessage(), "Fehlermeldung", JOptionPane.ERROR_MESSAGE);
 	}
 
-	private DefaultListCellRenderer createAktienListRenderer() {
-		return new DefaultListCellRenderer() {
-			private Color background = new Color(0, 100, 255, 15);
-			private Color defaultBackground = (Color) UIManager.get("List.background");
-
-			@Override
-			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-					boolean cellHasFocus) {
-				Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-				if (c instanceof JLabel) {
-					JLabel label = (JLabel) c;
-					Aktie ak = (Aktie) value;
-					try {
-						label.setText(String.format(" %s            %s            %s            %s            %s",
-								ak.getId(), ak.getWert(ak.getId()), ak.getAktiengesellschaft(ak.getId()),
-								ak.getDepotinhaber(ak.getId()), ak.getDepot(ak.getId())));
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					if (!isSelected) {
-						label.setBackground(index % 2 == 0 ? background : defaultBackground);
-					}
-				}
-				return c;
-			}
-		};
-	}
+//	private DefaultListCellRenderer createAktienListRenderer() {
+//		return new DefaultListCellRenderer() {
+//			private Color background = new Color(0, 100, 255, 15);
+//			private Color defaultBackground = (Color) UIManager.get("List.background");
+//
+//			@Override
+//			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+//					boolean cellHasFocus) {
+//				Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+//				if (c instanceof JLabel) {
+//					JLabel label = (JLabel) c;
+//					
+//					Aktie ak = (Aktie) value;
+//					try {
+//						label.setText(String.format(" %s            %s            %s            %s            %s",
+//								ak.getId(), ak.getWert(ak.getId()), ak.getAktiengesellschaft(ak.getId()),
+//								ak.getDepotinhaber(ak.getId()), ak.getDepot(ak.getId())));
+//					} catch (SQLException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//					if (!isSelected) {
+//						label.setBackground(index % 2 == 0 ? background : defaultBackground);
+//					}
+//				}
+//				return c;
+//			}
+//		};
+//	}
 
 	JPanel transaktionsP;
 
