@@ -10,6 +10,8 @@ import java.io.ObjectOutputStream;
 
 public class Serialisierung {
 
+	//
+	
 	public Serialisierung() {
 
 	}

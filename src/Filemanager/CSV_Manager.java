@@ -69,7 +69,7 @@ public class CSV_Manager {
 
 	public ArrayList<String> readCSV(String filename)  {
 		ArrayList<String> records = new ArrayList<>();
-		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(System.getProperty("user.home") + "/Börsenprogramm/CSV_Dateien"+filename))) {
 			String line;
 			while ((line = br.readLine()) != null) {
 				String[] values = line.split(",");
