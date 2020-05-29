@@ -37,7 +37,7 @@ public class Datenbankmanager {
 	 * überprüft, ob die referenzierte Tabelle schon vorhanden ist gibt false
 	 * zurück, wenn die Tabelle noch nicht existiert
 	 */
-	private boolean pruefeExistenz(Statement stat, Connection con, String tabellenName) throws SQLException {
+	protected boolean pruefeExistenz(Statement stat, Connection con, String tabellenName) throws SQLException {
 
 		DatabaseMetaData dbm;
 		try {

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import Filemanager.CSV_Manager;
 
@@ -36,7 +37,7 @@ public class Boerse {
 		ArrayList<String> alleAktien = new ArrayList<String>();
 		
 		try {
-			alleAktien = stat.("SELECT * FROM Aktie()");
+			alleAktien.addAll( stat.executeQuery("SELECT ID FROM Aktie;"));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -53,7 +53,7 @@ public class Boersenmanager {
 		}
 	}
 
-	public void ordersAusführen (Statement stat, Connection con) throws IOException {
+	public void ordersAusführen (Statement stat, Connection con) throws IOException, SQLException {
 		CSV_Manager readCSV = new CSV_Manager();
 		
 		ArrayList<String> records = new ArrayList<String>();
