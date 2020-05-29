@@ -1,25 +1,28 @@
 package börsenprogramm;
 
+import java.io.IOException;
+
 public class AktuellerUser {
 
 	private String userArt;
-	private String id;
+	private int id;
 
 	/**
 	 * Legt den aktueller Benutzer fest, mit Benutzerart und der ID. Die Parameter
 	 * sind dabei final.
 	 * 
-	 * @param userArt
-	 * @param id
+	 * @param userArt: aktuelle Userart, muss "bosersenmanager", "aktionaer" oder
+	 *                 "aktiengesellschaft" entsprechen.
+	 * @param id:      aktuelle UserID
 	 * @throws Exception, wenn die Benutzerart nicht existiert.
 	 */
-	public AktuellerUser(String userArt, String id) throws Exception {
-		if (userArt.contentEquals("bosersenmanager") || userArt.contentEquals("aktionaer")
+	public AktuellerUser(String userArt, int id) throws IllegalArgumentException {
+		if (userArt.contentEquals("boersenmanager") || userArt.contentEquals("depotinhaber")
 				|| userArt.contentEquals("aktiengesellschaft")) {
 			this.userArt = userArt;
 			this.id = id;
 		} else {
-			throw new Exception("Den User, " + userArt + ", gibt es nicht.");
+			throw new IllegalArgumentException("Den User, " + userArt + ", gibt es nicht.");
 		}
 	}
 
@@ -27,7 +30,7 @@ public class AktuellerUser {
 		return userArt;
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 }
