@@ -1,4 +1,4 @@
-package börsenprogramm;
+package boersenprogramm;
 
 
 

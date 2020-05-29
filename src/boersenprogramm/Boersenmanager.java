@@ -1,4 +1,4 @@
-package börsenprogramm;
+package boersenprogramm;
 
 import java.awt.Component;
 import java.io.IOException;

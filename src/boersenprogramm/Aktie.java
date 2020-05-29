@@ -1,4 +1,4 @@
-package b√∂rsenprogramm;
+package boersenprogramm∂rsenprogramm;
 
 import java.sql.Date;
 import java.sql.ResultSet;
