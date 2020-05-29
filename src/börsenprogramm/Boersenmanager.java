@@ -28,7 +28,7 @@ public class Boersenmanager {
 	}
 
 	Connection con;
-	Datenbankmanager datenbank = new Datenbankmanager(con);
+//	Datenbankmanager datenbank = new Datenbankmanager(con);
 
 	public void createDepot(Statement stat, int depotID) throws SQLException {
 		String sqlBefehlTabelleErstellen = "CREATE TABLE Depot(" + depotID
