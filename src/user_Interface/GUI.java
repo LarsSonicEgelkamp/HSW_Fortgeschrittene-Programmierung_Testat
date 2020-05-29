@@ -102,7 +102,7 @@ public class GUI extends JFrame implements ActionListener {
 		this.setMinimumSize(new Dimension(200, 200));
 		JPanel content = new JPanel();
 
-		btnBoersenmanager = new JRadioButton("Börsenmanager", true);
+		btnBoersenmanager = new JRadioButton("Boersenmanager", true);
 		btnAktiengesellschaft = new JRadioButton("Aktiengesellschaft");
 		btnAktionaer = new JRadioButton("Aktionär");
 		ButtonGroup anmeldeAuswahl = new ButtonGroup();
@@ -334,7 +334,7 @@ public class GUI extends JFrame implements ActionListener {
 
 		tabpane.addTab("Meine Transaktionen", createTransaktionPanel());
 
-		tabpane.add("Aktien Historie", createWertHistoriePanel());
+//		tabpane.add("Aktien Historie", createWertHistoriePanel());
 
 		meinDepot.add(btnVerkaufen);
 
