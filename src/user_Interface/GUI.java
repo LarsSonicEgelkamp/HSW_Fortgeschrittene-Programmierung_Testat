@@ -34,6 +34,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
@@ -164,7 +165,8 @@ public class GUI extends JFrame implements ActionListener {
 				return true;
 			}
 		}
-		// TODO Hier muss noch die Ã¼berprÃ¼fung stattfinden ob die ID bereits existiert
+		// TODO Hier muss noch die Ã¼berprÃ¼fung stattfinden ob die ID bereits
+		// existiert
 		// oder nicht
 //		exestierendeID = !s.deserilize(checkWord).equals(checkWord);
 
@@ -257,45 +259,35 @@ public class GUI extends JFrame implements ActionListener {
 				e.printStackTrace();
 			}
 		} else if (ae.getSource() == btnAktieAnlegen) {
-//			bm.aktieAnlegen(stat,  txtAktienID.getText(), txtAktienWert.getText(), AktiengesellschaftsID, DepotinhaberID, depotID);
+//				bm.aktieAnlegen(stat,  txtAktienID.getText(), txtAktienWert.getText(), AktiengesellschaftsID, DepotinhaberID, depotID);
 		} else if (ae.getSource() == cbxAktienID) {
 
-			
-			
 			try {
 				ResultSet rs = stat
-						.executeQuery("SELECT Wert FROM Wertehistorie WHERE ID = " + cbxAktienID.getName() + ";");
-				ResultSet rs2 =  stat
-						.executeQuery("SELECT Datum FROM Wertehistorie WHERE ID = " + cbxAktienID.getName() + ";");
+						.executeQuery("SELECT Wert FROM Wertehistorie WHERE ID = " + cbxAktienID.getName() +"ORDER by Datum"+ ";");
+//				ResultSet rs2 = stat
+//						.executeQuery("SELECT Datum FROM Wertehistorie WHERE ID = " + cbxAktienID.getName() + ";");
 				if (rs.next()) {
-					werteHistorie.addAll(rs.get);
+					werteHistorie.addAll(rs);
 				}
-				
+
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-
-		} else if (ae.getSource() == this.orderEinreichen) {
-			try {
-			JFileChooser chooserOrderEinreichen = new JFileChooser();
-			chooserOrderEinreichen.setDialogTitle("Bitte wählen sie ihre Order aus.");
-			chooserOrderEinreichen.showOpenDialog(null);
-			File f = chooserOrderEinreichen.getSelectedFile();
-			this.orderEinreichen(f);
-			}catch(IOException e) {
-				this.setErrorMessage(e);
-			}
-		}else if(ae.getSource()==this.btnOrdersAusfuehren) {
+		} else if (ae.getSource() == this.btnOrdersAusfuehren) {
 			try {
 				this.ordersAusfuehren();
 			} catch (IOException e) {
 				this.setErrorMessage(e);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
-	
+
 	ArrayList<String> werteHistorie = new ArrayList<String>();
 
 	public int getComponentIndex(Component component) throws Exception {
@@ -405,16 +397,17 @@ public class GUI extends JFrame implements ActionListener {
 	private void createWertHistoriePanel(Boerse b) {
 		JPanel werteHistoriePanel = new JPanel();
 		cbxAktienID = new JComboBox();
-		JList aktienHistorie = new JList();
+		JList aktienHistorie;
 
 		werteHistoriePanel.add(cbxAktienID);
-		werteHistoriePanel.add(aktienHistorie);
+		
 		for (String aktie : b.alleAktienLesen(stat)) {
 			cbxAktienID.addItem(aktie);
 		}
-
+		
 		cbxAktienID.addActionListener(this);
-
+		aktienHistorie = new JList((ListModel) werteHistorie);
+		werteHistoriePanel.add(aktienHistorie);
 	}
 
 	/**
@@ -422,6 +415,7 @@ public class GUI extends JFrame implements ActionListener {
 	 *
 	 */
 	JButton btnOrdersAusfuehren;
+
 	private void createBoersenmanagerFenster() {
 		JPanel panelBoersenmanager = new JPanel();
 		btnOrdersAusfuehren = new JButton("Alle Orders ausfuehren");
@@ -460,14 +454,8 @@ public class GUI extends JFrame implements ActionListener {
 		panelBoersenmanager.add(btnDepotAnlegen);
 		btnDepotAnlegen.addActionListener(this);
 
-		JLabel lblOrders = new JLabel("ausstehende Orders:");
-		JComboBox cbxOrders = new JComboBox();
-		JButton btnOrderAusfuehren = new JButton("Order ausfÃ¼hren");
-		// TODO Die Combo Box muss noch befÃ¼llt werden und eine Textarea mit allen
-		// Aktien oder ein Jlist eingefÃ¼gt werden
-		panelBoersenmanager.add(lblOrders);
-		panelBoersenmanager.add(cbxOrders);
-		panelBoersenmanager.add(btnOrderAusfuehren);
+		// TODO Die Combo Box muss noch befuellt werden und eine Textarea mit allen
+		// Aktien oder ein Jlist eingefuegt werden
 		panelBoersenmanager.add(btnOrdersAusfuehren);
 
 		panelBoersenmanager.add(btnAbmelden);
@@ -479,7 +467,7 @@ public class GUI extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Description: Hier wird das Panel fÃ¼r den Aktienmarkt erstellt
+	 * Description: Hier wird das Panel fuer den Aktienmarkt erstellt
 	 *
 	 */
 	private JPanel createAktienPanel() {
@@ -543,8 +531,6 @@ public class GUI extends JFrame implements ActionListener {
 		JOptionPane.showMessageDialog(null, e.getMessage(), "Fehlermeldung", JOptionPane.ERROR_MESSAGE);
 	}
 
-
-
 	JPanel transaktionsP;
 
 	private JPanel createTransaktionPanel() {
@@ -586,10 +572,10 @@ public class GUI extends JFrame implements ActionListener {
 	}
 
 	private void orderEinreichen(File order) throws IOException {
-		if(!this.orderPruefen(order)) {
+		if (!this.orderPruefen(order)) {
 			throw new IOException("Falsches Dateiformat. Die Datei muss eine CSV-Datei sein.");
 		}
-		CSV_Manager csvmag= new CSV_Manager();
+		CSV_Manager csvmag = new CSV_Manager();
 		csvmag.neueOrderDatei(order);
 	}
 
@@ -602,18 +588,17 @@ public class GUI extends JFrame implements ActionListener {
 	 */
 	private boolean orderPruefen(File order) {
 		String[] splitOrder = order.getName().split("\\.");
-		int index = splitOrder.length-1;
+		int index = splitOrder.length - 1;
 		if (splitOrder[index].contentEquals("csv")) {
 			return true;
 		}
 		return false;
 	}
-	
-	private void ordersAusfuehren() throws IOException {
-		CSV_Manager csvmag= new CSV_Manager();
-		csvmag.bearbeiteOrders();
-		
+
+	private void ordersAusfuehren() throws IOException, SQLException {
+		CSV_Manager csvmag = new CSV_Manager();
+		csvmag.bearbeiteOrders(stat);
+
 	}
-	
 
 }
