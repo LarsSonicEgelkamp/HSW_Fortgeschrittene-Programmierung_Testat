@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
@@ -107,7 +108,7 @@ public class GUI extends JFrame implements ActionListener {
 
 		btnBoersenmanager = new JRadioButton("Boersenmanager", true);
 		btnAktiengesellschaft = new JRadioButton("Aktiengesellschaft");
-		btnAktionaer = new JRadioButton("Aktionär");
+		btnAktionaer = new JRadioButton("AktionÃ¤r");
 		ButtonGroup anmeldeAuswahl = new ButtonGroup();
 		anmeldeAuswahl.add(btnAktiengesellschaft);
 		anmeldeAuswahl.add(btnAktionaer);
@@ -133,7 +134,7 @@ public class GUI extends JFrame implements ActionListener {
 	 * 
 	 * @param checkWord
 	 * @param anmeldeSubjekt
-	 * @return boolean: Gibt true zurück, wenn die ID valide ist.
+	 * @return boolean: Gibt true zurÃ¼ck, wenn die ID valide ist.
 	 * @throws FileNotFoundException
 	 * @throws ClassNotFoundException
 	 * @throws IOException
@@ -163,7 +164,7 @@ public class GUI extends JFrame implements ActionListener {
 				return true;
 			}
 		}
-		// TODO Hier muss noch die überprüfung stattfinden ob die ID bereits existiert
+		// TODO Hier muss noch die Ã¼berprÃ¼fung stattfinden ob die ID bereits existiert
 		// oder nicht
 //		exestierendeID = !s.deserilize(checkWord).equals(checkWord);
 
@@ -177,7 +178,7 @@ public class GUI extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent ae) {
 		// Die Quelle wird mit getSource() abgefragt und mit den
 		// Buttons abgeglichen. Wenn die Quelle des ActionEvents einer
-		// der Buttons ist, wird der Text des JLabels entsprechend geändert
+		// der Buttons ist, wird der Text des JLabels entsprechend geÃ¤ndert
 		if (ae.getSource() == this.btnAnmelden && btnBoersenmanager.isSelected() == true) {
 			try {
 				if (anmeldeIDPruefen(txtAnmeldeID.getText(), "boersenmanager")) {
@@ -185,7 +186,7 @@ public class GUI extends JFrame implements ActionListener {
 					createBoersenmanagerFenster();
 					bm = new Boersenmanager();
 				} else {
-					JOptionPane.showMessageDialog(null, "Die Anmelde-ID existiert nicht", "Börsenmanager",
+					JOptionPane.showMessageDialog(null, "Die Anmelde-ID existiert nicht", "BÃ¶rsenmanager",
 							JOptionPane.INFORMATION_MESSAGE);
 				}
 			} catch (HeadlessException | ClassNotFoundException | IOException | SQLException e) {
@@ -198,7 +199,7 @@ public class GUI extends JFrame implements ActionListener {
 					aUser = new AktuellerUser("depotinhaber", Integer.parseInt(txtAnmeldeID.getText()));
 					createAktionaerFenster();
 				} else {
-					JOptionPane.showMessageDialog(null, "Die Anmelde-ID existiert nicht", "Aktionär",
+					JOptionPane.showMessageDialog(null, "Die Anmelde-ID existiert nicht", "AktionÃ¤r",
 							JOptionPane.INFORMATION_MESSAGE);
 				}
 			} catch (HeadlessException | ClassNotFoundException | IOException | SQLException e) {
@@ -259,10 +260,27 @@ public class GUI extends JFrame implements ActionListener {
 //			bm.aktieAnlegen(stat,  txtAktienID.getText(), txtAktienWert.getText(), AktiengesellschaftsID, DepotinhaberID, depotID);
 		} else if (ae.getSource() == cbxAktienID) {
 
+			
+			
+			try {
+				ResultSet rs = stat
+						.executeQuery("SELECT Wert FROM Wertehistorie WHERE ID = " + cbxAktienID.getName() + ";");
+				ResultSet rs2 =  stat
+						.executeQuery("SELECT Datum FROM Wertehistorie WHERE ID = " + cbxAktienID.getName() + ";");
+				if (rs.next()) {
+					werteHistorie.addAll(rs.get);
+				}
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+
 		} else if (ae.getSource() == this.orderEinreichen) {
 			try {
 			JFileChooser chooserOrderEinreichen = new JFileChooser();
-			chooserOrderEinreichen.setDialogTitle("Bitte w�hlen sie ihre Order aus.");
+			chooserOrderEinreichen.setDialogTitle("Bitte wählen sie ihre Order aus.");
 			chooserOrderEinreichen.showOpenDialog(null);
 			File f = chooserOrderEinreichen.getSelectedFile();
 			this.orderEinreichen(f);
@@ -277,6 +295,8 @@ public class GUI extends JFrame implements ActionListener {
 			}
 		}
 	}
+	
+	ArrayList<String> werteHistorie = new ArrayList<String>();
 
 	public int getComponentIndex(Component component) throws Exception {
 		if (component != null && component.getParent() != null) {
@@ -310,7 +330,7 @@ public class GUI extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Description: Hier wird das Interface für einen Aktionär/Depotinhaber
+	 * Description: Hier wird das Interface fÃ¼r einen AktionÃ¤r/Depotinhaber
 	 * erstellt
 	 *
 	 */
@@ -394,6 +414,7 @@ public class GUI extends JFrame implements ActionListener {
 		}
 
 		cbxAktienID.addActionListener(this);
+
 	}
 
 	/**
@@ -441,9 +462,9 @@ public class GUI extends JFrame implements ActionListener {
 
 		JLabel lblOrders = new JLabel("ausstehende Orders:");
 		JComboBox cbxOrders = new JComboBox();
-		JButton btnOrderAusfuehren = new JButton("Order ausführen");
-		// TODO Die Combo Box muss noch befüllt werden und eine Textarea mit allen
-		// Aktien oder ein Jlist eingefügt werden
+		JButton btnOrderAusfuehren = new JButton("Order ausfÃ¼hren");
+		// TODO Die Combo Box muss noch befÃ¼llt werden und eine Textarea mit allen
+		// Aktien oder ein Jlist eingefÃ¼gt werden
 		panelBoersenmanager.add(lblOrders);
 		panelBoersenmanager.add(cbxOrders);
 		panelBoersenmanager.add(btnOrderAusfuehren);
@@ -458,7 +479,7 @@ public class GUI extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Description: Hier wird das Panel für den Aktienmarkt erstellt
+	 * Description: Hier wird das Panel fÃ¼r den Aktienmarkt erstellt
 	 *
 	 */
 	private JPanel createAktienPanel() {
@@ -522,35 +543,7 @@ public class GUI extends JFrame implements ActionListener {
 		JOptionPane.showMessageDialog(null, e.getMessage(), "Fehlermeldung", JOptionPane.ERROR_MESSAGE);
 	}
 
-//	private DefaultListCellRenderer createAktienListRenderer() {
-//		return new DefaultListCellRenderer() {
-//			private Color background = new Color(0, 100, 255, 15);
-//			private Color defaultBackground = (Color) UIManager.get("List.background");
-//
-//			@Override
-//			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-//					boolean cellHasFocus) {
-//				Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-//				if (c instanceof JLabel) {
-//					JLabel label = (JLabel) c;
-//					
-//					Aktie ak = (Aktie) value;
-//					try {
-//						label.setText(String.format(" %s            %s            %s            %s            %s",
-//								ak.getId(), ak.getWert(ak.getId()), ak.getAktiengesellschaft(ak.getId()),
-//								ak.getDepotinhaber(ak.getId()), ak.getDepot(ak.getId())));
-//					} catch (SQLException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//					if (!isSelected) {
-//						label.setBackground(index % 2 == 0 ? background : defaultBackground);
-//					}
-//				}
-//				return c;
-//			}
-//		};
-//	}
+
 
 	JPanel transaktionsP;
 
@@ -601,7 +594,7 @@ public class GUI extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * �berpr�ft, ob die eingereichte Datei das richtige Format hat.
+	 * Überprüft, ob die eingereichte Datei das richtige Format hat.
 	 * 
 	 * @param order: Die eingereichte Datei.
 	 * @return: true, wenn das Dateiformat korrekt ist; false, wenn das DAteiformat
