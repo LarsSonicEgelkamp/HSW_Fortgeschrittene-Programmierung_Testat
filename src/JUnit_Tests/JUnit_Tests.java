@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import javax.swing.DefaultListModel;
+
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
@@ -15,12 +17,14 @@ import org.junit.experimental.theories.DataPoints;
 import org.junit.experimental.theories.Theory;
 
 import boersenprogramm.Aktie;
+import boersenprogramm.Aktiengesellschaft;
 import boersenprogramm.AktuellerUser;
 import boersenprogramm.Boerse;
 import boersenprogramm.Datenbankersteller;
 import de.loehrke.testen.junit.uebung06.NegativeZahlException;
 import de.loehrke.testen.junit.uebung06.Rechner;
 import user_Interface.ConnectionManager;
+import user_Interface.GUI;
 
 //import de.loehrke.testen.junit.uebung02.Rechner;
 //	public class RechnerAdditionTest {
@@ -85,78 +89,80 @@ public class JUnit_Tests {
 
 	Boerse b;
 	Aktie ak;
+	Aktiengesellschaft akg;
+	GUI g;
+	AktuellerUser au;
 	Statement stat;
+	DefaultListModel<String> testListModel;
 	private static Datenbankersteller db;
+	
+	
 
 	@Before
-	public void initKlassen() throws SQLException {
+	public void init() throws SQLException {
+		initDatenbank();
+		initKlassen();
+		initListModel();
 		
+	}
+
+	public void initListModel() {
+		testListModel = new DefaultListModel<String>();
+		testListModel.add(0, "ID: 4 Wert: 45");
+	}
+	
+//	public void makeAktienList(DefaultListModel<String> listModel) throws SQLException {
+//	Boerse b = new Boerse(stat);
+//	ArrayList<Aktie> akList = b.getAktienListe(aUser);
+//	for (Aktie a : akList) {
+//		int aktuellesDepot = a.getDepot(a.getId());
+//		int gewaehltesDe = (Integer) depots.getSelectedItem();
+//		if (gewaehltesDe == aktuellesDepot) {
+//			listModel.addElement("ID: " + a.getId() + " Wert:" + a.getWert(a.getId()));
+//		}
+//	}
+//}
+
+	public void initDatenbank() throws SQLException {
 		String databaseURL = "jdbc:mysql://localhost/boersendatenbank?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 		try (Connection con = DriverManager.getConnection(databaseURL, "user", "user")) {
 			db = new Datenbankersteller(con);
 			this.stat = con.createStatement();
 		}
-		
+	}
+
+	public void initKlassen() {
 		this.b = new Boerse(stat);
 		this.ak = new Aktie(00, stat);
+		this.akg = new Aktiengesellschaft(00, stat);
+		this.g = new GUI(stat);
+		this.au = new AktuellerUser("depotinhaber", 10);
 	}
 
 	@Test
 	public void testGetAktiengesellschaft() throws SQLException {
-//		int actual = rechner.addiere(1, 2);
-//		Assert.assertTrue("Fehler bei der Addition", actual == 3);
-		int aktiengesellschaft = 99;
-		this.stat = ConnectionManager.ueberpruefeConnection(stat);
-		ResultSet rs = stat.executeQuery("SELECT Aktiengesellschaft_ID FROM Aktie WHERE ID = " + "1" + ";");
-		if (rs.next()) {
-			aktiengesellschaft = rs.getInt(1);
-		}
-
 		Assert.assertTrue(2 == ak.getAktiengesellschaft(1));
-
+	}
+	
+	@Test
+	public void testGetDepot () throws SQLException {
+		Assert.assertTrue(21 == ak.getDepot(1));
+	}
+	
+	@Test
+	public void testMakeAktienList() {
+		
+	}
+	
+	@Test
+	public void testListModel() throws SQLException {
+		System.out.println(b.getAktienListe(au));
 	}
 
-//	public ArrayList<Aktie> getAktienListe(AktuellerUser user) throws SQLException {
-//		ArrayList<Integer> aktienIDListe;
-//		aktienIDListe = dm.getAktienIDs(user);
-//		for (int id : aktienIDListe) {
-//			Aktie tempAk = new Aktie(id, stat);
-//			tempAk.setWert(tempAk.getWert(tempAk.getId()));
-//			tempAk.setAktiengesellschaft(tempAk.getAktiengesellschaft(tempAk.getId()));
-//			tempAk.setDepot(tempAk.getDepot(tempAk.getId()));
-//			tempAk.setDepotinhaber(tempAk.getDepotinhaber(tempAk.getId()));
-//			aktienListe.add(tempAk);
-//		}
-//		return aktienListe;
-//	}
+
 
 }
 
-//package de.loehrke.testen.junit.uebung07;
-//
-//import static org.hamcrest.CoreMatchers.both;
-//import static org.hamcrest.CoreMatchers.everyItem;
-//import static org.hamcrest.CoreMatchers.hasItem;
-//import static org.hamcrest.CoreMatchers.not;
-//import static org.hamcrest.CoreMatchers.startsWith;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//import org.junit.Assert;
-//import org.junit.Before;
-//import org.junit.Test;
-
-/**
- * Implementieren Sie jeweils einen Testfall, der für eine Liste von IBANs
- * testet, ob a. nicht nur deutsche IBANs enthalten sind. b. mindestens eine
- * französische IBAN enthalten ist. c. keine italienische IBAN enthalten ist. d.
- * die Bedingungen aus den Teilaufgaben b und c eingehalten werden.
- * 
- * Hinweis: Zur Vereinfachung reicht es aus, den Ländercode der IBAN zu prüfen.
- * 
- * @author Katharina Löhrke
- */
 //public class HamcrestTest {
 
 //	private List<String> ibans;

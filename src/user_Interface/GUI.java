@@ -264,11 +264,11 @@ public class GUI extends JFrame implements ActionListener {
 
 			try {
 				ResultSet rs = stat
-						.executeQuery("SELECT Wert FROM Wertehistorie WHERE ID = " + cbxAktienID.getName() +"ORDER by Datum"+ ";");
+						.executeQuery("SELECT Wert FROM Wertehistorie WHERE ID = " + cbxAktienID.getSelectedItem() +"ORDER by Datum"+ ";");
 //				ResultSet rs2 = stat
 //						.executeQuery("SELECT Datum FROM Wertehistorie WHERE ID = " + cbxAktienID.getName() + ";");
 				if (rs.next()) {
-					werteHistorie.addAll(rs);
+					werteHistorie.add(Integer.toString(rs.getInt(1)));
 				}
 
 			} catch (SQLException e) {
@@ -366,7 +366,7 @@ public class GUI extends JFrame implements ActionListener {
 
 		tabpane.addTab("Meine Transaktionen", createTransaktionPanel());
 
-//		tabpane.add("Aktien Historie", createWertHistoriePanel());
+		tabpane.addTab("Aktien Historie", createWertHistoriePanel(b));
 
 		meinDepot.add(btnVerkaufen);
 
@@ -394,10 +394,11 @@ public class GUI extends JFrame implements ActionListener {
 
 	JComboBox cbxAktienID;
 
-	private void createWertHistoriePanel(Boerse b) {
+	private JPanel createWertHistoriePanel(Boerse b) {
 		JPanel werteHistoriePanel = new JPanel();
 		cbxAktienID = new JComboBox();
 		JList aktienHistorie;
+		
 
 		werteHistoriePanel.add(cbxAktienID);
 		
@@ -406,8 +407,12 @@ public class GUI extends JFrame implements ActionListener {
 		}
 		
 		cbxAktienID.addActionListener(this);
+		
+		
 		aktienHistorie = new JList((ListModel) werteHistorie);
 		werteHistoriePanel.add(aktienHistorie);
+		werteHistoriePanel.validate();
+		return werteHistoriePanel;
 	}
 
 	/**

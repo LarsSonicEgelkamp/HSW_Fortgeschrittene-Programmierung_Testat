@@ -68,7 +68,6 @@ public class CSV_Manager {
 				new FileReader(System.getProperty("user.home") + "/Börsenprogramm/CSV_Dateien" + filename))) {
 			String line;
 			while ((line = br.readLine()) != null) {
-				
 				records.addAll(Arrays.asList(values));
 			}
 		} catch (FileNotFoundException e) {
