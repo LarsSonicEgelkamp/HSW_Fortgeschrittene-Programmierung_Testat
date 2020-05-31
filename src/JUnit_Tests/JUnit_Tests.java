@@ -1,7 +1,8 @@
 package JUnit_Tests;
 
-
-
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -16,8 +17,10 @@ import org.junit.experimental.theories.Theory;
 import boersenprogramm.Aktie;
 import boersenprogramm.AktuellerUser;
 import boersenprogramm.Boerse;
+import boersenprogramm.Datenbankersteller;
 import de.loehrke.testen.junit.uebung06.NegativeZahlException;
 import de.loehrke.testen.junit.uebung06.Rechner;
+import user_Interface.ConnectionManager;
 
 //import de.loehrke.testen.junit.uebung02.Rechner;
 //	public class RechnerAdditionTest {
@@ -62,37 +65,57 @@ import de.loehrke.testen.junit.uebung06.Rechner;
 //		Assert.fail(e.getMessage());
 //	}
 //}
-
-@Theory
-public void testBerechneFakultaetNegativ(int input) {
-	// Annahme, dass dieser Testfall nur mit negativen Zahlen aufgerufen wird
-	Assume.assumeTrue("Aufruf mit positiver Zahl oder 0: " + input, input < 0);
-	
-	boolean exceptionGeworfen = false;
-	try {
-		rechner.berechneFakultaet(input);
-	} catch (NegativeZahlException e) {
-		exceptionGeworfen = true;
-	}
-	Assert.assertTrue(exceptionGeworfen);
-}
-
+//
+//@Theory
+//public void testBerechneFakultaetNegativ(int input) {
+//	// Annahme, dass dieser Testfall nur mit negativen Zahlen aufgerufen wird
+//	Assume.assumeTrue("Aufruf mit positiver Zahl oder 0: " + input, input < 0);
+//	
+//	boolean exceptionGeworfen = false;
+//	try {
+//		rechner.berechneFakultaet(input);
+//	} catch (NegativeZahlException e) {
+//		exceptionGeworfen = true;
+//	}
+//	Assert.assertTrue(exceptionGeworfen);
+//}
 
 public class JUnit_Tests {
-	
-	Statement stat;
+
+
 	Boerse b;
-	
+	Aktie ak;
+	Statement stat;
+	private static Datenbankersteller db;
+
 	@Before
-	public void initKlassen() {
-		this.b = new Boerse(stat);
-	}
-	
-	@Test
-	public void testGetAktienListe () {
+	public void initKlassen() throws SQLException {
 		
+		String databaseURL = "jdbc:mysql://localhost/boersendatenbank?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+		try (Connection con = DriverManager.getConnection(databaseURL, "user", "user")) {
+			db = new Datenbankersteller(con);
+			this.stat = con.createStatement();
+		}
+		
+		this.b = new Boerse(stat);
+		this.ak = new Aktie(00, stat);
 	}
-	
+
+	@Test
+	public void testGetAktiengesellschaft() throws SQLException {
+//		int actual = rechner.addiere(1, 2);
+//		Assert.assertTrue("Fehler bei der Addition", actual == 3);
+		int aktiengesellschaft = 99;
+		this.stat = ConnectionManager.ueberpruefeConnection(stat);
+		ResultSet rs = stat.executeQuery("SELECT Aktiengesellschaft_ID FROM Aktie WHERE ID = " + "1" + ";");
+		if (rs.next()) {
+			aktiengesellschaft = rs.getInt(1);
+		}
+
+		Assert.assertTrue(2 == ak.getAktiengesellschaft(1));
+
+	}
+
 //	public ArrayList<Aktie> getAktienListe(AktuellerUser user) throws SQLException {
 //		ArrayList<Integer> aktienIDListe;
 //		aktienIDListe = dm.getAktienIDs(user);
@@ -106,9 +129,8 @@ public class JUnit_Tests {
 //		}
 //		return aktienListe;
 //	}
-	
-}
 
+}
 
 //package de.loehrke.testen.junit.uebung07;
 //
@@ -126,18 +148,15 @@ public class JUnit_Tests {
 //import org.junit.Test;
 
 /**
-* Implementieren Sie jeweils einen Testfall, der für eine Liste von IBANs
-* testet, ob
-* a. nicht nur deutsche IBANs enthalten sind.
-* b. mindestens eine französische IBAN enthalten ist.
-* c. keine italienische IBAN enthalten ist.
-* d. die Bedingungen aus den Teilaufgaben b und c eingehalten werden.
-* 
-* Hinweis: Zur Vereinfachung reicht es aus, den Ländercode der IBAN zu
-* prüfen.
-* 
-* @author Katharina Löhrke
-*/
+ * Implementieren Sie jeweils einen Testfall, der für eine Liste von IBANs
+ * testet, ob a. nicht nur deutsche IBANs enthalten sind. b. mindestens eine
+ * französische IBAN enthalten ist. c. keine italienische IBAN enthalten ist. d.
+ * die Bedingungen aus den Teilaufgaben b und c eingehalten werden.
+ * 
+ * Hinweis: Zur Vereinfachung reicht es aus, den Ländercode der IBAN zu prüfen.
+ * 
+ * @author Katharina Löhrke
+ */
 //public class HamcrestTest {
 
 //	private List<String> ibans;
