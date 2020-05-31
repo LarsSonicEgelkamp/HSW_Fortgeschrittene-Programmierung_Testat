@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import Ordermanager.Orderliste;
 import boersenprogramm.Order;
 
 public class CSV_Manager {
@@ -17,47 +18,49 @@ public class CSV_Manager {
 	private int fehlerhafteZeilen;
 	private ArrayList<String> logEintraege;
 
+	private File aktuelleOrder;
+
 	public CSV_Manager() {
 
 	}
 
-	public static void writeCSV(String filename) throws IOException {
+//	private static void writeCSV(String filename) throws IOException {
+//
+//		File filepath = new File(System.getProperty("user.home") + "/Börsenprogramm/CSV_Dateien");
+//		BufferedWriter bw = null;
+//		FileWriter fw = null;
+//		File f = new File(filepath + "/" + filename + ".csv");
+//
+//		if (filepath.mkdirs()) {
+//
+//			try {
+//
+//				fw = new FileWriter(f);
+//				bw = new BufferedWriter(fw);
+//
+//				for (String orderElement : Order.getOrderListe()) {
+//					bw.write(orderElement + ",");
+//				}
+//				bw.close();
+//			} catch (IOException e) {
+//				throw new IOException(e);
+//			}
+//		} else {
+//			try {
+//				fw = new FileWriter(f);
+//				bw = new BufferedWriter(fw);
+//
+//				for (String orderElement : Order.getOrderListe()) {
+//					bw.write(orderElement + ",");
+//				}
+//				bw.close();
+//			} catch (IOException e) {
+//				throw new IOException(e);
+//			}
+//		}
+//	}
 
-		File filepath = new File(System.getProperty("user.home") + "/Börsenprogramm/CSV_Dateien");
-		BufferedWriter bw = null;
-		FileWriter fw = null;
-		File f = new File(filepath + "/" + filename + ".csv");
-
-		if (filepath.mkdirs()) {
-
-			try {
-
-				fw = new FileWriter(f);
-				bw = new BufferedWriter(fw);
-
-				for (String orderElement : Order.getOrderListe()) {
-					bw.write(orderElement + ",");
-				}
-				bw.close();
-			} catch (IOException e) {
-				throw new IOException(e);
-			}
-		} else {
-			try {
-				fw = new FileWriter(f);
-				bw = new BufferedWriter(fw);
-
-				for (String orderElement : Order.getOrderListe()) {
-					bw.write(orderElement + ",");
-				}
-				bw.close();
-			} catch (IOException e) {
-				throw new IOException(e);
-			}
-		}
-	}
-
-	public ArrayList<String> readCSV(String filename) throws IOException {
+	private ArrayList<String> readCSV(String filename) throws IOException {// liest eine Zeile
 		ArrayList<String> records = new ArrayList<>();
 		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 			String line;
@@ -73,22 +76,48 @@ public class CSV_Manager {
 		return records;
 	}
 
+	/**
+	 * Liest eine Order zeilenweise aus.
+	 * 
+	 * @param order: die zu lesende Order
+	 * @return: ArrayList<String>, wobei jeder String eine Zeile einer Order ist
+	 * @throws IOException
+	 */
+	private ArrayList<String> readCSVDatei(File order) throws IOException {
+		ArrayList<String> zeilen = new ArrayList<>();
+		try (BufferedReader br = new BufferedReader(new FileReader(order))) {
+			String line;
+			while ((line = br.readLine()) != null) {
+				zeilen.add(line);
+			}
+		} catch (FileNotFoundException e) {
+			throw new IOException(e);
+		} catch (IOException e) {
+			throw new IOException(e);
+		}
+		return zeilen;
+	}
+
 	public void neueOrderDatei(File f) throws IOException {
-		File filepath = new File(System.getProperty("C:\\Users\\Service\\Documents\\Boerse\\Orders\\" + f.getName()));
+		String filename = f.getName();
+		File filepath = new File("C:\\Users\\Service\\Documents\\Boerse\\Orders\\zuBearbeiten\\" + filename);
 		System.out.println(filepath);
 		BufferedWriter bw = null;
 		FileWriter fw = null;
 
-		if (filepath.mkdirs()) {
+		if (filepath.createNewFile()) {
+			boolean write = filepath.canWrite();
+			System.out.println(write);
 
 			try {
-				ArrayList<String> orderLines = this.readCSV(f.getAbsolutePath());
-				filepath.setWritable(true);
+				ArrayList<String> orderLines = this.readCSVDatei(f);
 				// wird nicht geschrieben ???, angeblich kein Zugriff???
+				System.out.println("isFile:" + filepath.isFile());
 				fw = new FileWriter(filepath);
 				bw = new BufferedWriter(fw);
 				for (String line : orderLines) {
 					bw.write(line);
+					bw.newLine();
 				}
 
 				bw.close();
@@ -105,55 +134,161 @@ public class CSV_Manager {
 	 * 
 	 * @throws IOException
 	 */
-	public void bearbeiteOrders() throws IOException {
-		File orders = new File("C:\\Users\\Service\\Documents\\Boerse\\Orders");// da sollten alle Orders liegen
-		ArrayList<String> paths = this.readCSV(orders.getAbsolutePath());// aus den Zeilen der Datei: orders, werden
-																			// alle anderen Pfade der einzelnen Orders
-																			// entnommen.
-		for (String s : paths) { // für jeden Pfad wird ein File erstellt
-			File f = new File(s);
-			ArrayList<String> eineOrder = this.readCSV(f.getAbsolutePath());// der Inhalt einer Order wird gelesen
-			ueberpruefeOrder(eineOrder);// Order wird auf Richtigkeit der Syntax geprueft
-			if (this.fehlerhafteZeilen != 0) {//
-				this.logEintraege
-						.add("Die Datei: " + f.getName() + " hat " + this.fehlerhafteZeilen + " fehlerhafte Zeilen");
+	public Orderliste getKorrekteOrders() throws IOException {
+		Orderliste orderliste = new Orderliste();
+		File orderVerzeichnis = new File("C:\\Users\\Service\\Documents\\Boerse\\Orders\\zuBearbeiten");// da sollten
+																										// alle Orders
+		// liegen
+		if (orderVerzeichnis.mkdirs()) {
+			File[] orders = orderVerzeichnis.listFiles();// überprüfen, was in paths steht, wenn das Verzeichnis leer
+															// ist
+			for (File f : orders) {
+				this.aktuelleOrder = f;
+				ArrayList<String> orderAlsList = this.readCSVDatei(f);
+				orderAlsList = this.getKorrekteOrders(orderAlsList);
+				orderliste.setOrderListe(this.getOrderliste(orderAlsList));
+
 			}
+		} else {
+			throw new IOException("Speicherverzeichnis der Orders existiert nich und konnte nicht angelegt werden.");
 		}
 		this.schreibeLogDatei();
+		return orderliste;
+	}
+
+	private ArrayList<Order> getOrderliste(ArrayList<String> orderAlsList) {
+		ArrayList<Order> orderliste = new ArrayList<Order>();
+		for (String zeile : orderAlsList) {
+			String[] orderElemente = zeile.split(";");
+			Order tempOr = new Order();
+			tempOr.setDepotID(Integer.parseInt(orderElemente[0]));
+			tempOr.setAktienGruppenID(Integer.parseInt(orderElemente[1]));
+			tempOr.setMenge(Integer.parseInt(orderElemente[2]));
+			tempOr.setStueckpreis(Integer.parseInt(orderElemente[3]));
+			orderliste.add(tempOr);
+		}
+		return orderliste;
 	}
 
 	/**
-	 * Überprüft eine Order auf korrekte Syntax.
+	 * Überprüft die übergebene Order auf korrekte und fehlerhafte Zeilen.
+	 * 
+	 * @param eineOrder: eine ArrayList<String>, wobei jeder String einer Zeile der
+	 *                   Order entspricht
+	 * @return: ArrayList<String> mit alle fehlerfreien Zeilen der Order
+	 * @throws IOException
+	 */
+	private ArrayList<String> getKorrekteOrders(ArrayList<String> eineOrderDateiAlsListe) throws IOException {
+		this.fehlerhafteZeilen = 0;
+		ArrayList<String> korrekteOrders = new ArrayList<String>();
+		ArrayList<String> fehlerhafteOrders = new ArrayList<String>();
+		boolean fehlerVorhanden = false;
+
+		for (String zeile : eineOrderDateiAlsListe) {
+			boolean fehlerfrei = this.ueberpruefeZeile(zeile);
+			if (fehlerfrei) {
+				korrekteOrders.add(zeile);
+			} else {
+				this.fehlerhafteZeilen++;
+				fehlerVorhanden = true;
+				fehlerhafteOrders.add(zeile);
+
+			}
+		}
+		if (fehlerVorhanden) {
+			this.schreibeFehlerhafteDatei(korrekteOrders, fehlerhafteOrders);
+			this.logEintraege.add("Die Datei: " + this.aktuelleOrder.getName() + " hat " + this.fehlerhafteZeilen
+					+ " fehlerhafte Zeilen");
+
+		} else {
+			this.schreibeVerarbeiteteOrderDatei(korrekteOrders);
+		}
+		return korrekteOrders;
+	}
+
+	/**
+	 * Überprüft eine Zeile einer Orderdatei auf Korrektheit der Syntax.
 	 * 
 	 * @param eineOrder: Eine Order, wobei jede Zeile der Order in einer AllarList
 	 *                   übergeben wird.
 	 */
-	public void ueberpruefeOrder(ArrayList<String> eineOrder) {
-		this.fehlerhafteZeilen = 0;// anzahl der fehlerhaften Zeilen wird bei dem jeder neuen Order wieder auf null
-									// gesetzt
-		for (String zeile : eineOrder) {// jede Zeile der Order wird untersucht
-			String[] elements = zeile.split(";");// Elemente in der CSV-Datei werden durch ; getrennt und Zeilen durch ,
-			if (elements.length == 4) {// Syntax der Order: Muss 4 elemente haben
-				for (String s : elements) {
-					try {// fängt NumberFormatException, wenn die Strings keine Zahlen sind. Dies sollten
-							// sie sein, da es ID`s oder Werte sind.
-						int i = Integer.parseInt(s);
-					} catch (NumberFormatException e) {
-						this.fehlerhafteZeilen++;
-						break;
-					}
+	private boolean ueberpruefeZeile(String zeileEinerOrder) {
+		String[] elements = zeileEinerOrder.split(";");
+		if (elements.length == 4) {// Syntax der Order: Muss 4 elemente haben
+			for (String s : elements) {
+				try {// fängt NumberFormatException, wenn die Strings keine Zahlen sind. Dies sollten
+						// sie sein, da es ID`s oder Werte sind.
+					int i = Integer.parseInt(s);
+				} catch (NumberFormatException e) {
+					this.fehlerhafteZeilen++;
+					return false;
 				}
-			} else {
-				this.fehlerhafteZeilen++;
 			}
+		} else {
+			this.fehlerhafteZeilen++;
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Schreibt die gesamte Orderdatei in das Verzeichnis fehlerhafter Orders. Die
+	 * korrekten und fehlerhaften Zeilen werden dabei voneinander getrennt.
+	 * 
+	 * @param korrekteOrders:    als ArrayList<String>
+	 * @param fehlerhafteOrders: als ArrayList<String>
+	 */
+	private void schreibeFehlerhafteDatei(ArrayList<String> korrekteOrders, ArrayList<String> fehlerhafteOrders)
+			throws IOException {
+		File f = new File("C:\\Users\\Service\\Documents\\Boerse\\Orders\\fehlerhaft\\" + this.aktuelleOrder.getName());
+
+		if (f.createNewFile()) {
+			FileWriter fw = new FileWriter(f);
+			BufferedWriter bw = new BufferedWriter(fw);
+
+			for (String zeile : korrekteOrders) {
+				bw.write(zeile);
+				bw.newLine();
+			}
+
+			bw.write("Fehlerhafte Orders:");
+			bw.newLine();
+
+			for (String zeile : fehlerhafteOrders) {
+				bw.write(zeile);
+				bw.newLine();
+			}
+			bw.close();
+		} else {
+			throw new IOException(
+					"Fehlerhafte Orderdatei, " + this.aktuelleOrder.getName() + ", konnte nicht angelegt werden.");
+		}
+	}
+
+	private void schreibeVerarbeiteteOrderDatei(ArrayList<String> korrekteOrders) throws IOException {
+		File f = new File("C:\\Users\\Service\\Documents\\Boerse\\Orders\\verarbeitet\\" + this.aktuelleOrder.getName());
+
+		if (f.createNewFile()) {
+			FileWriter fw = new FileWriter(f);
+			BufferedWriter bw = new BufferedWriter(fw);
+
+			for (String zeile : korrekteOrders) {
+				bw.write(zeile);
+				bw.newLine();
+			}
+			bw.close();
+		} else {
+			throw new IOException(
+					"Die vollständig korrekte Orderdatei, " + this.aktuelleOrder.getName() + ", konnte im Verzeichnis \"verarbeitet\" nicht angelegt werden.");
 		}
 	}
 
 	/**
 	 * Schreibt eine Logdatei mit der Anzahl an fehlerhaften Zeilen von jeder Datei
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
-	public void schreibeLogDatei() throws IOException {
+	private void schreibeLogDatei() throws IOException {
 		int i = 1;// individueller Name jeder Logdatei
 		File filepath = new File(System.getProperty("C:\\Users\\Service\\Documents\\Boerse\\Logs\\" + i));
 		BufferedWriter bw = null;

@@ -38,7 +38,7 @@ import javax.swing.table.DefaultTableModel;
 
 import Filemanager.CSV_Manager;
 import Filemanager.Serialisierung;
-
+import Ordermanager.Orderverarbeitung;
 import boersenprogramm.AktuellerUser;
 import boersenprogramm.Boerse;
 import boersenprogramm.Boersenmanager;
@@ -617,10 +617,6 @@ public class GUI extends JFrame implements ActionListener {
 	}
 	
 	private void ordersAusfuehren() throws IOException {
-		CSV_Manager csvmag= new CSV_Manager();
-		csvmag.bearbeiteOrders();
-		
+		Orderverarbeitung ord = new Orderverarbeitung();	
 	}
-	
-
 }

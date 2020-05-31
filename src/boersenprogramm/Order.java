@@ -1,24 +1,53 @@
 package boersenprogramm;
 
-import java.util.ArrayList;
-
 public class Order {
 
-	private int orderID;
-	private int aktienID;
+	private int depotID;
+	private int aktienGruppenID;
 	private int menge;
 	private int stueckpreis;
-	private static ArrayList<String> OrderListe;
 
-	public static ArrayList<String> getOrderListe() {
-		return OrderListe;
+	public Order(int depotID, int aktienGruppenID, int menge, int stueckpreis) {
+		this.depotID = depotID;
+		this.aktienGruppenID = aktienGruppenID;
+		this.menge = menge;
+		this.stueckpreis = stueckpreis;
 	}
 
-	public void setOrderListe(ArrayList<String> orderListe) {
-		OrderListe = orderListe;
+	public Order() {
+
 	}
 
-	public Order(int id) {
-		this.orderID = id;
+	public int getDepotID() {
+		return depotID;
 	}
+
+	public void setDepotID(int depotID) {
+		this.depotID = depotID;
+	}
+
+	public int getAktienGruppenID() {
+		return aktienGruppenID;
+	}
+
+	public void setAktienGruppenID(int aktienGruppenID) {
+		this.aktienGruppenID = aktienGruppenID;
+	}
+
+	public int getMenge() {
+		return menge;
+	}
+
+	public void setMenge(int menge) {
+		this.menge = menge;
+	}
+
+	public int getStueckpreis() {
+		return stueckpreis;
+	}
+
+	public void setStueckpreis(int stueckpreis) {
+		this.stueckpreis = stueckpreis;
+	}
+
 }
