@@ -21,8 +21,6 @@ import boersenprogramm.Aktiengesellschaft;
 import boersenprogramm.AktuellerUser;
 import boersenprogramm.Boerse;
 import boersenprogramm.Datenbankersteller;
-import de.loehrke.testen.junit.uebung06.NegativeZahlException;
-import de.loehrke.testen.junit.uebung06.Rechner;
 import user_Interface.ConnectionManager;
 import user_Interface.GUI;
 
