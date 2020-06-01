@@ -262,15 +262,15 @@ public class GUI extends JFrame implements ActionListener {
 
 		} else if (ae.getSource() == this.orderEinreichen) {
 			try {
-			JFileChooser chooserOrderEinreichen = new JFileChooser();
-			chooserOrderEinreichen.setDialogTitle("Bitte wählen sie ihre Order aus.");
-			chooserOrderEinreichen.showOpenDialog(null);
-			File f = chooserOrderEinreichen.getSelectedFile();
-			this.orderEinreichen(f);
-			}catch(IOException e) {
+				JFileChooser chooserOrderEinreichen = new JFileChooser();
+				chooserOrderEinreichen.setDialogTitle("Bitte wählen sie ihre Order aus.");
+				chooserOrderEinreichen.showOpenDialog(null);
+				File f = chooserOrderEinreichen.getSelectedFile();
+				this.orderEinreichen(f);
+			} catch (IOException e) {
 				this.setErrorMessage(e);
 			}
-		}else if(ae.getSource()==this.btnOrdersAusfuehren) {
+		} else if (ae.getSource() == this.btnOrdersAusfuehren) {
 			try {
 				this.ordersAusfuehren();
 			} catch (IOException | SQLException e) {
@@ -390,8 +390,12 @@ public class GUI extends JFrame implements ActionListener {
 
 		werteHistoriePanel.add(cbxAktienID);
 		werteHistoriePanel.add(aktienHistorie);
-		for (String aktie : b.alleAktienLesen(stat)) {
-			cbxAktienID.addItem(aktie);
+		try {
+			for (String aktie : b.alleAktienLesen(stat)) {
+				cbxAktienID.addItem(aktie);
+			}
+		} catch (SQLException e) {
+			this.setErrorMessage(e);
 		}
 
 		cbxAktienID.addActionListener(this);
@@ -402,6 +406,7 @@ public class GUI extends JFrame implements ActionListener {
 	 *
 	 */
 	JButton btnOrdersAusfuehren;
+
 	private void createBoersenmanagerFenster() {
 		JPanel panelBoersenmanager = new JPanel();
 		btnOrdersAusfuehren = new JButton("Alle Orders ausfuehren");
@@ -594,10 +599,10 @@ public class GUI extends JFrame implements ActionListener {
 	}
 
 	private void orderEinreichen(File order) throws IOException {
-		if(!this.orderPruefen(order)) {
+		if (!this.orderPruefen(order)) {
 			throw new IOException("Falsches Dateiformat. Die Datei muss eine CSV-Datei sein.");
 		}
-		CSV_Manager csvmag= new CSV_Manager();
+		CSV_Manager csvmag = new CSV_Manager();
 		csvmag.neueOrderDatei(order);
 	}
 
@@ -610,15 +615,16 @@ public class GUI extends JFrame implements ActionListener {
 	 */
 	private boolean orderPruefen(File order) {
 		String[] splitOrder = order.getName().split("\\.");
-		int index = splitOrder.length-1;
+		int index = splitOrder.length - 1;
 		if (splitOrder[index].contentEquals("csv")) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	private void ordersAusfuehren() throws IOException, SQLException {
-		Date datum = null;//TODO aktuelles Datum initialisieren oder User nach Datum fragen und dann auslesen
-		Orderverarbeitung ord = new Orderverarbeitung(stat, datum);	
+		Date datum = null;// TODO aktuelles Datum initialisieren oder User nach Datum fragen und dann
+							// auslesen
+		Orderverarbeitung ord = new Orderverarbeitung(stat, datum);
 	}
 }

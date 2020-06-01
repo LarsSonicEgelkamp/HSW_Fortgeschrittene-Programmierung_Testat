@@ -92,12 +92,11 @@ public class CSV_Manager {
 	 */
 	public Orderliste getKorrekteOrders() throws IOException {
 		Orderliste orderliste = new Orderliste();
-		File orderVerzeichnis = new File("C:\\Users\\Service\\Documents\\Boerse\\Orders\\zuBearbeiten");// da sollten
-																										// alle Orders
-		// liegen
+		File orderVerzeichnis = new File("C:\\Users\\Service\\Documents\\Boerse\\Orders\\zuBearbeiten");
+																										
 		if (orderVerzeichnis.mkdirs()) {
-			File[] orders = orderVerzeichnis.listFiles();// überprüfen, was in paths steht, wenn das Verzeichnis leer
-															// ist
+			File[] orders = orderVerzeichnis.listFiles();
+															
 			for (File f : orders) {
 				this.aktuelleOrder = f;
 				ArrayList<String> orderAlsList = this.readCSVDatei(f);
@@ -178,10 +177,9 @@ public class CSV_Manager {
 	 */
 	private boolean ueberpruefeZeile(String zeileEinerOrder) {
 		String[] elements = zeileEinerOrder.split(";");
-		if (elements.length == 4) {// Syntax der Order: Muss 4 elemente haben
+		if (elements.length == 4) {
 			for (String s : elements) {
-				try {// fängt NumberFormatException, wenn die Strings keine Zahlen sind. Dies sollten
-						// sie sein, da es ID`s oder Werte sind.
+				try {
 					int i = Integer.parseInt(s);
 				} catch (NumberFormatException e) {
 					this.fehlerhafteZeilen++;
