@@ -60,28 +60,30 @@ public class CSV_Manager {
 		System.out.println(filepath);
 		BufferedWriter bw = null;
 		FileWriter fw = null;
+		if (filepath.exists() == false) {
+			if (filepath.createNewFile()) {
+				boolean write = filepath.canWrite();
+				System.out.println(write);
 
-		if (filepath.createNewFile()) {
-			boolean write = filepath.canWrite();
-			System.out.println(write);
+				try {
+					ArrayList<String> orderLines = this.readCSVDatei(neueOrder);
+					System.out.println("isFile:" + filepath.isFile());
+					fw = new FileWriter(filepath);
+					bw = new BufferedWriter(fw);
+					for (String line : orderLines) {
+						bw.write(line);
+						bw.newLine();
+					}
 
-			try {
-				ArrayList<String> orderLines = this.readCSVDatei(neueOrder);
-				// wird nicht geschrieben ???, angeblich kein Zugriff???
-				System.out.println("isFile:" + filepath.isFile());
-				fw = new FileWriter(filepath);
-				bw = new BufferedWriter(fw);
-				for (String line : orderLines) {
-					bw.write(line);
-					bw.newLine();
+					bw.close();
+				} catch (IOException e) {
+					throw new IOException(e);
 				}
-
-				bw.close();
-			} catch (IOException e) {
-				throw new IOException(e);
+			} else {
+				throw new IOException("Fehler beim Einreichen der Order.");
 			}
 		} else {
-			throw new IOException("Fehler beim Einreichen der Order.");
+			throw new IOException("Eine Order mit diesem Namen existiert schon.");
 		}
 	}
 
@@ -93,10 +95,15 @@ public class CSV_Manager {
 	public Orderliste getKorrekteOrders() throws IOException {
 		Orderliste orderliste = new Orderliste();
 		File orderVerzeichnis = new File("C:\\Users\\Service\\Documents\\Boerse\\Orders\\zuBearbeiten");
-																										
-		if (orderVerzeichnis.mkdirs()) {
+		if (orderVerzeichnis.exists() == false) {
+			if (orderVerzeichnis.mkdirs()) {
+
+			} else {
+				throw new IOException(
+						"Speicherverzeichnis der Orders existiert nicht und konnte nicht angelegt werden.");
+			}
 			File[] orders = orderVerzeichnis.listFiles();
-															
+
 			for (File f : orders) {
 				this.aktuelleOrder = f;
 				ArrayList<String> orderAlsList = this.readCSVDatei(f);
@@ -104,8 +111,6 @@ public class CSV_Manager {
 				orderliste = this.getOrderliste(orderAlsList);
 
 			}
-		} else {
-			throw new IOException("Speicherverzeichnis der Orders existiert nich und konnte nicht angelegt werden.");
 		}
 		this.schreibeLogDatei();
 		return orderliste;
@@ -252,11 +257,15 @@ public class CSV_Manager {
 	 * @throws IOException
 	 */
 	private void schreibeLogDatei() throws IOException {
-		String datum = null;// TODO automatisches Datum erzeugen
-		File filepath = new File("C:\\Users\\Service\\Documents\\Boerse\\Logs\\" + datum);
+		int i = 1;
+		File filepath = new File("C:\\Users\\Service\\Documents\\Boerse\\Logs\\" + i);
 		BufferedWriter bw = null;
 		FileWriter fw = null;
-		if (filepath.mkdirs()) {
+		while (filepath.exists()) {
+			i++;
+			filepath = new File("C:\\Users\\Service\\Documents\\Boerse\\Logs\\" + i);
+		}
+		if (filepath.createNewFile()) {
 
 			try {
 
@@ -273,16 +282,22 @@ public class CSV_Manager {
 			throw new IOException("Fehler beim Schreiben der Logdatei.");
 		}
 	}
-/**
- * Legt anhande der uebergebenen Umsaetze eine neue Umsaetzedatei an
- * @param umsaetze: ArrayList<Umsaetze>, enthält alle umsaetze
- * @throws IOException
- */
+
+	/**
+	 * Legt anhande der uebergebenen Umsaetze eine neue Umsaetzedatei an
+	 * 
+	 * @param umsaetze: ArrayList<Umsaetze>, enthält alle umsaetze
+	 * @throws IOException
+	 */
 	public void schreibeUmsaetze(ArrayList<Umsaetze> umsaetze) throws IOException {
-		String datum = null;// TODO automatisches Datum erzeugen
-		File filepath = new File(System.getProperty("C:\\Users\\Service\\Documents\\Boerse\\UmsaetzDateien" + datum));
+		int i = 1;
+		File filepath = new File(System.getProperty("C:\\Users\\Service\\Documents\\Boerse\\UmsaetzDateien" + i));
 		BufferedWriter bw = null;
 		FileWriter fw = null;
+		while (filepath.exists()) {
+			i++;
+			filepath = new File(System.getProperty("C:\\Users\\Service\\Documents\\Boerse\\UmsaetzDateien" + i));
+		}
 		if (filepath.mkdirs()) {
 			try {
 				double transaktionskosten = 0;
@@ -290,7 +305,7 @@ public class CSV_Manager {
 				bw = new BufferedWriter(fw);
 				for (Umsaetze um : umsaetze) {
 					bw.write(um.getZahlerIban() + "; " + um.getZahlungsempfaengerIban() + "; " + um.getBetrag() + "; "
-							+ um.getVerwendungszweck() + "; " + um.getAusfuehrdatum()+", ");
+							+ um.getVerwendungszweck() + "; " + um.getAusfuehrdatum() + ", ");
 					bw.newLine();
 					transaktionskosten = transaktionskosten + um.getTransaktionskosten();
 				}
