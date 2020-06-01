@@ -1,4 +1,4 @@
-package platzZumTesten;
+package DriverTest;
 
 import java.sql.Driver;
 import java.sql.DriverManager;
