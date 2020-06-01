@@ -51,15 +51,10 @@ public class Aktie {
 	}
 
 	/*
-	 * Bevor der Wert der Aktie geändert wird, wird der aktuelle Wert zuerst in der
+	 * Bevor der Wert der Aktie geaendert wird, wird der aktuelle Wert zuerst in der
 	 * Werte-Historie gespeichert.
 	 */
 	public void setWert(int wert) throws SQLException {
-//		this.werteHistorie.add(this.getWert(id));
-//		this.stat = ConnectionManager.ueberpruefeConnection(stat);
-//		stat.execute("INSERT INTO Wertehistorie (Aktie_ID, Wert, Datum) VALUES (" + this.id + ", " + this.aktWert + ", "
-//				+ aktDatum + ");");
-
 		this.aktWert = wert;
 	}
 

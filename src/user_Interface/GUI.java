@@ -272,7 +272,6 @@ public class GUI extends JFrame implements ActionListener {
 				}
 
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -282,7 +281,6 @@ public class GUI extends JFrame implements ActionListener {
 			} catch (IOException e) {
 				this.setErrorMessage(e);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

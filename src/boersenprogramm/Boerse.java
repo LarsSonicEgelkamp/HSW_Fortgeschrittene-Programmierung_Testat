@@ -85,9 +85,6 @@ public class Boerse {
 			Aktie aktie = new Aktie(stat, id, wert);
 			stat.execute("INSERT INTO Aktie(ID, aktuellerWert) VALUES (" + id + ", " + wert + ");");
 			this.aktienListe.add(aktie);
-			// Aktiengesellschaft_ID zu Aktie hinzufügen, prüfen, ob Aktie schon
-			// Aktiengesellschaft_ID hat
-//			stat.execute("UPDATE Aktie SET Aktiengesellschaft_ID = "+Aktiengesellschaft_ID+" WHERE (ID="+id+");"); // wie bekomme ich die ID
 		}
 	}
 
@@ -107,7 +104,6 @@ public class Boerse {
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

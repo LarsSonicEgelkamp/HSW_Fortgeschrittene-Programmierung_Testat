@@ -25,7 +25,7 @@ public class Aktiengesellschaft {
 		if (aktie.next()) {
 			this.unsereAktien.add(ak);
 		} else {
-			System.out.println("Die hinzuzufügende Aktie existiert nicht. Bitte legen sie erst ihre Aktie an"); // Design
+			System.out.println("Die hinzuzufuegende Aktie existiert nicht. Bitte legen sie erst ihre Aktie an"); // Design
 		}
 	}
 }

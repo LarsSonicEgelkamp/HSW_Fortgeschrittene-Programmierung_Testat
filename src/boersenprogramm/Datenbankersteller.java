@@ -14,13 +14,6 @@ public class Datenbankersteller {
 		this.co = con;
 		try {
 			Statement stat = co.createStatement();
-//			stat.execute("DROP TABLE Aktiengesellschaft");
-//			stat.execute("DROP TABLE Boersenmanager");
-//			stat.execute("DROP TABLE Depotinhaber");
-//			stat.execute("DROP TABLE Depot");
-//			stat.execute("DROP TABLE Aktie");
-//			stat.execute("DROP TABLE WerteHistorie");
-//			stat.execute("DROP TABLE Transaktion");
 
 			erstelleAktiengesellschafttabelle(stat, co);
 			erstelleBoersenmanagerTabelle(stat, co);
@@ -30,7 +23,6 @@ public class Datenbankersteller {
 			erstelleWerteHistorieTabelle(stat, co);
 			erstelleTransaktionTabelle(stat,co);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
