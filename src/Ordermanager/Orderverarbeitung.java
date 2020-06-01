@@ -150,7 +150,7 @@ public class Orderverarbeitung {
 		ArrayList<Integer> alleAktienIDs = new ArrayList<Integer>();
 		this.stat = ConnectionManager.ueberpruefeConnection(stat);
 		ResultSet rs = stat
-				.executeQuery("SELECT ID FROM Aktie WHERE Akteingesellschaft_ID = " + aktiengesellschaftsID + ";");
+				.executeQuery("SELECT ID FROM Aktie WHERE Aktiengesellschaft_ID = " + aktiengesellschaftsID + ";");
 		while (rs.next()) {
 			alleAktienIDs.add(rs.getInt(1));
 		}
@@ -204,21 +204,21 @@ public class Orderverarbeitung {
 			this.stat = ConnectionManager.ueberpruefeConnection(stat);
 			ResultSet rs = stat.executeQuery("SELECT ID FROM Aktie WHERE Depot_ID = " + t.getVerkaufsDepotID()
 					+ " AND Aktiengesellschaft_ID = " + t.getAktiengesellschaftsID() + ";");
-			while (rs.next() && idsMoeglicherAktien.size() < t.getMenge()) {
+			while (rs.next() && idsMoeglicherAktien.size() - 1 < t.getMenge()) {
 				idsMoeglicherAktien.add(rs.getInt(1));
 			}
-			int zaehler = t.getMenge();
+			int zaehler = 0;
 			Depot tempDe = new Depot(t.getAnkaufsDepotID(), stat);
 			int depotinhaberID = tempDe.getInhaber(t.getAnkaufsDepotID());
-			while (zaehler > 0) {
+			while (zaehler <= t.getMenge() && zaehler < idsMoeglicherAktien.size() - 1) {
 				this.stat = ConnectionManager.ueberpruefeConnection(stat);
-				stat.execute("UPDATE Aktie SET Depot_ID = " + t.getAnkaufsDepotID() + "WHERE Aktie_ID = "
+				stat.execute("UPDATE Aktie SET Depot_ID = " + t.getAnkaufsDepotID() + " WHERE ID = "
 						+ idsMoeglicherAktien.get(zaehler) + ";");
 
-				stat.execute("UPDATE Aktie SET Depotinhaber_ID = " + depotinhaberID + "WHERE Aktie_ID = "
+				stat.execute("UPDATE Aktie SET Depotinhaber_ID = " + depotinhaberID + " WHERE ID = "
 						+ idsMoeglicherAktien.get(zaehler) + ";");
 				this.transaktionenEintragen(t, idsMoeglicherAktien.get(zaehler));
-				zaehler--;
+				zaehler++;
 			}
 		}
 

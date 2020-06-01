@@ -14,13 +14,15 @@ public class Datenbankersteller {
 		this.co = con;
 		try {
 			Statement stat = co.createStatement();
-//			stat.execute("DROP TABLE Aktiengesellschaft");
+//			stat.execute("SET FOREIGN_KEY_CHECKS = 0");
 //			stat.execute("DROP TABLE Boersenmanager");
-//			stat.execute("DROP TABLE Depotinhaber");
-//			stat.execute("DROP TABLE Depot");
-//			stat.execute("DROP TABLE Aktie");
 //			stat.execute("DROP TABLE WerteHistorie");
 //			stat.execute("DROP TABLE Transaktion");
+//			stat.execute("DROP TABLE Aktie");
+//			stat.execute("DROP TABLE Aktiengesellschaft");
+//			stat.execute("DROP TABLE Depotinhaber");
+//			stat.execute("DROP TABLE Depot");
+//			stat.execute("SET FOREIGN_KEY_CHECKS = 1");
 
 			erstelleAktiengesellschafttabelle(stat, co);
 			erstelleBoersenmanagerTabelle(stat, co);
@@ -150,7 +152,7 @@ public class Datenbankersteller {
 		try {
 			if (this.pruefeExistenz(stat, con, "Depotinhaber") == false) {
 				String sqlBefehlTabelleErstellen = "CREATE TABLE "
-						+ "Depotinhaber ( ID INT, Name VARCHAR(255),Iban VARCHAR(255) CONSTRAINT PK_Depotinhaber_ID PRIMARY KEY (ID));";
+						+ "Depotinhaber ( ID INT, Name VARCHAR(255),Iban VARCHAR(255), CONSTRAINT PK_Depotinhaber_ID PRIMARY KEY (ID));";
 				stat.execute(sqlBefehlTabelleErstellen);
 				stat.execute("INSERT INTO Depotinhaber(ID, Name, Iban) VALUES \r\n"
 						+ "('10', 'Klaus Heinrich', 'DE88500105173812539961'),\r\n"
