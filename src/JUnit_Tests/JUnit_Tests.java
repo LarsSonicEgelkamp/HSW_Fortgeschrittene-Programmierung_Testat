@@ -40,63 +40,6 @@ import boersenprogramm.Order;
 import user_Interface.ConnectionManager;
 import user_Interface.GUI;
 
-//import de.loehrke.testen.junit.uebung02.Rechner;
-//	public class RechnerAdditionTest {
-//
-//		private Rechner rechner;
-//
-//		@Before
-//		public void initRechner() {
-//			this.rechner = new Rechner();
-//		}
-//
-//		@Test
-//		public void testAddition() {
-//			int actual = rechner.addiere(1, 2);
-//			Assert.assertTrue("Fehler bei der Addition", actual == 3);
-//		}
-//
-//	}
-
-//private Rechner rechner;
-//
-//@DataPoints
-//public static final int[] zahlen = { -100, -20, -10, -5, -2, -1, 0, 1, 2, 5, 10, 20, 100};
-//
-//@Before
-//public void initRechner() {
-//	this.rechner = new Rechner();
-//}
-//
-//@Theory
-//public void testBerechneFakultaetPositiv(int input) {
-//	// Annahme, dass dieser Testfall nur mit positiven Zahlen und 0 aufgerufen wird
-//	Assume.assumeTrue("Aufruf mit negativer Zahl: " + input, input >= 0);
-//	
-//	// Hinweis: Dieser Test basiert auf der Korrektheit der Methode
-//	// berechnetFakultaetMitSchleife!
-//	int expected = berechneFakultaetMitSchleife(input);
-//	try {
-//		int actual = rechner.berechneFakultaet(input);
-//		Assert.assertTrue(actual == expected);
-//	} catch (NegativeZahlException e) {
-//		Assert.fail(e.getMessage());
-//	}
-//}
-//
-//@Theory
-//public void testBerechneFakultaetNegativ(int input) {
-//	// Annahme, dass dieser Testfall nur mit negativen Zahlen aufgerufen wird
-//	Assume.assumeTrue("Aufruf mit positiver Zahl oder 0: " + input, input < 0);
-//	
-//	boolean exceptionGeworfen = false;
-//	try {
-//		rechner.berechneFakultaet(input);
-//	} catch (NegativeZahlException e) {
-//		exceptionGeworfen = true;
-//	}
-//	Assert.assertTrue(exceptionGeworfen);
-//}
 
 public class JUnit_Tests {
 
@@ -192,45 +135,3 @@ public class JUnit_Tests {
 
 }
 
-//public class HamcrestTest {
-
-//	private List<String> ibans;
-
-//	@Before
-//	public void initIbanListe() {
-//		ibans = new ArrayList<>();
-//
-//		ibans.add("DE12346788901234567890");
-//		ibans.add("DE12346788901234567890");
-//		ibans.add("DE12346788901234567890");
-//		ibans.add("DE12346788901234567890");
-//		ibans.add("DE12346788901234567890");
-//		ibans.add("FR12346788901234567890");
-//	}
-
-//	@Test
-//	public void testTeilaufgabeA() {
-//		// Test, ob nicht nur deutsche IBANs enthalten sind
-//		Assert.assertThat(this.ibans, not(everyItem(startsWith("DE"))));
-//	}
-//
-//	@Test
-//	public void testTeilaufgabeB() {
-//		// Test, ob mindestens eine französische IBAN enthalten ist
-//		Assert.assertThat(this.ibans, hasItem(startsWith("FR")));
-//	}
-//
-//	@Test
-//	public void testTeilaufgabeC() {
-//		// Test, ob keine italienische IBAN enthalten ist
-//		Assert.assertThat(this.ibans, not(hasItem(startsWith("IT"))));
-//	}
-//
-//	@Test
-//	public void testTeilaufgabeD() {
-//		// Test, ob mindestens eine französische IBAN
-//		// UND keine italienische IBAN enthalten ist
-//		Assert.assertThat(this.ibans, both(hasItem(startsWith("FR"))).and(not(hasItem(startsWith("IT")))));
-//	}
-//
-//}
