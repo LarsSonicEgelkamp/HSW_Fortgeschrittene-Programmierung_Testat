@@ -64,10 +64,16 @@ public class Datenbankersteller {
 						+ "Aktie ( ID INT, aktuellerWert INT, Aktiengesellschaft_ID INT, Depotinhaber_ID INT, Depot_ID INT, FOREIGN KEY(Aktiengesellschaft_ID) REFERENCES Aktiengesellschaft(ID), FOREIGN KEY(Depotinhaber_ID) REFERENCES Depotinhaber(ID), FOREIGN KEY(Depot_ID) REFERENCES Depot(ID),  CONSTRAINT PK_Aktie_ID PRIMARY KEY (ID));";
 				stat.execute(sqlBefehlTabelleErstellen);
 				stat.execute(
-						"INSERT INTO Aktie(ID, aktuellerWert, Aktiengesellschaft_ID, Depotinhaber_ID, Depot_ID) VALUES \r\n"
-								+ "('1', '20', '2', '11', '21'),\r\n" + "('2','10', '3', '12', '23'),\r\n"
-								+ "('3','49', '1', '11', '21'),\r\n" + "('4','45', '4', '10', '20'),\r\n"
-								+ "('5','56', '4', '12', '23'),\r\n" + "('6','17', '5', '10', '22'),\r\n"
+						"INSERT INTO Aktie(ID, aktuellerWert, Aktiengesellschaft_ID, Depotinhaber_ID, Depot_ID) VALUES\r\n"
+								+ "('1', '20', '2', '11', '21'),\r\n" + "('12', '22', '2', '11', '21'),\r\n"
+								+ "('13', '23', '2', '11', '21'),\r\n" + "('14', '40', '2', '11', '21'),\r\n"
+								+ "('15', '20', '2', '11', '21'),\r\n" + "('16', '15', '2', '11', '21'),\r\n"
+								+ "('2','10', '3', '12', '23'),\r\n" + "('3','49', '1', '11', '21'),\r\n"
+								+ "('8','49', '1', '11', '21'),\r\n" + "('9','55', '1', '11', '21'),\r\n"
+								+ "('10','30', '1', '11', '21'),\r\n" + "('11','23', '1', '11', '21'),\r\n"
+								+ "('4','45', '4', '10', '20'),\r\n" + "('5','56', '4', '12', '23'),\r\n"
+								+ "('19','60', '4', '12', '23'),\r\n" + "('6','17', '5', '10', '22'),\r\n"
+								+ "('17','17', '5', '10', '22'),\r\n" + "('18','20', '5', '10', '22'),\r\n"
 								+ "('7','15', '2', '12', '24');");
 
 			}
