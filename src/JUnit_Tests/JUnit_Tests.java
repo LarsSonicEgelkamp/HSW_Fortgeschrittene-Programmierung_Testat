@@ -113,11 +113,8 @@ public class JUnit_Tests {
 		csv.getKorrekteOrders();
 		System.out.println(csv.getKorrekteOrders());
 		ArrayList<String> testarray = new ArrayList<String>();
-		System.out.println(orderTestList);
-		System.out.println("123");
 		for (Order order : orderTestList) {
 			testarray.add(Integer.toString(order.getDepotID()));
-			System.out.println(order.getDepotID());
 		}
 		assertThat(testarray.get(1), hasItem("21"));
 	}
