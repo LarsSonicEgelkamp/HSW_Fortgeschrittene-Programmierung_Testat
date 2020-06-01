@@ -89,7 +89,6 @@ public class GUI extends JFrame implements ActionListener {
 		this.stat = stat;
 		createStartseite(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		System.out.println("Hallo");
 
 	}
 

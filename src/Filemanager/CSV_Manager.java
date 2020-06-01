@@ -32,7 +32,7 @@ public class CSV_Manager {
 	 * @return: ArrayList<String>, wobei jeder String eine Zeile einer Order ist
 	 * @throws IOException
 	 */
-	private ArrayList<String> readCSVDatei(File order) throws IOException {
+	public ArrayList<String> readCSVDatei(File order) throws IOException {
 		ArrayList<String> zeilen = new ArrayList<>();
 		try (BufferedReader br = new BufferedReader(new FileReader(order))) {
 			String line;
@@ -56,7 +56,7 @@ public class CSV_Manager {
 	 */
 	public void neueOrderDatei(File neueOrder) throws IOException {
 		String filename = neueOrder.getName();
-		File filepath = new File("C:\\Users\\Service\\Documents\\Boerse\\Orders\\zuBearbeiten\\" + filename);
+		File filepath = new File(System.getProperty("user.home")+"\\Service\\Documents\\Boerse\\Orders\\zuBearbeiten\\" + filename);
 		System.out.println(filepath);
 		BufferedWriter bw = null;
 		FileWriter fw = null;
@@ -94,7 +94,7 @@ public class CSV_Manager {
 	 */
 	public Orderliste getKorrekteOrders() throws IOException {
 		Orderliste orderliste = new Orderliste();
-		File orderVerzeichnis = new File("C:\\Users\\Service\\Documents\\Boerse\\Orders\\zuBearbeiten");
+		File orderVerzeichnis = new File(System.getProperty("user.home")+"\\Service\\Documents\\Boerse\\Orders\\zuBearbeiten");
 		if (orderVerzeichnis.exists() == false) {
 			if (orderVerzeichnis.mkdirs()) {
 
@@ -208,7 +208,7 @@ public class CSV_Manager {
 	 */
 	private void schreibeFehlerhafteDatei(ArrayList<String> korrekteOrders, ArrayList<String> fehlerhafteOrders)
 			throws IOException {
-		File f = new File("C:\\Users\\Service\\Documents\\Boerse\\Orders\\fehlerhaft\\" + this.aktuelleOrder.getName());
+		File f = new File(System.getProperty("user.home")+"\\Service\\Documents\\Boerse\\Orders\\fehlerhaft\\" + this.aktuelleOrder.getName());
 
 		if (f.createNewFile()) {
 			FileWriter fw = new FileWriter(f);
@@ -235,7 +235,7 @@ public class CSV_Manager {
 
 	private void schreibeVerarbeiteteOrderDatei(ArrayList<String> korrekteOrders) throws IOException {
 		File f = new File(
-				"C:\\Users\\Service\\Documents\\Boerse\\Orders\\verarbeitet\\" + this.aktuelleOrder.getName());
+				System.getProperty("user.home")+"\\Service\\Documents\\Boerse\\Orders\\verarbeitet\\" + this.aktuelleOrder.getName());
 
 		if (f.createNewFile()) {
 			FileWriter fw = new FileWriter(f);
@@ -259,12 +259,12 @@ public class CSV_Manager {
 	 */
 	private void schreibeLogDatei() throws IOException {
 		int i = 1;
-		File filepath = new File("C:\\Users\\Service\\Documents\\Boerse\\Logs\\" + i);
+		File filepath = new File(System.getProperty("user.home")+"\\Service\\Documents\\Boerse\\Logs\\" + i);
 		BufferedWriter bw = null;
 		FileWriter fw = null;
 		while (filepath.exists()) {
 			i++;
-			filepath = new File("C:\\Users\\Service\\Documents\\Boerse\\Logs\\" + i);
+			filepath = new File(System.getProperty("user.home")+"\\Service\\Documents\\Boerse\\Logs\\" + i);
 		}
 		if (filepath.createNewFile()) {
 
@@ -295,12 +295,12 @@ public class CSV_Manager {
 	public void schreibeUmsaetze(ArrayList<Umsaetze> umsaetze) throws IOException {
 		int i = 1;
 		File filepath = new File(
-				System.getProperty("C:\\Users\\Service\\Documents\\Boerse\\UmsaetzDateien\\umsaetze" + i));
+				System.getProperty(System.getProperty("user.home")+"\\Service\\Documents\\Boerse\\UmsaetzDateien\\umsaetze" + i));
 		BufferedWriter bw = null;
 		FileWriter fw = null;
 		while (filepath.exists()) {
 			i++;
-			filepath = new File(System.getProperty("C:\\Users\\Service\\Documents\\Boerse\\UmsaetzDateien" + i));
+			filepath = new File(System.getProperty(System.getProperty("user.home")+"\\Service\\Documents\\Boerse\\UmsaetzDateien" + i));
 		}
 		if (filepath.mkdirs()) {
 			try {
