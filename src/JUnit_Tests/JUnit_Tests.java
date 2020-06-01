@@ -157,10 +157,6 @@ public class JUnit_Tests {
 		Assert.assertTrue(21 == ak.getDepot(1));
 	}
 
-	@Test
-	public void testListModel() throws SQLException {
-		System.out.println(b.getAktienListe(au));
-	}
 
 	@Test
 	public void tesCSVreader() throws IOException {
@@ -171,6 +167,7 @@ public class JUnit_Tests {
 	@Test
 	public void testOrderListe() throws IOException {
 		orderTestList = csv.getKorrekteOrders();
+		csv.getKorrekteOrders();
 		System.out.println(csv.getKorrekteOrders());
 		ArrayList<String> testarray = new ArrayList<String>();
 		System.out.println(orderTestList);
@@ -179,17 +176,16 @@ public class JUnit_Tests {
 			testarray.add(Integer.toString(order.getDepotID()));
 			System.out.println(order.getDepotID());
 		}
-		assertTrue(1==1);
-//		assertThat(testarray.get(1), hasItem("21"));
+		assertThat(testarray.get(1), hasItem("21"));
 	}
 	
 	@Test
 	public void testNeueOrderDatei () throws IOException {
 		File file = new File("JunitTest.csv");
-		File testFile = new File("C:\\Users\\Service\\Documents\\Boerse\\Orders\\zuBearbeiten\\" +"JunitTest.csv");
+		File testFile = new File(System.getProperty("user.home")+"\\Service\\Documents\\Boerse\\Orders\\zuBearbeiten\\" +"JunitTest");
 		csv.neueOrderDatei(file);
 		assertTrue(testFile.exists());
-		file.delete();
+		testFile.delete();
 	}
 	
 	
