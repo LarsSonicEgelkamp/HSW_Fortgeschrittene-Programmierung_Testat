@@ -291,7 +291,7 @@ public class CSV_Manager {
 	 */
 	public void schreibeUmsaetze(ArrayList<Umsaetze> umsaetze) throws IOException {
 		int i = 1;
-		File filepath = new File(System.getProperty("C:\\Users\\Service\\Documents\\Boerse\\UmsaetzDateien" + i));
+		File filepath = new File(System.getProperty("C:\\Users\\Service\\Documents\\Boerse\\UmsaetzDateien\\umsaetze" + i));
 		BufferedWriter bw = null;
 		FileWriter fw = null;
 		while (filepath.exists()) {
