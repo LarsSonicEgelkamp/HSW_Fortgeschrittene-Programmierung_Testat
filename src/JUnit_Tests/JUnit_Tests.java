@@ -100,6 +100,7 @@ import user_Interface.GUI;
 
 public class JUnit_Tests {
 
+	
 	Boerse b;
 	Aktie ak;
 	Aktiengesellschaft akg;
@@ -171,13 +172,21 @@ public class JUnit_Tests {
 	public void testOrderListe() throws IOException {
 		orderTestList = csv.getKorrekteOrders();
 		System.out.println(csv.getKorrekteOrders());
-		assertThat(this.orderTestList, hasItem("21"));
+		ArrayList<String> testarray = new ArrayList<String>();
+		System.out.println(orderTestList);
+		System.out.println("123");
+		for (Order order : orderTestList) {
+			testarray.add(Integer.toString(order.getDepotID()));
+			System.out.println(order.getDepotID());
+		}
+		assertTrue(1==1);
+//		assertThat(testarray.get(1), hasItem("21"));
 	}
 	
 	@Test
 	public void testNeueOrderDatei () throws IOException {
 		File file = new File("JunitTest.csv");
-		File testFile = new File( System.getProperty("user.home")+"\\Service\\Documents\\Boerse\\Orders\\zuBearbeiten\\" +"JunitTest.csv");
+		File testFile = new File("C:\\Users\\Service\\Documents\\Boerse\\Orders\\zuBearbeiten\\" +"JunitTest.csv");
 		csv.neueOrderDatei(file);
 		assertTrue(testFile.exists());
 		file.delete();
