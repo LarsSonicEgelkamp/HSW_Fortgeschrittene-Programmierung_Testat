@@ -1,11 +1,12 @@
 package Ordermanager;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Date;
 import java.util.ArrayList;
+
 
 import Filemanager.CSV_Manager;
 import boersenprogramm.Aktie;
@@ -131,7 +132,7 @@ public class Orderverarbeitung {
 
 					this.stat = ConnectionManager.ueberpruefeConnection(stat);
 					stat.execute("UPDATE Aktie SET aktuellerWert = " + trn.getVerkaufswert()
-							+ "WHERE Aktiegesellschaft_ID = " + trn.getAktiengesellschaftsID() + ";");
+							+ " WHERE Aktiegesellschaft_ID = " + trn.getAktiengesellschaftsID() + ";");
 				}
 			}
 		}

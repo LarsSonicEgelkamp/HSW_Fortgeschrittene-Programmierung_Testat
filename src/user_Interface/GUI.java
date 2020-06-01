@@ -15,7 +15,9 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
@@ -47,12 +49,7 @@ import boersenprogramm.Depot;
 import boersenprogramm.Depotinhaber;
 import boersenprogramm.Transaktion;
 import boersenprogramm.Aktie;
-import boersenprogramm.AktuellerUser;
-import boersenprogramm.Boerse;
-import boersenprogramm.Boersenmanager;
-import boersenprogramm.Depot;
-import boersenprogramm.Depotinhaber;
-import boersenprogramm.Transaktion;
+
 
 public class GUI extends JFrame implements ActionListener {
 
@@ -623,8 +620,14 @@ public class GUI extends JFrame implements ActionListener {
 	}
 
 	private void ordersAusfuehren() throws IOException, SQLException {
-		Date datum = null;// TODO aktuelles Datum initialisieren oder User nach Datum fragen und dann
-							// auslesen
+		java.util.Date date = java.util.Calendar.getInstance().getTime();
+		SimpleDateFormat dateFormatter = 
+		          new SimpleDateFormat("yyyy.MM.dd");
+		String dateString = dateFormatter.format(date);
+
+
+		java.sql.Date datum = new java.sql.Date(date.getTime());
+							
 		Orderverarbeitung ord = new Orderverarbeitung(stat, datum);
 	}
 }
