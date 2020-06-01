@@ -90,7 +90,9 @@ public class Datenbankmanager {
 			ArrayList<Integer> aktienIDs = this.getAktienIDs(user);
 			for (int id : aktienIDs) {
 				this.stat = ConnectionManager.ueberpruefeConnection(stat);
-				ResultSet rs = stat.executeQuery("SELECT ID FROM Transaktion WHERE Aktien_ID = " + id + ";");
+				String sql = "SELECT ID FROM Transaktion WHERE Aktien_ID = " + Integer.toString(id) + ";";
+				System.out.println(sql);
+				ResultSet rs = stat.executeQuery("SELECT ID FROM Transaktion WHERE Aktie_ID = " + Integer.toString(id) + ";");
 				while (rs.next()) {
 					ids.add(rs.getInt(1));
 				}

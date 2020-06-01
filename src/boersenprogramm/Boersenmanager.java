@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javax.swing.JFileChooser;
 
 import Filemanager.CSV_Manager;
+import user_Interface.ConnectionManager;
 
 public class Boersenmanager {
 
@@ -34,21 +35,23 @@ public class Boersenmanager {
  * @param depotID
  * @throws SQLException
  */
-	public void createDepot(Statement stat, int depotID) throws SQLException {
-		String sqlBefehlTabelleErstellen = "CREATE TABLE Depot(" + depotID
-				+ " INT, AktieID, CONSTRAINT PK_Depot_ID PRIMARY KEY (ID))";
+	public void createDepot(Statement stat, String depotID,String depotinhaberID) throws SQLException {
+		String sqlBefehlTabelleErstellen = "INSERT INTO Depot (ID, Depotinhaber_ID) Values ('"+depotID+"' ,'"+ depotinhaberID+"');";
 		stat.execute(sqlBefehlTabelleErstellen);
 	}
 
-	public void aktieAnlegen(Statement stat, int aktienID, int aktuellerWert, int AktiengesellschaftsID,
-			int DepotinhaberID, int depotID) throws SQLException {
+	public void aktieAnlegen(Statement stat, String aktienID, String aktuellerWert, String AktiengesellschaftsID,
+			String DepotinhaberID, String depotID) throws SQLException {
 		try {
+			stat = ConnectionManager.ueberpruefeConnection(stat);
 			stat.execute(
-					"INSERT INTO Aktie(ID, aktuellerWert, Aktiengesellschaft_ID, Depotinhaber_ID, Depot_ID) VALUES \r\n"
+					"INSERT INTO Aktie(ID, aktuellerWert, Aktiengesellschaft_ID, Depotinhaber_ID, Depot_ID) VALUES "
 							+ "('" + aktienID + "', '" + aktuellerWert + "', '" + AktiengesellschaftsID + "', '"
-							+ DepotinhaberID + "', '" + depotID + "'),\r\n");
+							+ DepotinhaberID + "', '" + depotID + "');");
 		} catch (SQLException e) {
 			throw new SQLException(e.getMessage());
 		}
 	}
+
+
 }

@@ -40,7 +40,6 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 import Filemanager.CSV_Manager;
-import Filemanager.Serialisierung;
 import Ordermanager.Orderverarbeitung;
 import boersenprogramm.AktuellerUser;
 import boersenprogramm.Boerse;
@@ -68,11 +67,9 @@ public class GUI extends JFrame implements ActionListener {
 
 	JButton btnAbmelden = new JButton("Abmelden");
 
-	JTextField txtAnmeldeID, txtDepotinhaberID, txtAktienID, txtAktienWert;
+	JTextField txtAnmeldeID, txtDepotinhaberID, txtAktienID, txtAktienWert,txtAktiengesellschaftsID,txtDepotId,txtDepotinhaberId,txtDepotID;
 
 	JButton btnDepotAnlegen, btnAktieAnlegen;
-
-	Serialisierung s = new Serialisierung();
 
 	Statement stat;
 
@@ -104,7 +101,7 @@ public class GUI extends JFrame implements ActionListener {
 
 		btnBoersenmanager = new JRadioButton("Boersenmanager", true);
 		btnAktiengesellschaft = new JRadioButton("Aktiengesellschaft");
-		btnAktionaer = new JRadioButton("Aktionär");
+		btnAktionaer = new JRadioButton("Aktionaer");
 		ButtonGroup anmeldeAuswahl = new ButtonGroup();
 		anmeldeAuswahl.add(btnAktiengesellschaft);
 		anmeldeAuswahl.add(btnAktionaer);
@@ -130,7 +127,7 @@ public class GUI extends JFrame implements ActionListener {
 	 * 
 	 * @param checkWord
 	 * @param anmeldeSubjekt
-	 * @return boolean: Gibt true zurück, wenn die ID valide ist.
+	 * @return boolean: Gibt true zur�ck, wenn die ID valide ist.
 	 * @throws FileNotFoundException
 	 * @throws ClassNotFoundException
 	 * @throws IOException
@@ -160,7 +157,7 @@ public class GUI extends JFrame implements ActionListener {
 				return true;
 			}
 		}
-		// TODO Hier muss noch die überprüfung stattfinden ob die ID bereits existiert
+		// TODO Hier muss noch die �berpr�fung stattfinden ob die ID bereits existiert
 		// oder nicht
 //		exestierendeID = !s.deserilize(checkWord).equals(checkWord);
 
@@ -174,7 +171,7 @@ public class GUI extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent ae) {
 		// Die Quelle wird mit getSource() abgefragt und mit den
 		// Buttons abgeglichen. Wenn die Quelle des ActionEvents einer
-		// der Buttons ist, wird der Text des JLabels entsprechend geändert
+		// der Buttons ist, wird der Text des JLabels entsprechend geaendert
 		if (ae.getSource() == this.btnAnmelden && btnBoersenmanager.isSelected() == true) {
 			try {
 				if (anmeldeIDPruefen(txtAnmeldeID.getText(), "boersenmanager")) {
@@ -195,7 +192,7 @@ public class GUI extends JFrame implements ActionListener {
 					aUser = new AktuellerUser("depotinhaber", Integer.parseInt(txtAnmeldeID.getText()));
 					createAktionaerFenster();
 				} else {
-					JOptionPane.showMessageDialog(null, "Die Anmelde-ID existiert nicht", "Aktionär",
+					JOptionPane.showMessageDialog(null, "Die Anmelde-ID existiert nicht", "Aktionaer",
 							JOptionPane.INFORMATION_MESSAGE);
 				}
 			} catch (HeadlessException | ClassNotFoundException | IOException | SQLException e) {
@@ -241,19 +238,21 @@ public class GUI extends JFrame implements ActionListener {
 				this.revalidate();
 				this.repaint();
 
-			} catch (Exception e) {// SQLException |
+			} catch (Exception e) {
 				this.setErrorMessage(e);
 			}
 		} else if (ae.getSource() == this.btnDepotAnlegen) {
-			int depotinhaberID = Integer.parseInt(txtDepotinhaberID.getText());
 			try {
-				bm.createDepot(stat, depotinhaberID);
+				bm.createDepot(stat,txtDepotID.getText(), txtDepotinhaberID.getText());
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				this.setErrorMessage(e);
 			}
 		} else if (ae.getSource() == btnAktieAnlegen) {
-//			bm.aktieAnlegen(stat,  txtAktienID.getText(), txtAktienWert.getText(), AktiengesellschaftsID, DepotinhaberID, depotID);
+			try {
+				bm.aktieAnlegen(stat,  txtAktienID.getText(), txtAktienWert.getText(), txtAktiengesellschaftsID.getText(), txtDepotinhaberId.getText(), txtDepotId.getText());
+			} catch (NumberFormatException | SQLException e) {
+				this.setErrorMessage(e);
+			}
 		} else if (ae.getSource() == cbxAktienID) {
 
 		} else if (ae.getSource() == this.orderEinreichen) {
@@ -288,7 +287,7 @@ public class GUI extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Description: Hier wird das Interface für eine Aktiengesellschaft erstellt
+	 * Description: Hier wird das Interface f�r eine Aktiengesellschaft erstellt
 	 *
 	 */
 	private void createAktiengesellschaftFenster() {
@@ -307,7 +306,7 @@ public class GUI extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Description: Hier wird das Interface für einen Aktionär/Depotinhaber
+	 * Description: Hier wird das Interface f�r einen Aktion�r/Depotinhaber
 	 * erstellt
 	 *
 	 */
@@ -353,17 +352,6 @@ public class GUI extends JFrame implements ActionListener {
 
 //		tabpane.add("Aktien Historie", createWertHistoriePanel());
 
-		meinDepot.add(btnVerkaufen);
-
-		JComboBox cbxAlleAktien = new JComboBox();
-		JLabel lblAktienKaufen = new JLabel("Anzahl der Aktien:");
-		JTextField txtAktienKaufen = new JTextField(5);
-		JButton btnAktienKaufen = new JButton("kaufen");
-
-		meinDepot.add(cbxAlleAktien);
-		meinDepot.add(lblAktienKaufen);
-		meinDepot.add(txtAktienKaufen);
-		meinDepot.add(btnAktienKaufen);
 
 		orderEinreichen.addActionListener(this);
 		btnVerkaufen.addActionListener(this);
@@ -422,16 +410,31 @@ public class GUI extends JFrame implements ActionListener {
 		btnAktieAnlegen = new JButton("Aktie anlegen");
 		JLabel lblDepotinhaberID = new JLabel("Depotinhaber ID:");
 		txtDepotinhaberID = new JTextField(5);
+		txtDepotId = new JTextField(5);
+		txtAktiengesellschaftsID = new JTextField(5);
+		JLabel lblAktiengesellschaftsID = new JLabel("AktiengesellschaftsID:");
+		JLabel lblDepotId = new JLabel("DepotID:");
+		JLabel lblDepotinhaberId = new JLabel("DepotinhaberID:");
+		txtDepotinhaberId = new JTextField(5);
+		
 
 		panelBoersenmanager.add(lblAktienID);
 		panelBoersenmanager.add(txtAktienID);
 		panelBoersenmanager.add(lblAktienWert);
 		panelBoersenmanager.add(txtAktienWert);
+		panelBoersenmanager.add(lblDepotinhaberID);
+		panelBoersenmanager.add(txtDepotinhaberID);
+		panelBoersenmanager.add(lblAktiengesellschaftsID);
+		panelBoersenmanager.add(txtAktiengesellschaftsID);
+		panelBoersenmanager.add(lblDepotId);
+		panelBoersenmanager.add(txtDepotId);
+		panelBoersenmanager.add(lblDepotinhaberId);
+		panelBoersenmanager.add(txtDepotinhaberId);
 		panelBoersenmanager.add(btnAktieAnlegen);
 		btnAktieAnlegen.addActionListener(this);
 
 		JLabel lblDepotID = new JLabel("Depot ID:");
-		JTextField txtDepotID = new JTextField(5);
+		txtDepotID = new JTextField(5);
 		btnDepotAnlegen = new JButton("Depot anlegen");
 
 		panelBoersenmanager.add(lblDepotID);
@@ -442,13 +445,7 @@ public class GUI extends JFrame implements ActionListener {
 		btnDepotAnlegen.addActionListener(this);
 
 		JLabel lblOrders = new JLabel("ausstehende Orders:");
-		JComboBox cbxOrders = new JComboBox();
-		JButton btnOrderAusfuehren = new JButton("Order ausführen");
-		// TODO Die Combo Box muss noch befüllt werden und eine Textarea mit allen
-		// Aktien oder ein Jlist eingefügt werden
 		panelBoersenmanager.add(lblOrders);
-		panelBoersenmanager.add(cbxOrders);
-		panelBoersenmanager.add(btnOrderAusfuehren);
 		panelBoersenmanager.add(btnOrdersAusfuehren);
 
 		panelBoersenmanager.add(btnAbmelden);
@@ -460,7 +457,7 @@ public class GUI extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Description: Hier wird das Panel für den Aktienmarkt erstellt
+	 * Description: Hier wird das Panel fuer den Aktienmarkt erstellt
 	 *
 	 */
 	private JPanel createAktienPanel() {
@@ -524,35 +521,6 @@ public class GUI extends JFrame implements ActionListener {
 		JOptionPane.showMessageDialog(null, e.getMessage(), "Fehlermeldung", JOptionPane.ERROR_MESSAGE);
 	}
 
-//	private DefaultListCellRenderer createAktienListRenderer() {
-//		return new DefaultListCellRenderer() {
-//			private Color background = new Color(0, 100, 255, 15);
-//			private Color defaultBackground = (Color) UIManager.get("List.background");
-//
-//			@Override
-//			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-//					boolean cellHasFocus) {
-//				Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-//				if (c instanceof JLabel) {
-//					JLabel label = (JLabel) c;
-//					
-//					Aktie ak = (Aktie) value;
-//					try {
-//						label.setText(String.format(" %s            %s            %s            %s            %s",
-//								ak.getId(), ak.getWert(ak.getId()), ak.getAktiengesellschaft(ak.getId()),
-//								ak.getDepotinhaber(ak.getId()), ak.getDepot(ak.getId())));
-//					} catch (SQLException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//					if (!isSelected) {
-//						label.setBackground(index % 2 == 0 ? background : defaultBackground);
-//					}
-//				}
-//				return c;
-//			}
-//		};
-//	}
 
 	JPanel transaktionsP;
 
