@@ -294,7 +294,7 @@ public class Orderverarbeitung {
 	 * @return: den Verkaufspreis
 	 */
 	public int berechnePreis(int ankaufsP, int verkaufsP) {
-		int differenz = ankaufsP - (-verkaufsP);
+		int differenz = ankaufsP - verkaufsP;
 		if (differenz > 0) {
 			differenz = differenz / 2;
 		}

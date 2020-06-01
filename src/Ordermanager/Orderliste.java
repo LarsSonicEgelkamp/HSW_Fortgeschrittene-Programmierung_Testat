@@ -23,8 +23,8 @@ public class Orderliste extends ArrayList<Order> {
 		Orderliste ankaufsliste = new Orderliste();
 
 		for (Order o : this) {
-			int preis = o.getStueckpreis();
-			if (preis > 0) {
+			int menge = o.getMenge();
+			if (menge > 0) {
 				ankaufsliste.add(o);
 			}
 		}
@@ -40,8 +40,9 @@ public class Orderliste extends ArrayList<Order> {
 		Orderliste verkaufsliste = new Orderliste();
 
 		for (Order o : this) {
-			int preis = o.getStueckpreis();
-			if (preis < 0) {
+			int menge = o.getMenge();
+			if (menge < 0) {
+				o.setMenge(menge * -1);
 				verkaufsliste.add(o);
 			}
 		}
