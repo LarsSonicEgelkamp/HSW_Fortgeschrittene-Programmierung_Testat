@@ -1,21 +1,18 @@
 package boersenprogramm;
 
-import java.io.IOException;
-
+/**
+ * Legt den aktueller Benutzer fest, mit Benutzerart und der ID.
+ * 
+ * @param userArt: aktuelle Userart, muss "bosersenmanager", "aktionaer" oder
+ *                 "aktiengesellschaft" entsprechen.
+ * @param id:      aktuelle UserID
+ * @throws Exception, wenn die Benutzerart nicht existiert.
+ */
 public class AktuellerUser {
 
 	private String userArt;
 	private int id;
 
-	/**
-	 * Legt den aktueller Benutzer fest, mit Benutzerart und der ID. Die Parameter
-	 * sind dabei final.
-	 * 
-	 * @param userArt: aktuelle Userart, muss "bosersenmanager", "aktionaer" oder
-	 *                 "aktiengesellschaft" entsprechen.
-	 * @param id:      aktuelle UserID
-	 * @throws Exception, wenn die Benutzerart nicht existiert.
-	 */
 	public AktuellerUser(String userArt, int id) throws IllegalArgumentException {
 		if (userArt.contentEquals("boersenmanager") || userArt.contentEquals("depotinhaber")
 				|| userArt.contentEquals("aktiengesellschaft")) {

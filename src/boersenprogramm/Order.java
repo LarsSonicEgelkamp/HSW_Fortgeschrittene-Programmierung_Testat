@@ -1,5 +1,8 @@
 package boersenprogramm;
 
+/**
+ * Beschreibt das Objekt Order der Börsenanwendung. 
+ */
 public class Order {
 
 	private int depotID;

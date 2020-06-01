@@ -5,10 +5,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import user_Interface.ConnectionManager;
-
+/**
+ * Beschreibt das Objekt Transaktion der Börsenanwendung. Durch den Konstruktor
+ * und die set-Methoden kann eine neue Transaktion erstellt werden. Die get-Methoden
+ * suchen anhand der übergebenen AktienID die gefragten Werte aus der Datenbank.
+ */
 public class Transaktion {
 
-	private int  transaktionsID;
+	private int transaktionsID;
 	private int aktienID;
 	private int verkaufsDepotID;
 	private int ankaufsDepotID;
@@ -19,7 +23,7 @@ public class Transaktion {
 		this.transaktionsID = id;
 		this.stat = stat;
 	}
-	
+
 	public int getTransaktionsID() {
 		return transaktionsID;
 	}

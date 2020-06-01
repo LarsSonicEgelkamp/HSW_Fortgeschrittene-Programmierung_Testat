@@ -1,19 +1,18 @@
 package boersenprogramm;
 
-
-
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collection;
-
-import Filemanager.CSV_Manager;
 
 import user_Interface.ConnectionManager;
 
+/**
+ * Verwaltet die grundsätzlichen Funktionen der Börsenanwendung mit Außnahme der
+ * Orderverarbeitung.
+ *
+ */
 public class Boerse {
 
 	private ArrayList<Aktie> aktienListe = new ArrayList<Aktie>();
@@ -28,6 +27,7 @@ public class Boerse {
 	}
 
 	/**
+	 * Sucht alle Aktien, die für den aktuellen User relevant sind.
 	 * 
 	 * @return: Eine ArrayList mit Aktien gefüllt, mit den Attributen ID, aktueller
 	 *          Wert, Aktiengesellschaft ID, Depot ID und Depotinhaber ID.
@@ -46,11 +46,14 @@ public class Boerse {
 		}
 		return aktienListe;
 	}
-/**
- * 
- * @return: Eine ArrayList mit Depots gefüllt, mit den Attributen ID und Inhaber ID.
- * @throws SQLException
- */
+
+	/**
+	 * Sucht alle Depots, die für den aktuellen User relevant sind.
+	 * 
+	 * @return: Eine ArrayList mit Depots gefüllt, mit den Attributen ID und Inhaber
+	 *          ID.
+	 * @throws SQLException
+	 */
 	public ArrayList<Depot> getDepotListe(AktuellerUser user) throws SQLException {
 
 		ArrayList<Integer> depotIDListe;
@@ -62,7 +65,15 @@ public class Boerse {
 		}
 		return depotListe;
 	}
-	
+
+	/**
+	 * Sucht alle Transaktionen, die für den aktuellen User relevant sind.
+	 * 
+	 * @param user: aktueller User
+	 * @return: ArrayList<Transaktion>, eine Liste mit allen Transaktionen, die für
+	 *          den aktuellen User relevant sind
+	 * @throws SQLException
+	 */
 	public ArrayList<Transaktion> getTransaktionsListe(AktuellerUser user) throws SQLException {
 		ArrayList<Integer> transaktionsIDListe;
 		transaktionsIDListe = dm.getTransaktionsListe(user);
@@ -77,17 +88,25 @@ public class Boerse {
 		return transaktionsListe;
 	}
 
-	public void neueAktie(int id, int wert) throws SQLException {
+	/**
+	 * Legt eine neue Aktie an.
+	 * 
+	 * @param id:   ID der neuen Aktie
+	 * @param wert: Initialwert der neuen Aktie
+	 * @throws SQLException
+	 */
+	public void neueAktie(int id, int wert, int aktiengesellschaftID) throws SQLException {
+		this.stat = ConnectionManager.ueberpruefeConnection(stat);
 		ResultSet aktieVorhanden = stat.executeQuery("SELECT ID FROM Aktien WHERE ID = " + id + ";");
 		if (aktieVorhanden.next()) {
-			System.out.println("Diese Aktie existiert schon. Bitte waehlen sie eine andere ID.");
+			throw new IllegalArgumentException("Diese Aktie existiert schon. Bitte geben sie eine andere an.");
 		} else {
 			Aktie aktie = new Aktie(stat, id, wert);
+			this.stat = ConnectionManager.ueberpruefeConnection(stat);
 			stat.execute("INSERT INTO Aktie(ID, aktuellerWert) VALUES (" + id + ", " + wert + ");");
 			this.aktienListe.add(aktie);
-			// Aktiengesellschaft_ID zu Aktie hinzufÃ¼gen, prÃ¼fen, ob Aktie schon
-			// Aktiengesellschaft_ID hat
-//			stat.execute("UPDATE Aktie SET Aktiengesellschaft_ID = "+Aktiengesellschaft_ID+" WHERE (ID="+id+");"); // wie bekomme ich die ID
+			this.stat = ConnectionManager.ueberpruefeConnection(stat);
+			stat.execute("UPDATE Aktie SET Aktiengesellschaft_ID = "+aktiengesellschaftID+" WHERE (ID="+id+");");
 		}
 	}
 
@@ -96,10 +115,18 @@ public class Boerse {
 		this.depotListe.add(depot);
 	}
 
-	public ArrayList<String> alleAktienLesen(Statement stat) {
+	/**
+	 * Liest alle IDs, der in der Datenbank befindlichen Aktien aus.
+	 * 
+	 * @param stat
+	 * @return: ArrayList<String>, mit allen IDs
+	 * @throws SQLException
+	 */
+	public ArrayList<String> alleAktienLesen(Statement stat) throws SQLException {
 		ArrayList<String> alleAktien = new ArrayList<String>();
 
 		try {
+			this.stat = ConnectionManager.ueberpruefeConnection(stat);
 			ResultSet alleAktienSQL = stat.executeQuery("SELECT ID FROM Aktie;");
 
 			for (int j = 0; alleAktienSQL.next(); j++) {
@@ -107,15 +134,21 @@ public class Boerse {
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new SQLException(e);
 		}
 
 		return alleAktien;
 	}
 
+	/**
+	 * Sucht zu der übergebenen AktienID die Wertehistorie heraus.
+	 * 
+	 * @param stat
+	 * @param aktienID
+	 * @throws SQLException
+	 */
 	public void abfragenAktienHistorie(Statement stat, Aktie aktienID) throws SQLException {
-
+		this.stat = ConnectionManager.ueberpruefeConnection(stat);
 		ResultSet aktienHistorie = stat
 				.executeQuery("SELECT ID FROM Wertehistorie WHERE ID = " + aktienID.getId() + ";");
 

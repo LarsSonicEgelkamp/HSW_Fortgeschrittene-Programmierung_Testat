@@ -3,15 +3,18 @@ package boersenprogramm;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 
 import user_Interface.ConnectionManager;
 
+/**
+ * Beschreibt das Objekt Depotinhaber der Börsenanwendung. Durch die
+ * Konstruktoren und die set-Methoden kann ein neueer Depotinhaber erstellt
+ * werden.
+ */
 public class Depotinhaber {
 
 	private int id;
 	private String name;
-	private static ArrayList<Integer> meineDepots = new ArrayList<Integer>();
 	private Statement stat;
 
 	public Depotinhaber(int id, String name, Statement stat) {
@@ -29,6 +32,13 @@ public class Depotinhaber {
 		return id;
 	}
 
+	/**
+	 * Sucht zu einer Depotinhaber_ID den entsprechenden Namen aus der Datenbank.
+	 * 
+	 * @param inhaberID
+	 * @return: den Namen des Depotinhaber mit der übergebenen ID
+	 * @throws SQLException
+	 */
 	public String getName(int inhaberID) throws SQLException {
 		this.stat = ConnectionManager.ueberpruefeConnection(stat);
 		ResultSet rs = stat.executeQuery("SELECT Name FROM Depotinhaber WHERE ID = " + inhaberID + ";");
@@ -41,18 +51,4 @@ public class Depotinhaber {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	private void neuesDepot(int depotID) {
-		this.meineDepots.add(depotID);
-	}
-
-	public static ArrayList<Integer> getMeineDepots() {
-		return meineDepots;
-	}
-	
-	public void verkaufsVerlauf() {
-		
-	}
-	
-	
 }

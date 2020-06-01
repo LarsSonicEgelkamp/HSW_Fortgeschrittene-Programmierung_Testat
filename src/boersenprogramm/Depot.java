@@ -7,6 +7,11 @@ import java.util.ArrayList;
 
 import user_Interface.ConnectionManager;
 
+/**
+ * Beschreibt das Objekt Depot der Börsenanwendung. Durch die Konstruktoren und
+ * die set-Methoden kann ein neues Depot erstellt werden. Die get-Methoden
+ * suchen anhand der übergebenen DepotID die gefragten Werte aus der Datenbank.
+ */
 public class Depot {
 
 	private int id;
@@ -44,6 +49,15 @@ public class Depot {
 		this.inhaberID = inhaberID;
 	}
 
+	/**
+	 * Sucht alle Aktien_IDs heraus, die in dem Depot mit der übergebenen Depot_ID
+	 * liegen.
+	 * 
+	 * @param depotID
+	 * @return: ArrayList<Integer>, mit allen Aktien_IDs, die in diesem Depot
+	 *          liegen.
+	 * @throws SQLException
+	 */
 	public ArrayList<Integer> getAlleAktienIDs(int depotID) throws SQLException {
 		this.stat = ConnectionManager.ueberpruefeConnection(stat);
 		ResultSet rs = stat.executeQuery("SELECT ID FROM Aktie WHERE Depot_ID = " + depotID + ";");

@@ -15,6 +15,14 @@ public class Datenbankmanager {
 		this.stat = stat;
 	}
 
+	/**
+	 * Sucht die zu dem User zugehörigen Aktien_IDs heraus. Bei einem Zugriff durch
+	 * den Börsenmanager werden alle Aktien_IDs zurückgegeben.
+	 * 
+	 * @param user: aktueller User
+	 * @return: ArrayList<Integer>, alle dem User zugeordneten Aktien_IDs
+	 * @throws SQLException
+	 */
 	public ArrayList<Integer> getAktienIDs(AktuellerUser user) throws SQLException {
 
 		ArrayList<Integer> ids = new ArrayList<Integer>();
@@ -35,6 +43,15 @@ public class Datenbankmanager {
 		return ids;
 	}
 
+	/**
+	 * Sucht die zu dem User zugehörigen Depot_IDs heraus. Bei einem Zugriff durch
+	 * den Börsenmanager werden alle Depot_IDs zurückgegeben.
+	 * 
+	 * @param user: aktueller User
+	 * @return: ArrayList<Integer>, alle dem User zugeordneten Depot_IDs
+	 * @throws SQLException
+	 * @throws IllegalArgumentException
+	 */
 	public ArrayList<Integer> getDepotIDs(AktuellerUser user) throws SQLException, IllegalArgumentException {
 
 		ArrayList<Integer> ids = new ArrayList<Integer>();
@@ -57,6 +74,15 @@ public class Datenbankmanager {
 		return ids;
 	}
 
+	/**
+	 * Sucht die zu dem User zugehörigen Transaktions_IDs heraus. Bei einem Zugriff
+	 * durch den Börsenmanager werden alle Transaktions_IDs zurückgegeben.
+	 * 
+	 * @param user: aktueller User
+	 * @return: ArrayList<Integer>, alle dem User zugeordneten Transaktion_IDs
+	 * @throws SQLException
+	 * @throws IllegalArgumentException
+	 */
 	public ArrayList<Integer> getTransaktionsListe(AktuellerUser user) throws SQLException, IllegalArgumentException {
 
 		ArrayList<Integer> ids = new ArrayList<Integer>();

@@ -28,7 +28,7 @@ public class Datenbankersteller {
 			erstelleDepottabelle(stat, co);
 			erstelleAktienTabelle(stat, co);
 			erstelleWerteHistorieTabelle(stat, co);
-			erstelleTransaktionTabelle(stat,co);
+			erstelleTransaktionTabelle(stat, co);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -104,7 +104,7 @@ public class Datenbankersteller {
 						+ "Aktiengesellschaft ( ID INT, CONSTRAINT PK_Aktiengesellschaft_ID PRIMARY KEY (ID));";
 				stat.execute(sqlBefehlTabelleErstellen);
 				stat.execute("INSERT INTO Aktiengesellschaft(ID) VALUES ('1'),('2'),('3'),('4'),('5');");
-				
+
 			}
 		} catch (SQLException e) {
 			throw new SQLException(e.getMessage());
@@ -146,36 +146,33 @@ public class Datenbankersteller {
 				String sqlBefehlTabelleErstellen = "CREATE TABLE "
 						+ "Depotinhaber ( ID INT, Name VARCHAR(255),Iban VARCHAR(255) CONSTRAINT PK_Depotinhaber_ID PRIMARY KEY (ID));";
 				stat.execute(sqlBefehlTabelleErstellen);
-				stat.execute("INSERT INTO Depotinhaber(ID, Name, Iban) VALUES \r\n" + "('10', 'Klaus Heinrich', 'DE88500105173812539961'),\r\n"
-						+ "('11', 'Maria Engel','DE90500105178797648121'),\r\n" + "('12', 'Barbara Giesberg','DE81500105175916719571');");
+				stat.execute("INSERT INTO Depotinhaber(ID, Name, Iban) VALUES \r\n"
+						+ "('10', 'Klaus Heinrich', 'DE88500105173812539961'),\r\n"
+						+ "('11', 'Maria Engel','DE90500105178797648121'),\r\n"
+						+ "('12', 'Barbara Giesberg','DE81500105175916719571');");
 
 			}
 		} catch (SQLException e) {
 			throw new SQLException(e.getMessage());
 		}
 	}
-	
+
 	public void erstelleTransaktionTabelle(Statement stat, Connection con) throws SQLException {
 		try {
 			if (this.pruefeExistenz(stat, con, "Transaktion") == false) {
 				String sqlBefehlTabelleErstellen = "CREATE TABLE "
 						+ "Transaktion ( ID INT, Aktie_ID INT, Verkaufswert INT, VerkaufsDepot_ID INT, AnkaufsDepot_ID INT, FOREIGN KEY (Aktie_ID) REFERENCES Aktie(ID), FOREIGN KEY (AnkaufsDepot_ID) REFERENCES Depot(ID), FOREIGN KEY (VerkaufsDepot_ID) REFERENCES Depot(ID)  , CONSTRAINT PK_Transaktion_ID PRIMARY KEY (ID));";
 				stat.execute(sqlBefehlTabelleErstellen);
-				stat.execute("INSERT INTO Transaktion(ID, Aktie_ID, Verkaufswert, VerkaufsDepot_ID, AnkaufsDepot_ID) VALUES\r\n" + 
-						"('50', '1', '5', '20', '21'),\r\n" + 
-						"('51', '1', '10', '21', '22'),\r\n" + 
-						"('52', '1', '15', '22', '20'),\r\n" + 
-						"('53', '1', '10', '20', '21'),						\r\n" + 
-						"('54', '2', '20', '23', '20'),\r\n" + 
-						"('55', '2', '30', '20', '24'),\r\n" + 
-						"('56', '2', '10', '24', '22'),\r\n" + 
-						"('57', '3', '50', '24', '22'),\r\n" + 
-						"('58', '3', '33', '22', '21'),\r\n" + 
-						"('59', '4', '45', '21', '20'),\r\n" + 
-						"('60', '5', '56', '20', '24'),\r\n" + 
-						"('61', '5', '23', '24', '23'),\r\n" + 
-						"('62', '6', '45', '21', '22'),\r\n" + 
-						"('63', '7', '65', '23', '24');");
+				stat.execute(
+						"INSERT INTO Transaktion(ID, Aktie_ID, Verkaufswert, VerkaufsDepot_ID, AnkaufsDepot_ID) VALUES\r\n"
+								+ "('50', '1', '5', '20', '21'),\r\n" + "('51', '1', '10', '21', '22'),\r\n"
+								+ "('52', '1', '15', '22', '20'),\r\n"
+								+ "('53', '1', '10', '20', '21'),						\r\n"
+								+ "('54', '2', '20', '23', '20'),\r\n" + "('55', '2', '30', '20', '24'),\r\n"
+								+ "('56', '2', '10', '24', '22'),\r\n" + "('57', '3', '50', '24', '22'),\r\n"
+								+ "('58', '3', '33', '22', '21'),\r\n" + "('59', '4', '45', '21', '20'),\r\n"
+								+ "('60', '5', '56', '20', '24'),\r\n" + "('61', '5', '23', '24', '23'),\r\n"
+								+ "('62', '6', '45', '21', '22'),\r\n" + "('63', '7', '65', '23', '24');");
 
 			}
 		} catch (SQLException e) {

@@ -25,58 +25,6 @@ public class CSV_Manager {
 
 	}
 
-//	private static void writeCSV(String filename) throws IOException {
-//
-//		File filepath = new File(System.getProperty("user.home") + "/Börsenprogramm/CSV_Dateien");
-//		BufferedWriter bw = null;
-//		FileWriter fw = null;
-//		File f = new File(filepath + "/" + filename + ".csv");
-//
-//		if (filepath.mkdirs()) {
-//
-//			try {
-//
-//				fw = new FileWriter(f);
-//				bw = new BufferedWriter(fw);
-//
-//				for (String orderElement : Order.getOrderListe()) {
-//					bw.write(orderElement + ",");
-//				}
-//				bw.close();
-//			} catch (IOException e) {
-//				throw new IOException(e);
-//			}
-//		} else {
-//			try {
-//				fw = new FileWriter(f);
-//				bw = new BufferedWriter(fw);
-//
-//				for (String orderElement : Order.getOrderListe()) {
-//					bw.write(orderElement + ",");
-//				}
-//				bw.close();
-//			} catch (IOException e) {
-//				throw new IOException(e);
-//			}
-//		}
-//	}
-
-	private ArrayList<String> readCSV(String filename) throws IOException {// liest eine Zeile
-		ArrayList<String> records = new ArrayList<>();
-		try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-			String line;
-			while ((line = br.readLine()) != null) {
-				String[] values = line.split(",");
-				records.addAll(Arrays.asList(values));
-			}
-		} catch (FileNotFoundException e) {
-			throw new IOException(e);
-		} catch (IOException e) {
-			throw new IOException(e);
-		}
-		return records;
-	}
-
 	/**
 	 * Liest eine Order zeilenweise aus.
 	 * 

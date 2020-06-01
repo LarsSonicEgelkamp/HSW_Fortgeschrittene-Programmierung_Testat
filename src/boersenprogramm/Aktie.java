@@ -3,15 +3,18 @@ package boersenprogramm;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 
 import user_Interface.ConnectionManager;
 
+/**
+ * Beschreibt das Objekt Aktie der Börsenanwendung. Durch die Konstruktoren und
+ * die set-Methoden kann eine neue AKtie erstellt werden. Die get-Methoden
+ * suchen anhand der übergebenen AktienID die gefragten Werte aus der Datenbank.
+ */
 public class Aktie {
 
 	private final int id;
 	private int aktWert;
-
 	private int depotinhaber;
 	private int aktiengesellschaft;
 	private int depot;

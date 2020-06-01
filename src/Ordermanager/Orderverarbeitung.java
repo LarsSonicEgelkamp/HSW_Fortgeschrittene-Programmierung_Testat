@@ -11,7 +11,6 @@ import Filemanager.CSV_Manager;
 import boersenprogramm.Aktie;
 import boersenprogramm.Depot;
 import boersenprogramm.Order;
-import boersenprogramm.Transaktion;
 import boersenprogramm.Transaktionen;
 import boersenprogramm.Umsaetze;
 import user_Interface.ConnectionManager;
@@ -280,9 +279,9 @@ public class Orderverarbeitung {
 					this.verkaufsListe.remove(verkaufIndex);
 				}
 
+			} else {
+				index++;
 			}
-
-			index++;
 		}
 	}
 

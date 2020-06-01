@@ -1,8 +1,11 @@
 package boersenprogramm;
 
-import java.io.File;
 import java.sql.Date;
 
+/**
+ * Beschreibt das Objekt Umsaetze der Börsenanwendung für die
+ * Orderabwicklung.
+ */
 public class Umsaetze {
 	
 	private String zahlerIban;

@@ -28,8 +28,12 @@ public class Boersenmanager {
 	}
 
 	Connection con;
-//	Datenbankmanager datenbank = new Datenbankmanager(con);
-
+/**
+ * 
+ * @param stat
+ * @param depotID
+ * @throws SQLException
+ */
 	public void createDepot(Statement stat, int depotID) throws SQLException {
 		String sqlBefehlTabelleErstellen = "CREATE TABLE Depot(" + depotID
 				+ " INT, AktieID, CONSTRAINT PK_Depot_ID PRIMARY KEY (ID))";
@@ -47,31 +51,4 @@ public class Boersenmanager {
 			throw new SQLException(e.getMessage());
 		}
 	}
-
-//	public void ordersAusführen(Statement stat) throws IOException, SQLException {
-//		CSV_Manager readCSV = new CSV_Manager();
-//
-//		ArrayList<String> records = new ArrayList<String>();
-//		JFileChooser jfc = new JFileChooser();
-//
-//		int rueckgabeWert = jfc.showOpenDialog(null);
-//
-//		if (rueckgabeWert == JFileChooser.APPROVE_OPTION) {
-//			// Ausgabe der ausgewaehlten Datei
-//			records = readCSV.readCSV(jfc.getSelectedFile().getName());
-//		}
-//
-//		// TODO hier muss dann noch geguckt werden welche Pfad da rein muss
-//
-//		// AktienID, DepotID
-//		String aktienID, depotID;
-//
-//		depotID = records.get(0);
-//		aktienID = records.get(1);
-//
-//		// TODO hier muss noch der SQL Befehl vernünfitg gemacht werden
-//		stat.execute("INSERT INTO depot(ID,AktienID) VALUES \r\n" + "('");
-//
-//	}
-
 }
