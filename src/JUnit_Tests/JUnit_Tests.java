@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.junit.experimental.theories.DataPoints;
 import org.junit.experimental.theories.Theory;
 
+import Ordermanager.Orderliste;
 import boersenprogramm.Aktie;
 import boersenprogramm.Aktiengesellschaft;
 import boersenprogramm.AktuellerUser;
@@ -84,42 +85,29 @@ import user_Interface.GUI;
 
 public class JUnit_Tests {
 
-
 	Boerse b;
 	Aktie ak;
 	Aktiengesellschaft akg;
 	GUI g;
 	AktuellerUser au;
 	Statement stat;
+	Orderliste ol;
 	DefaultListModel<String> testListModel;
 	private static Datenbankersteller db;
-	
-	
 
 	@Before
 	public void init() throws SQLException {
 		initDatenbank();
 		initKlassen();
 		initListModel();
-		
+
 	}
 
 	public void initListModel() {
 		testListModel = new DefaultListModel<String>();
 		testListModel.add(0, "ID: 4 Wert: 45");
 	}
-	
-//	public void makeAktienList(DefaultListModel<String> listModel) throws SQLException {
-//	Boerse b = new Boerse(stat);
-//	ArrayList<Aktie> akList = b.getAktienListe(aUser);
-//	for (Aktie a : akList) {
-//		int aktuellesDepot = a.getDepot(a.getId());
-//		int gewaehltesDe = (Integer) depots.getSelectedItem();
-//		if (gewaehltesDe == aktuellesDepot) {
-//			listModel.addElement("ID: " + a.getId() + " Wert:" + a.getWert(a.getId()));
-//		}
-//	}
-//}
+
 
 	public void initDatenbank() throws SQLException {
 		String databaseURL = "jdbc:mysql://localhost/boersendatenbank?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
@@ -135,34 +123,33 @@ public class JUnit_Tests {
 		this.akg = new Aktiengesellschaft(00, stat);
 		this.g = new GUI(stat);
 		this.au = new AktuellerUser("depotinhaber", 10);
+		this.ol = new Orderliste();
 	}
 
 	@Test
 	public void testGetAktiengesellschaft() throws SQLException {
 		Assert.assertTrue(2 == ak.getAktiengesellschaft(1));
 	}
-	
+
 	@Test
-	public void testGetDepot () throws SQLException {
+	public void testGetDepot() throws SQLException {
 		Assert.assertTrue(21 == ak.getDepot(1));
 	}
-	
-	@Test
-	public void testMakeAktienList() {
-		
-	}
-	
+
 	@Test
 	public void testListModel() throws SQLException {
 		System.out.println(b.getAktienListe(au));
 	}
-	
+
 	@Test
-	public void tesCSVManager () {
-		
+	public void tesCSVManager() {
+
 	}
 
-
+	@Test
+	public void testOrderListe() {
+		System.out.println(ol.getAnkaufsliste());
+	}
 
 }
 

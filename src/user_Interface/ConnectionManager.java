@@ -10,7 +10,7 @@ public class ConnectionManager {
 	/**
 	 * 
 	 * @param stat
-	 * @return boolean: Es wird true zurückgegeben, wenn noch eine Connection zur
+	 * @return boolean: Es wird true zurueckgegeben, wenn noch eine Connection zur
 	 *         Datenbank besteht.
 	 * @throws SQLException
 	 */

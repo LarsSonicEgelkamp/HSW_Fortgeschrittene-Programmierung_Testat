@@ -108,7 +108,7 @@ public class GUI extends JFrame implements ActionListener {
 
 		btnBoersenmanager = new JRadioButton("Boersenmanager", true);
 		btnAktiengesellschaft = new JRadioButton("Aktiengesellschaft");
-		btnAktionaer = new JRadioButton("AktionÃ¤r");
+		btnAktionaer = new JRadioButton("Aktionaer");
 		ButtonGroup anmeldeAuswahl = new ButtonGroup();
 		anmeldeAuswahl.add(btnAktiengesellschaft);
 		anmeldeAuswahl.add(btnAktionaer);
@@ -263,7 +263,7 @@ public class GUI extends JFrame implements ActionListener {
 		} else if (ae.getSource() == this.orderEinreichen) {
 			try {
 			JFileChooser chooserOrderEinreichen = new JFileChooser();
-			chooserOrderEinreichen.setDialogTitle("Bitte wählen sie ihre Order aus.");
+			chooserOrderEinreichen.setDialogTitle("Bitte waehlen sie ihre Order aus.");
 			chooserOrderEinreichen.showOpenDialog(null);
 			File f = chooserOrderEinreichen.getSelectedFile();
 			this.orderEinreichen(f);
@@ -602,7 +602,7 @@ public class GUI extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Überprüft, ob die eingereichte Datei das richtige Format hat.
+	 * Ueberprueft, ob die eingereichte Datei das richtige Format hat.
 	 * 
 	 * @param order: Die eingereichte Datei.
 	 * @return: true, wenn das Dateiformat korrekt ist; false, wenn das DAteiformat
