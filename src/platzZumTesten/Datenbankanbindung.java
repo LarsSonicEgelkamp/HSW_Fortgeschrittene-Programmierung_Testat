@@ -14,7 +14,6 @@ public class Datenbankanbindung {
 
 			Statement statement = con.createStatement();
 
-//			statement.execute("CREATE DATABASE");
 			System.out.println("Hallo hallo");
 		} catch (SQLException e) {
 			System.out.println("Fehler: " + e.getMessage());
