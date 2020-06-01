@@ -202,8 +202,8 @@ public class Orderverarbeitung {
 		for (Transaktionen t : transaktionsListe) {
 			ArrayList<Integer> idsMoeglicherAktien = new ArrayList<Integer>();
 			this.stat = ConnectionManager.ueberpruefeConnection(stat);
-			ResultSet rs = stat.executeQuery("SELECT Aktie_ID FROM Aktie WHERE Depot_ID = " + t.getVerkaufsDepotID()
-					+ "AND Aktiengesellschaft_ID = " + t.getAktiengesellschaftsID() + ";");
+			ResultSet rs = stat.executeQuery("SELECT ID FROM Aktie WHERE Depot_ID = " + t.getVerkaufsDepotID()
+					+ " AND Aktiengesellschaft_ID = " + t.getAktiengesellschaftsID() + ";");
 			while (rs.next() && idsMoeglicherAktien.size() < t.getMenge()) {
 				idsMoeglicherAktien.add(rs.getInt(1));
 			}
@@ -233,7 +233,7 @@ public class Orderverarbeitung {
 		this.ankaufsListe = this.orderListe.getAnkaufsliste();
 		int index = 0;
 
-		while (index < this.ankaufsListe.size()) {
+		while (index < this.ankaufsListe.size() && !this.verkaufsListe.isEmpty() && !this.ankaufsListe.isEmpty()) {
 			Order tempOr = this.ankaufsListe.get(index);
 			Order passenderVerkauf = this.verkaufsListe.getpassendeOrder(tempOr);
 			if (passenderVerkauf != null) {

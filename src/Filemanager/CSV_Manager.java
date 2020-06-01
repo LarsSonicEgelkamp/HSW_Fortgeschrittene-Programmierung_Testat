@@ -102,16 +102,17 @@ public class CSV_Manager {
 				throw new IOException(
 						"Speicherverzeichnis der Orders existiert nicht und konnte nicht angelegt werden.");
 			}
-			File[] orders = orderVerzeichnis.listFiles();
-
-			for (File f : orders) {
-				this.aktuelleOrder = f;
-				ArrayList<String> orderAlsList = this.readCSVDatei(f);
-				orderAlsList = this.getKorrekteOrders(orderAlsList);
-				orderliste = this.getOrderliste(orderAlsList);
-
-			}
 		}
+		File[] orders = orderVerzeichnis.listFiles();
+
+		for (File f : orders) {
+			this.aktuelleOrder = f;
+			ArrayList<String> orderAlsList = this.readCSVDatei(f);
+			orderAlsList = this.getKorrekteOrders(orderAlsList);
+			orderliste = this.getOrderliste(orderAlsList);
+
+		}
+
 		this.schreibeLogDatei();
 		return orderliste;
 	}
@@ -271,8 +272,10 @@ public class CSV_Manager {
 
 				fw = new FileWriter(filepath);
 				bw = new BufferedWriter(fw);
-				for (String zeile : this.logEintraege) {
-					bw.write(zeile);
+				if (this.logEintraege != null) {
+					for (String zeile : this.logEintraege) {
+						bw.write(zeile);
+					}
 				}
 				bw.close();
 			} catch (IOException e) {
@@ -291,7 +294,8 @@ public class CSV_Manager {
 	 */
 	public void schreibeUmsaetze(ArrayList<Umsaetze> umsaetze) throws IOException {
 		int i = 1;
-		File filepath = new File(System.getProperty("C:\\Users\\Service\\Documents\\Boerse\\UmsaetzDateien\\umsaetze" + i));
+		File filepath = new File(
+				System.getProperty("C:\\Users\\Service\\Documents\\Boerse\\UmsaetzDateien\\umsaetze" + i));
 		BufferedWriter bw = null;
 		FileWriter fw = null;
 		while (filepath.exists()) {
