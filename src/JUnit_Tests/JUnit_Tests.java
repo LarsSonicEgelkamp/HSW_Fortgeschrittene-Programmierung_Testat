@@ -21,8 +21,7 @@ import boersenprogramm.Aktiengesellschaft;
 import boersenprogramm.AktuellerUser;
 import boersenprogramm.Boerse;
 import boersenprogramm.Datenbankersteller;
-import de.loehrke.testen.junit.uebung06.NegativeZahlException;
-import de.loehrke.testen.junit.uebung06.Rechner;
+
 import user_Interface.ConnectionManager;
 import user_Interface.GUI;
 
@@ -111,17 +110,6 @@ public class JUnit_Tests {
 		testListModel.add(0, "ID: 4 Wert: 45");
 	}
 	
-//	public void makeAktienList(DefaultListModel<String> listModel) throws SQLException {
-//	Boerse b = new Boerse(stat);
-//	ArrayList<Aktie> akList = b.getAktienListe(aUser);
-//	for (Aktie a : akList) {
-//		int aktuellesDepot = a.getDepot(a.getId());
-//		int gewaehltesDe = (Integer) depots.getSelectedItem();
-//		if (gewaehltesDe == aktuellesDepot) {
-//			listModel.addElement("ID: " + a.getId() + " Wert:" + a.getWert(a.getId()));
-//		}
-//	}
-//}
 
 	public void initDatenbank() throws SQLException {
 		String databaseURL = "jdbc:mysql://localhost/boersendatenbank?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
