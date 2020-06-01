@@ -158,6 +158,11 @@ public class JUnit_Tests {
 	public void testListModel() throws SQLException {
 		System.out.println(b.getAktienListe(au));
 	}
+	
+	@Test
+	public void tesCSVManager () {
+		
+	}
 
 
 
