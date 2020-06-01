@@ -12,6 +12,7 @@ import java.util.Arrays;
 
 import Ordermanager.Orderliste;
 import boersenprogramm.Order;
+import boersenprogramm.Umsaetze;
 
 public class CSV_Manager {
 
@@ -98,8 +99,15 @@ public class CSV_Manager {
 		return zeilen;
 	}
 
-	public void neueOrderDatei(File f) throws IOException {
-		String filename = f.getName();
+	/**
+	 * Fügt die übergebene Orderdatei in das Empfangsverzeichnis für neue Ordes
+	 * hinzu.
+	 * 
+	 * @param neueOrder: im CSV-Format
+	 * @throws IOException
+	 */
+	public void neueOrderDatei(File neueOrder) throws IOException {
+		String filename = neueOrder.getName();
 		File filepath = new File("C:\\Users\\Service\\Documents\\Boerse\\Orders\\zuBearbeiten\\" + filename);
 		System.out.println(filepath);
 		BufferedWriter bw = null;
@@ -110,7 +118,7 @@ public class CSV_Manager {
 			System.out.println(write);
 
 			try {
-				ArrayList<String> orderLines = this.readCSVDatei(f);
+				ArrayList<String> orderLines = this.readCSVDatei(neueOrder);
 				// wird nicht geschrieben ???, angeblich kein Zugriff???
 				System.out.println("isFile:" + filepath.isFile());
 				fw = new FileWriter(filepath);
@@ -146,7 +154,7 @@ public class CSV_Manager {
 				this.aktuelleOrder = f;
 				ArrayList<String> orderAlsList = this.readCSVDatei(f);
 				orderAlsList = this.getKorrekteOrders(orderAlsList);
-				orderliste.setOrderListe(this.getOrderliste(orderAlsList));
+				orderliste = this.getOrderliste(orderAlsList);
 
 			}
 		} else {
@@ -156,8 +164,16 @@ public class CSV_Manager {
 		return orderliste;
 	}
 
-	private ArrayList<Order> getOrderliste(ArrayList<String> orderAlsList) {
-		ArrayList<Order> orderliste = new ArrayList<Order>();
+	/**
+	 * Wandelt die übergebenen Orders vom String-Format zu Orders um.
+	 * 
+	 * @param orderAlsList: ArrayList<String>, die eine Orderdatei repräsentiert,
+	 *                      wobei jeder String eine Orderzeile enthält
+	 * @return: ArrayList<Order>, welche alle Orders der übergebenen Orderdatei
+	 *          enthält
+	 */
+	private Orderliste getOrderliste(ArrayList<String> orderAlsList) {
+		Orderliste orderliste = new Orderliste();
 		for (String zeile : orderAlsList) {
 			String[] orderElemente = zeile.split(";");
 			Order tempOr = new Order();
@@ -266,7 +282,8 @@ public class CSV_Manager {
 	}
 
 	private void schreibeVerarbeiteteOrderDatei(ArrayList<String> korrekteOrders) throws IOException {
-		File f = new File("C:\\Users\\Service\\Documents\\Boerse\\Orders\\verarbeitet\\" + this.aktuelleOrder.getName());
+		File f = new File(
+				"C:\\Users\\Service\\Documents\\Boerse\\Orders\\verarbeitet\\" + this.aktuelleOrder.getName());
 
 		if (f.createNewFile()) {
 			FileWriter fw = new FileWriter(f);
@@ -278,8 +295,8 @@ public class CSV_Manager {
 			}
 			bw.close();
 		} else {
-			throw new IOException(
-					"Die vollständig korrekte Orderdatei, " + this.aktuelleOrder.getName() + ", konnte im Verzeichnis \"verarbeitet\" nicht angelegt werden.");
+			throw new IOException("Die vollständig korrekte Orderdatei, " + this.aktuelleOrder.getName()
+					+ ", konnte im Verzeichnis \"verarbeitet\" nicht angelegt werden.");
 		}
 	}
 
@@ -289,8 +306,8 @@ public class CSV_Manager {
 	 * @throws IOException
 	 */
 	private void schreibeLogDatei() throws IOException {
-		int i = 1;// individueller Name jeder Logdatei
-		File filepath = new File(System.getProperty("C:\\Users\\Service\\Documents\\Boerse\\Logs\\" + i));
+		String datum = null;// TODO automatisches Datum erzeugen
+		File filepath = new File("C:\\Users\\Service\\Documents\\Boerse\\Logs\\" + datum);
 		BufferedWriter bw = null;
 		FileWriter fw = null;
 		if (filepath.mkdirs()) {
@@ -308,6 +325,37 @@ public class CSV_Manager {
 			}
 		} else {
 			throw new IOException("Fehler beim Schreiben der Logdatei.");
+		}
+	}
+/**
+ * Legt anhande der uebergebenen Umsaetze eine neue Umsaetzedatei an
+ * @param umsaetze: ArrayList<Umsaetze>, enthält alle umsaetze
+ * @throws IOException
+ */
+	public void schreibeUmsaetze(ArrayList<Umsaetze> umsaetze) throws IOException {
+		String datum = null;// TODO automatisches Datum erzeugen
+		File filepath = new File(System.getProperty("C:\\Users\\Service\\Documents\\Boerse\\UmsaetzDateien" + datum));
+		BufferedWriter bw = null;
+		FileWriter fw = null;
+		if (filepath.mkdirs()) {
+			try {
+				double transaktionskosten = 0;
+				fw = new FileWriter(filepath);
+				bw = new BufferedWriter(fw);
+				for (Umsaetze um : umsaetze) {
+					bw.write(um.getZahlerIban() + "; " + um.getZahlungsempfaengerIban() + "; " + um.getBetrag() + "; "
+							+ um.getVerwendungszweck() + "; " + um.getAusfuehrdatum()+", ");
+					bw.newLine();
+					transaktionskosten = transaktionskosten + um.getTransaktionskosten();
+				}
+				bw.write("Die gesamten Transaktionskosten betragen:" + transaktionskosten);
+				bw.close();
+			} catch (IOException e) {
+				throw new IOException(e);
+			}
+
+		} else {
+			throw new IOException("Fehler beim Schreiben der Umsaetzedatei.");
 		}
 	}
 }

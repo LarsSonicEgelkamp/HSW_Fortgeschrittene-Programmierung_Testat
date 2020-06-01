@@ -144,10 +144,10 @@ public class Datenbankersteller {
 		try {
 			if (this.pruefeExistenz(stat, con, "Depotinhaber") == false) {
 				String sqlBefehlTabelleErstellen = "CREATE TABLE "
-						+ "Depotinhaber ( ID INT, Name VARCHAR(255), CONSTRAINT PK_Depotinhaber_ID PRIMARY KEY (ID));";
+						+ "Depotinhaber ( ID INT, Name VARCHAR(255),Iban VARCHAR(255) CONSTRAINT PK_Depotinhaber_ID PRIMARY KEY (ID));";
 				stat.execute(sqlBefehlTabelleErstellen);
-				stat.execute("INSERT INTO Depotinhaber(ID, Name) VALUES \r\n" + "('10', 'Klaus Heinrich'),\r\n"
-						+ "('11', 'Maria Engel'),\r\n" + "('12', 'Barbara Giesberg');");
+				stat.execute("INSERT INTO Depotinhaber(ID, Name, Iban) VALUES \r\n" + "('10', 'Klaus Heinrich', 'DE88500105173812539961'),\r\n"
+						+ "('11', 'Maria Engel','DE90500105178797648121'),\r\n" + "('12', 'Barbara Giesberg','DE81500105175916719571');");
 
 			}
 		} catch (SQLException e) {

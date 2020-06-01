@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -272,7 +273,7 @@ public class GUI extends JFrame implements ActionListener {
 		}else if(ae.getSource()==this.btnOrdersAusfuehren) {
 			try {
 				this.ordersAusfuehren();
-			} catch (IOException e) {
+			} catch (IOException | SQLException e) {
 				this.setErrorMessage(e);
 			}
 		}
@@ -616,7 +617,8 @@ public class GUI extends JFrame implements ActionListener {
 		return false;
 	}
 	
-	private void ordersAusfuehren() throws IOException {
-		Orderverarbeitung ord = new Orderverarbeitung();	
+	private void ordersAusfuehren() throws IOException, SQLException {
+		Date datum = null;//TODO aktuelles Datum initialisieren oder User nach Datum fragen und dann auslesen
+		Orderverarbeitung ord = new Orderverarbeitung(stat, datum);	
 	}
 }

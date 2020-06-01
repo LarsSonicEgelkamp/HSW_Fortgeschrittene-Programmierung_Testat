@@ -35,7 +35,7 @@ public class Depot {
 		this.stat = ConnectionManager.ueberpruefeConnection(stat);
 		ResultSet rs = stat.executeQuery("SELECT Depotinhaber_ID FROM Depot WHERE ID = " + id + ";");
 		if (rs.next()) {
-			return rs.getInt(rs.getRow());
+			return rs.getInt(1);
 		}
 		return 000;// Errorcode
 	}

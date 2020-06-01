@@ -11,7 +11,6 @@ public class Aktie {
 
 	private final int id;
 	private int aktWert;
-	private ArrayList<Integer> werteHistorie = new ArrayList<Integer>();
 
 	private int depotinhaber;
 	private int aktiengesellschaft;
@@ -55,11 +54,6 @@ public class Aktie {
 	 * Werte-Historie gespeichert.
 	 */
 	public void setWert(int wert) throws SQLException {
-//		this.werteHistorie.add(this.getWert(id));
-//		this.stat = ConnectionManager.ueberpruefeConnection(stat);
-//		stat.execute("INSERT INTO Wertehistorie (Aktie_ID, Wert, Datum) VALUES (" + this.id + ", " + this.aktWert + ", "
-//				+ aktDatum + ");");
-
 		this.aktWert = wert;
 	}
 

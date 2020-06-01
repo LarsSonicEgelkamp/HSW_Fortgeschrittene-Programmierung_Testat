@@ -80,7 +80,7 @@ public class Boerse {
 	public void neueAktie(int id, int wert) throws SQLException {
 		ResultSet aktieVorhanden = stat.executeQuery("SELECT ID FROM Aktien WHERE ID = " + id + ";");
 		if (aktieVorhanden.next()) {
-			System.out.println("Diese Aktie existiert schon. Bitte wählen sie eine andere ID.");
+			System.out.println("Diese Aktie existiert schon. Bitte waehlen sie eine andere ID.");
 		} else {
 			Aktie aktie = new Aktie(stat, id, wert);
 			stat.execute("INSERT INTO Aktie(ID, aktuellerWert) VALUES (" + id + ", " + wert + ");");
